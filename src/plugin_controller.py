@@ -1,4 +1,4 @@
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtGui, QtCore
 import shutil
 from moilutils.moilutils import MoilUtils
 from plugin_collection import PluginCollection
@@ -9,22 +9,35 @@ class PluginController(object):
         super(PluginController, self).__init__()
         self.main_controller = main_controller
         self.plugin_win = None
+        self.index = None
         self.plugins = PluginCollection("plugins")
         self.init_plugin_win()
         self.main_controller.comboBox.addItems(self.plugins.name_application)
         self.connect_button()
 
     def connect_button(self):
-        self.main_controller.btn_open_app.clicked.connect(self.open_application)
+        self.main_controller.btn_open_app.clicked.connect(self.btn_open_apps)
         self.main_controller.btn_add_apps.clicked.connect(self.add_application)
-        self.main_controller.btn_delete_app.clicked.connect(self.delete_apps)
+        self.main_controller.btn_delete_app.clicked.connect(self.btn_delete_apps)
+        self.main_controller.actionAdd_Apps.triggered.connect(self.add_application)
+        self.main_controller.actionDelete_Apps.triggered.connect(self.action_delete_apps)
+        self.main_controller.actionOpen_Apps.triggered.connect(self.action_open_apps)
 
     def init_plugin_win(self):
         self.plugin_win = []
         for i in range(len(self.plugins.name_application)):
             self.plugin_win.append(QtWidgets.QMainWindow())
 
-    def open_application(self):
+    def btn_open_apps(self):
+        index = self.main_controller.comboBox.currentIndex()
+        self.open_application(index)
+
+    def action_open_apps(self):
+        self.dialog_apps()
+        if self.index is not None:
+            self.open_application(self.index)
+
+    def open_application(self, index):
         """
         Open application depend on selected application available on comboBox.
 
@@ -32,25 +45,74 @@ class PluginController(object):
             Will hide the main apps window and show the selection application.
         """
         self.main_controller.open_plugin = True
-        __index = self.main_controller.comboBox.currentIndex()
-        if __index == -1:
+        if index == -1:
             QtWidgets.QMessageBox.warning(None, "Warning", " No Instalation Plugin, please add frist !!")
         else:
-            self.plugins.application(self.plugin_win[__index], __index)
+            self.plugins.application(self.plugin_win[index], index)
 
-    def delete_apps(self):
+    def btn_delete_apps(self):
+        index = self.main_controller.comboBox.currentIndex()
+        self.delete_apps(index)
+
+    def action_delete_apps(self):
+        self.dialog_apps()
+        if self.index is not None:
+            self.delete_apps(self.index)
+
+    def dialog_apps(self):
+        """
+        Select the camera type prompt.
+
+        """
+        self.Dialog = QtWidgets.QDialog()
+        self.Dialog.setObjectName("Dialog")
+        self.Dialog.setWindowTitle("Select Plugin")
+        self.Dialog.resize(240, 120)
+        buttonBox = QtWidgets.QDialogButtonBox(self.Dialog)
+        buttonBox.setGeometry(QtCore.QRect(20, 80, 200, 32))
+        buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        buttonBox.setStandardButtons(
+            QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
+        buttonBox.setObjectName("buttonBox")
+        self.combobox_plugins = QtWidgets.QComboBox(self.Dialog)
+        self.combobox_plugins.setGeometry(QtCore.QRect(20, 40, 200, 30))
+        self.combobox_plugins.setObjectName("comboBox")
+        self.combobox_plugins.addItems(self.plugins.name_application)
+        label = QtWidgets.QLabel(self.Dialog)
+        label.setGeometry(QtCore.QRect(10, 10, 220, 30))
+        font = QtGui.QFont()
+        font.setFamily("DejaVu Serif")
+        font.setPointSize(13)
+        label.setFont(font)
+        label.setAlignment(QtCore.Qt.AlignCenter)
+        label.setObjectName("label")
+        label.setText("A Plugin wants to open!!")
+
+        buttonBox.accepted.connect(self.dialog_accept)
+        buttonBox.rejected.connect(self.dialog_reject)
+        self.Dialog.exec_()
+
+    def dialog_accept(self):
+        self.index = self.combobox_plugins.currentIndex()
+        self.Dialog.close()
+
+    def dialog_reject(self):
+        self.index = None
+        self.Dialog.close()
+
+    def delete_apps(self, index):
         """
         Delete selected application from the list.
 
         Returns:
             None.
         """
-        __index = self.main_controller.comboBox.currentIndex()
-        if __index == -1:
+
+        if index == -1:
             QtWidgets.QMessageBox.warning(None, "Warning", " No Instalation Plugin, please add frist !!")
         else:
-            name = self.plugins.name_application[__index]
-            path = self.plugins.path_folder[__index]
+            name = self.plugins.name_application[index]
+            path = self.plugins.path_folder[index]
             path = path.split(".")[1]
             path = "./plugins/" + path
             reply = QtWidgets.QMessageBox.question(
@@ -69,6 +131,7 @@ class PluginController(object):
                 self.main_controller.comboBox.clear()
                 self.main_controller.comboBox.addItems(new_list)
                 self.init_plugin_win()
+                QtWidgets.QMessageBox.information(None, "Information", "Plugins was successfully deleted !!")
 
     def add_application(self):
         """
@@ -88,3 +151,5 @@ class PluginController(object):
             self.main_controller.comboBox.clear()
             self.main_controller.comboBox.addItems(new_list)
             self.init_plugin_win()
+            QtWidgets.QMessageBox.information(None, "Information", "Plugins was successfully added !!")
+

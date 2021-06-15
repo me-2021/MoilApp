@@ -39,6 +39,7 @@ class ControllerMain(Ui_MainWindow):
         self.pushButton.clicked.connect(self.calculate)
         self.OpenImage.clicked.connect(self.open_image)
         self.OpenParams.clicked.connect(self.cam_params_window)
+        self.parent.closeEvent = self.close_event
 
     def cam_params_window(self):
         """
@@ -151,7 +152,7 @@ class ControllerMain(Ui_MainWindow):
         cam1_3d_coordinate.append(0)
         cam1_3d_coordinate.append(0)
 
-        cam2_3d_coordinate.append(6.0)
+        cam2_3d_coordinate.append(6.6)
         cam2_3d_coordinate.append(0)
         cam2_3d_coordinate.append(0)
 
@@ -159,9 +160,8 @@ class ControllerMain(Ui_MainWindow):
         self.coordinate_sys.set_cam2_3d_coordinate(cam2_3d_coordinate)
 
         dis = self.coordinate_sys.calculate_dis()
-        print("-------->>>>>>>>> dis:", dis)
-        self.label_distance.setText(str(round(dis)))
-        self.label_distanc_config.setText(str(round(dis)))
+        self.label_distance.setText(str(round(dis, 2)))
+        self.label_distanc_config.setText(str(round(dis, 2)))
 
     def mouse_label_image_left(self, e):
         if e.button() == QtCore.Qt.LeftButton:
@@ -275,11 +275,12 @@ class ControllerMain(Ui_MainWindow):
                 print("No Left Image !!!")
 
     def show_to_ui_window(self):
-        # image_l = self.img_l if self.img_result_l is None else self.img_result_l
-        # image_r = self.img_r if self.img_result_r is None else self.img_result_r
         MoilUtils.showing_image_object_measurement(self.Label_image_L,
                                                    self.img_result_l,
                                                    self.width_image)
         MoilUtils.showing_image_object_measurement(self.Label_Image_R,
                                                    self.img_result_r,
                                                    self.width_image)
+
+    def close_event(self, e):
+        self.camParams.close()

@@ -8,14 +8,14 @@ class Help():
         super(Help, self).__init__()
 
     @classmethod
-    def open_information_moildev(self):
+    def open_user_guide_moildev(cls):
         # file = os.path.realpath('./plugins/Thread_inspection/help/index.html')
         # print(file)
         # webbrowser.open('file://' + file)
-        webbrowser.open('https://github.com/MoilOrg/MoilApps-Plugins/wiki')
+        webbrowser.open('https://www.youtube.com/watch?v=irpWmNmgAz4')
 
     @classmethod
-    def about_us(self):
+    def about_us(cls):
         """
         Showing prompt About us information (MOIL LAB).
 
@@ -30,7 +30,37 @@ class Help():
         msgbox.exec()
 
     @classmethod
-    def help_moildev_apps(self):
+    def help_create_plugin(cls):
+        """
+        Showing prompt About us information (MOIL LAB).
+
+        Returns:
+            None.
+        """
+        msgbox = QtWidgets.QMessageBox()
+        msgbox.setWindowTitle("Create Plugin")
+        msgbox.setText(
+            "Comming soon !!!!!!!!\n")
+        msgbox.setIconPixmap(QtGui.QPixmap('./images/moildev2.png'))
+        msgbox.exec()
+
+    @classmethod
+    def help_plugin(cls):
+        """
+        Showing prompt About us information (MOIL LAB).
+
+        Returns:
+            None.
+        """
+        msgbox = QtWidgets.QMessageBox()
+        msgbox.setWindowTitle("Help Plugin")
+        msgbox.setText(
+            "Comming soon !!!!!!!!\n")
+        msgbox.setIconPixmap(QtGui.QPixmap('./images/moildev2.png'))
+        msgbox.exec()
+
+    @classmethod
+    def help_moilApp(cls):
         msgbox = QtWidgets.QMessageBox()
         msgbox.setWindowTitle("Help !!")
         msgbox.setText(

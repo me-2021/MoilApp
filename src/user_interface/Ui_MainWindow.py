@@ -1395,7 +1395,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         # self.actionMinimize.setCheckable(True)
         self.actionDelete_Apps.setObjectName("actionDelete_Apps")
 
-        self.actionOpen_Apps = QtWidgets.QMenu(MainWindow)
+        self.actionOpen_Apps = QtWidgets.QAction(MainWindow)
         font = QtGui.QFont()
         font.setFamily("DejaVu Serif")
         font.setPointSize(12)
@@ -1410,10 +1410,10 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.actionAbout_Apps.setFont(font)
         self.actionAbout_Apps.setObjectName("actionAbout_Apps")
 
-        self.actiontest = QtWidgets.QAction(MainWindow)
-        self.actiontest.setObjectName("actiontest")
-        self.actiontest1 = QtWidgets.QAction(MainWindow)
-        self.actiontest1.setObjectName("actiontest1")
+        # self.actiontest = QtWidgets.QAction(MainWindow)
+        # self.actiontest.setObjectName("actiontest")
+        # self.actiontest1 = QtWidgets.QAction(MainWindow)
+        # self.actiontest1.setObjectName("actiontest1")
 
         self.actionAbout_Us = QtWidgets.QAction(MainWindow)
         font = QtGui.QFont()
@@ -1461,10 +1461,10 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
 
         self.menuApps.addAction(self.actionAdd_Apps)
 
-        self.actionOpen_Apps.addAction(self.actiontest)
-        self.actionOpen_Apps.addAction(self.actiontest1)
+        # self.actionOpen_Apps.addAction(self.actiontest)
+        # self.actionOpen_Apps.addAction(self.actiontest1)
 
-        self.menuApps.addAction(self.actionOpen_Apps.menuAction())
+        self.menuApps.addAction(self.actionOpen_Apps)
         self.menuApps.addAction(self.actionDelete_Apps)
         self.menuApps.addAction(self.actionCreatePlugins)
         self.menuApps.addAction(self.actionHelpPlugins)
@@ -1521,9 +1521,10 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.menuWindow.setTitle(_translate("MainWindow", "Window"))
         self.menuApps.setTitle(_translate("MainWindow", "Apps"))
+        # self.actionOpen_Apps
 
-        self.actiontest.setText(_translate("MainWindow", "test"))
-        self.actiontest1.setText(_translate("MainWindow", "test1"))
+        # self.actiontest.setText(_translate("MainWindow", "test"))
+        # self.actiontest1.setText(_translate("MainWindow", "test1"))
 
         self.menuHelp.setTitle(_translate("MainWindow", "Help"))
         self.actionLoad_Image.setText(_translate("MainWindow", "Load Image"))
@@ -1536,7 +1537,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.actionMaximize.setText(_translate("MainWindow", "Maximize"))
         self.actionMinimize.setText(_translate("MainWindow", "Minimize"))
         self.actionAdd_Apps.setText(_translate("MainWindow", "Add Plugins"))
-        self.actionOpen_Apps.setTitle(_translate("MainWindow", "Open Plugins"))
+        self.actionOpen_Apps.setText(_translate("MainWindow", "Open Plugins"))
         self.actionDelete_Apps.setText(_translate("MainWindow", "Delete Plugins"))
         self.actionCreatePlugins.setText(_translate("MainWindow", "Create Plugins"))
         self.actionHelpPlugins.setText(_translate("MainWindow", "Help Plugins"))

@@ -5,10 +5,9 @@
 #########################################################################
 import numpy as np
 import cv2
-import json
 from PyQt5 import QtWidgets, QtGui, QtCore
 import datetime
-from moilutils import MoilUtils
+from moilutils.moilutils import MoilUtils
 from help.help import Help
 from plugin_controller import PluginController
 from Exif.exif_lib import MetaImage
@@ -27,7 +26,6 @@ class Controller(Ui_MainWindow):
 
     def __init__(self, parent):
         super().__init__(parent)
-        self.Dialog = QtWidgets.QDialog()
         self.comboBox_cam_type = None
         self.parent = parent
         self.setupUi(self.parent)
@@ -94,8 +92,13 @@ class Controller(Ui_MainWindow):
         self.btn_Save_Image.clicked.connect(self.save_image)
         self.btn_normal.clicked.connect(self.onclick_view_normal)
         self.listWidget.currentItemChanged.connect(self.saved_image_activated)
-
         self.btn_show_help.clicked.connect(self.onclick_help)
+        self.pushButton_29.clicked.connect(Help.about_us)
+        self.pushButton_18.clicked.connect(Help.open_user_guide_moildev)
+        self.actionAbout_Apps.triggered.connect(Help.help_moilApp)
+        self.actionCreatePlugins.triggered.connect(Help.help_create_plugin)
+        self.actionAbout_Us.triggered.connect(Help.about_us)
+        self.actionHelpPlugins.triggered.connect(Help.help_plugin)
 
     def open_image(self):
         """
@@ -131,7 +134,7 @@ class Controller(Ui_MainWindow):
                                              "",
                                              "Video Files (*.mp4 *.avi *.mpg *.gif *.mov)")
         if video_source:
-            self.select_camera_type()
+            self.type_camera = MoilUtils.select_camera_type()
             if self.type_camera is not None:
                 self.running_video(video_source)
 
@@ -149,7 +152,7 @@ class Controller(Ui_MainWindow):
         """
         self.reset_mode_view()
         camera_source = self.winOpenCam.camera_source_used()
-        self.select_camera_type()
+        self.type_camera = MoilUtils.select_camera_type()
         if self.type_camera is not None:
             self.running_video(camera_source)
 
@@ -177,52 +180,6 @@ class Controller(Ui_MainWindow):
 
         """
         self.camParams.show()
-
-    def select_camera_type(self):
-        """
-        Select the camera type prompt.
-
-        """
-        with open(self.camera_parameter) as f:
-            data = json.load(f)
-        new_list = []
-        for key in data.keys():
-            new_list.append(key)
-        self.Dialog.setObjectName("Dialog")
-        self.Dialog.setWindowTitle("Select Camera !!!")
-        self.Dialog.resize(240, 120)
-        buttonBox = QtWidgets.QDialogButtonBox(self.Dialog)
-        buttonBox.setGeometry(QtCore.QRect(20, 80, 200, 32))
-        buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        buttonBox.setStandardButtons(
-            QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
-        buttonBox.setObjectName("buttonBox")
-        self.comboBox_cam_type = QtWidgets.QComboBox(self.Dialog)
-        self.comboBox_cam_type.setGeometry(QtCore.QRect(20, 40, 200, 30))
-        self.comboBox_cam_type.setObjectName("comboBox")
-        self.comboBox_cam_type.addItems(new_list)
-        label = QtWidgets.QLabel(self.Dialog)
-        label.setGeometry(QtCore.QRect(10, 10, 220, 30))
-        font = QtGui.QFont()
-        font.setFamily("DejaVu Serif")
-        font.setPointSize(13)
-        label.setFont(font)
-        label.setAlignment(QtCore.Qt.AlignCenter)
-        label.setObjectName("label")
-        label.setText("Select the camera type !!!")
-
-        buttonBox.accepted.connect(self.dialog_camera_oke)
-        buttonBox.rejected.connect(self.Dialog.reject)
-
-        self.Dialog.exec_()
-
-    def dialog_camera_oke(self):
-        """
-        The function will execute when you press accept or ok in dialog camera type selection.
-
-        """
-        self.type_camera = self.comboBox_cam_type.currentText()
-        self.Dialog.close()
 
     def onclick_view_normal(self):
         """
@@ -332,7 +289,6 @@ class Controller(Ui_MainWindow):
         Function that for connect with the event in list widget to reopen the image.
 
         """
-        print("here")
         filename = self.dir_save + "/" + self.listWidget.currentItem().text()
         img = MetaImage(filename)
         self.type_camera = img.read_comment()
@@ -383,7 +339,7 @@ class Controller(Ui_MainWindow):
         Showing the message box to show help information obout this application.
 
         """
-        Help.help_moildev_apps()
+        Help.help_moilApp()
 
     def onclick_exit(self):
         """
@@ -413,6 +369,8 @@ class Controller(Ui_MainWindow):
             if self.open_plugin:
                 for i in range(len(self.control_plugin.plugins.name_application)):
                     self.control_plugin.plugin_win[i].close()
+            self.openCam.close()
+            self.camParams.close()
             event.accept()
         else:
             event.ignore()

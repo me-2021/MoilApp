@@ -1,21 +1,18 @@
-from .user_interface.ui_mainwindoww import Ui_MainWindow
+from .user_interface.ui_mainwindow import Ui_MainWindow
 from moilutils import MoilUtils
 from Exif.exif_lib import MetaImage
 from help.help import Help
 import datetime
 import cv2
-import json
 from PyQt5 import QtWidgets, QtCore, QtGui
 from video_controller import VideoController
 from moilutils.select_source_camera import OpenCameraSource
+from moilutils.camera_parameters import CameraParameters
 
 
 class UiController(Ui_MainWindow):
-    camera_parameter = 'cam_params/camera_parameters.json'
-
     def __init__(self, mainWindow):
         super(UiController, self).__init__()
-        self.Dialog = QtWidgets.QDialog()
         self.parent = mainWindow
         self.setupUi(self.parent)
         self.type_camera = None
@@ -36,6 +33,8 @@ class UiController(Ui_MainWindow):
         self.video_controller.set_button_disable()
         self.openCam = QtWidgets.QDialog()
         self.winOpenCam = OpenCameraSource(self, self.openCam)
+        self.camParams = QtWidgets.QDialog()
+        self.winCamParams = CameraParameters(self, self.camParams)
         self.hide_widget_for_original()
         self.connect_event()
 
@@ -44,6 +43,7 @@ class UiController(Ui_MainWindow):
         self.actionLoad_Video.triggered.connect(self.load_video)
         self.actionOpen_Camera.triggered.connect(self.onclick_open_camera)
         self.actionSave_image.triggered.connect(self.save_image)
+        self.actionCam_parameter.triggered.connect(self.cam_params_window)
         self.pushButton_2.clicked.connect(self.open_image)
         self.pushButton.clicked.connect(self.load_video)
         self.pushButton_3.clicked.connect(self.onclick_open_camera)
@@ -63,11 +63,19 @@ class UiController(Ui_MainWindow):
         self.label_image6.mousePressEvent = self.mouse_window_r
         self.label_Original_image.wheelEvent = self.mouse_wheelEvent
         self.label_Original_image.mouseReleaseEvent = self.mouse_release_event
-        self.parent.closeEvent = self.closeEvent
+        self.parent.closeEvent = self.close_event
 
     def hide_widget_for_original(self):
         self.scrollArea_3.hide()
         self.frame_2.hide()
+
+    def cam_params_window(self):
+        """
+        Open the window of camera parameter form, this window you can update, add, and
+        delete the camera parameter from database.
+
+        """
+        self.camParams.show()
 
     def open_image(self):
         filename = MoilUtils.select_file(self.parent, "Select Image", "",
@@ -92,7 +100,7 @@ class UiController(Ui_MainWindow):
                                              "",
                                              "Video Files (*.mp4 *.avi *.mpg *.gif *.mov)")
         if video_source:
-            self.select_camera_type()
+            self.type_camera = MoilUtils.select_camera_type()
             if self.type_camera is not None:
                 self.running_video(video_source)
                 self.onclick_original()
@@ -128,56 +136,10 @@ class UiController(Ui_MainWindow):
         this function provide 2 source namely USB cam and Streaming Cam from Raspberry pi.
         """
         camera_source = self.winOpenCam.camera_source_used()
-        self.select_camera_type()
+        self.type_camera = MoilUtils.select_camera_type()
         if self.type_camera is not None:
             self.running_video(camera_source)
             self.onclick_original()
-
-    def select_camera_type(self):
-        """
-        Select the camera type prompt.
-
-        """
-        with open(self.camera_parameter) as f:
-            data = json.load(f)
-        new_list = []
-        for key in data.keys():
-            new_list.append(key)
-        self.Dialog.setObjectName("Dialog")
-        self.Dialog.setWindowTitle("Select Camera !!!")
-        self.Dialog.resize(240, 120)
-        buttonBox = QtWidgets.QDialogButtonBox(self.Dialog)
-        buttonBox.setGeometry(QtCore.QRect(20, 80, 200, 32))
-        buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        buttonBox.setStandardButtons(
-            QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
-        buttonBox.setObjectName("buttonBox")
-        self.comboBox_cam_type = QtWidgets.QComboBox(self.Dialog)
-        self.comboBox_cam_type.setGeometry(QtCore.QRect(20, 40, 200, 30))
-        self.comboBox_cam_type.setObjectName("comboBox")
-        self.comboBox_cam_type.addItems(new_list)
-        label = QtWidgets.QLabel(self.Dialog)
-        label.setGeometry(QtCore.QRect(10, 10, 220, 30))
-        font = QtGui.QFont()
-        font.setFamily("DejaVu Serif")
-        font.setPointSize(13)
-        label.setFont(font)
-        label.setAlignment(QtCore.Qt.AlignCenter)
-        label.setObjectName("label")
-        label.setText("Select the camera type !!!")
-
-        buttonBox.accepted.connect(self.dialog_camera_oke)
-        buttonBox.rejected.connect(self.Dialog.reject)
-
-        self.Dialog.exec_()
-
-    def dialog_camera_oke(self):
-        """
-        The function will execute when you press accept or ok in dialog camera type selection.
-
-        """
-        self.type_camera = self.comboBox_cam_type.currentText()
-        self.Dialog.close()
 
     def onclick_original(self):
         self.btn_ori_view.setChecked(True)
@@ -225,7 +187,7 @@ class UiController(Ui_MainWindow):
         self.multiple_view = False
         self.window = 1
         moildev = MoilUtils.connect_to_moildev(self.type_camera)
-        self.mapX_1, self.mapY_1, = moildev.getAnypointMaps(30,-50,
+        self.mapX_1, self.mapY_1, = moildev.getAnypointMaps(30, -50,
                                                             self.zoom_any,
                                                             self.anypoint_mode)
 
@@ -560,5 +522,6 @@ class UiController(Ui_MainWindow):
                                     image_ori,
                                     self.width_ori_image)
 
-    def closeEvent(self, e):
-        self.parent.close()
+    def close_event(self, e):
+        self.openCam.close()
+        self.camParams.close()
