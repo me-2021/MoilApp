@@ -160,9 +160,7 @@
 
    You can watch the tutorial how to use this application here
 
-   ```
    [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg)](https://youtu.be/irpWmNmgAz4)
-   ```
 
 6. For more documentation, **Contact US....**
 
