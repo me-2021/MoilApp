@@ -156,19 +156,10 @@
      
 
 
-5. **Introduction how to use this apps**
+5. **Introduction how to use this Apps**
+      You can watch the tutorial to know how to use this application. Click in bellow :arrow_down::arrow_down::arrow_down:
 
-<<<<<<< HEAD
-   You can watch the tutorial how to use this application here
-
-   [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg)](https://www.youtube.com/watch?v=irpWmNmgAz4)
-
-   
-=======
-   You can watch the tutorial bellow to know how to use this application.
-   
    [![Watch the video](https://user-images.githubusercontent.com/47322969/122130755-af6ddc80-ce6a-11eb-94d7-51b5d3346078.jpg)](https://youtu.be/irpWmNmgAz4)
->>>>>>> f2d46c74427d57f8cd958e4a249f87e0d41e52a3
 
 6. For more documentation, **Contact US....**
 
