@@ -1,0 +1,1 @@
+from Exif.exif_lib import MetaImage

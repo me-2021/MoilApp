@@ -1,0 +1,2 @@
+11- 六 -21 07:54:35: root - INFO - SYSTEM STARTED
+11- 六 -21 07:54:35: root - ERROR - [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
