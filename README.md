@@ -158,7 +158,9 @@
 
 5. **Introduction how to use this apps**
 
-   You can watch the tutorial how to use this application **[here](https://www.youtube.com/watch?v=irpWmNmgAz4)**
+   You can watch the tutorial bellow to know how to use this application.
+   
+   [![Watch the video](https://user-images.githubusercontent.com/47322969/122130755-af6ddc80-ce6a-11eb-94d7-51b5d3346078.jpg)](https://youtu.be/irpWmNmgAz4)
 
 6. For more documentation, **Contact US....**
 
