@@ -158,8 +158,7 @@
 
 5. **Introduction how to use this apps**
 
-   You can watch the tutorial how to use this application here
-   [![Alt text](https://img.youtube.com/vi/VID/0.jpg)](https://www.youtube.com/watch?v=irpWmNmgAz4)
+   You can watch the tutorial how to use this application **[here](https://www.youtube.com/watch?v=irpWmNmgAz4)**
 
 6. For more documentation, **Contact US....**
 
