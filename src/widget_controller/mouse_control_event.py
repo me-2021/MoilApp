@@ -1,5 +1,6 @@
 from PyQt5 import QtCore, QtWidgets
 from processing.anypoint import AnypointView
+from moilutils.moilutils import MoilUtils
 
 
 class MouseController(object):
@@ -17,10 +18,12 @@ class MouseController(object):
         self.parent.label_Original_Image.mouseDoubleClickEvent = self.mouseDoubleclick_event
         self.parent.label_Result_Image.mouseDoubleClickEvent = self.mouseDoubleclick_event
         self.parent.label_Original_Image.mousePressEvent = self.mouse_event
+        self.parent.label_Result_Image.mousePressEvent = self.mouse_result_press
         self.parent.label_Original_Image.wheelEvent = self.mouse_wheelEvent_ori_label
         self.parent.label_Result_Image.wheelEvent = self.mouse_wheelEvent
         self.parent.label_Result_Image.mouseReleaseEvent = self.mouse_release_event
         self.parent.label_Original_Image.mouseMoveEvent = self.mouseMovedOriImage
+        self.parent.label_Result_Image.mouseMoveEvent = self.mouseMoveEvent
 
     def mouse_event(self, e):
         """
@@ -39,6 +42,7 @@ class MouseController(object):
                 ratio_x, ratio_y = self.init_ori_ratio(self.parent.image)
                 coordinate_X = round(pos_x * ratio_x)
                 coordinate_Y = round(pos_y * ratio_y)
+                self.parent.point = (coordinate_X, coordinate_Y)
                 # print(coordinate_X, coordinate_Y)
                 if self.parent.normal_view:
                     pass
@@ -46,6 +50,7 @@ class MouseController(object):
                 if self.parent.anypoint_view:
                     self.anypoint.alpha, self.anypoint.beta = self.anypoint.moildev.get_alpha_beta(
                         coordinate_X, coordinate_Y, self.anypoint.anypoint_mode)
+                    # print(self.anypoint.alpha, self.anypoint.beta)
                     self.anypoint.process_to_anypoint()
 
                 elif self.parent.panorama_view:
@@ -79,7 +84,7 @@ class MouseController(object):
             if modifiers == QtCore.Qt.ControlModifier:
                 wheel_counter = e.angleDelta()
                 if wheel_counter.y() / 120 == -1:
-                    if self.parent.width_result_image == 1000:
+                    if self.parent.width_result_image == 320:
                         pass
                     else:
                         self.parent.width_result_image -= 100
@@ -90,6 +95,7 @@ class MouseController(object):
                     else:
                         self.parent.width_result_image += 100
                 self.parent.show_to_window()
+                self.parent.show_percentage()
 
     def mouse_wheelEvent_ori_label(self, e):
         """
@@ -115,6 +121,16 @@ class MouseController(object):
                             self.anypoint.zoom_any -= 1
                             self.anypoint.anypoint()
 
+    def mouse_result_press(self, e):
+        self.parent.rubberband.hide()
+        self.origin = self.parent.label_Result_Image.mapFromParent(e.pos())
+        self.parent.rubberband.setGeometry(QtCore.QRect(self.origin, QtCore.QSize()))
+        self.parent.rubberband.show()
+
+    def mouseMoveEvent(self, event):
+        if self.parent.rubberband.isVisible():
+            self.parent.rubberband.setGeometry(QtCore.QRect(self.origin, event.pos()))
+
     def mouse_release_event(self, e):
         """
         Mouse release event right click to show menu. the menu can select is show maximum, show minimum,
@@ -126,9 +142,15 @@ class MouseController(object):
         Returns:
             None.
         """
-        if e.button() == QtCore.Qt.LeftButton:
-            pass
-        else:
+        rect = self.parent.rubberband.geometry()
+        if rect.width() > 20 and rect.height() > 20:
+            selectedImage = self.parent.cropImage(rect)
+            MoilUtils.showing_image(self.parent.label_Result_Image, selectedImage, 1380)
+            self.parent.rubberband.hide()
+            self.parent.comboBox_zoom.setCurrentIndex(0)
+            self.parent.comboBox_zoom.setItemText(0, "Zoom Area")
+
+        if e.button() == QtCore.Qt.RightButton:
             if self.parent.image is None:
                 pass
             else:
@@ -170,6 +192,7 @@ class MouseController(object):
         ratio_x, ratio_y = self.init_ori_ratio(self.parent.image)
         coordinate_X = round(pos_x * ratio_x)
         coordinate_Y = round(pos_y * ratio_y)
+        self.parent.point = (coordinate_X, coordinate_Y)
 
         if self.parent.normal_view:
             pass

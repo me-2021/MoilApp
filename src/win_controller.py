@@ -47,6 +47,7 @@ class Controller(Ui_MainWindow):
         self.pos_x = 0
         self.w = 0
         self.h = 0
+        self.point = None
         self.result_image = None
         self.width_original_image = 300
         self.width_result_image = 1400
@@ -68,6 +69,7 @@ class Controller(Ui_MainWindow):
         self.video_controller.set_button_disable()
         self.frame_panorama.hide()
         self.frame_navigator.hide()
+        self.label_34.hide()
 
     def connect_event(self):
         """
@@ -84,6 +86,7 @@ class Controller(Ui_MainWindow):
         self.actionCamera_Parameters.triggered.connect(self.cam_params_window)
         self.actionSave_Image.triggered.connect(self.save_image)
         self.action_accessibility.triggered.connect(self.onclick_accessibility)
+        self.comboBox_zoom.activated.connect(self.combo_percentage_zoom)
 
         # connect button to function
         self.btn_Open_Image.clicked.connect(self.open_image)
@@ -110,8 +113,9 @@ class Controller(Ui_MainWindow):
         if self.cam:
             self.video_controller.stop_video()
             self.cap.release()
-        filename = MoilUtils.select_file(self.parent, "Image Files", "", "(*.jpeg *.jpg *.png *.gif *.bmg)")
+        filename = MoilUtils.select_file(self.parent, "Image Files", "../", "(*.jpeg *.jpg *.png *.gif *.bmg)")
         if filename:
+            self.parent.setWindowTitle("MoilApp - " + filename)
             img = MetaImage(filename)
             self.type_camera = img.read_comment()
             print(self.type_camera)
@@ -119,7 +123,9 @@ class Controller(Ui_MainWindow):
             self.h, self.w = self.image.shape[:2]
             self.video_controller.set_button_disable()
             self.show_to_window()
+            self.show_percentage()
             self.cam = False
+            self.label_Application.setText("Camera: " + self.type_camera)
             img.close()
 
     def onclick_load_video(self):
@@ -131,11 +137,13 @@ class Controller(Ui_MainWindow):
         self.reset_mode_view()
         video_source = MoilUtils.select_file(self.parent,
                                              "Select Video Files",
-                                             "",
+                                             "../",
                                              "Video Files (*.mp4 *.avi *.mpg *.gif *.mov)")
         if video_source:
             self.type_camera = MoilUtils.select_camera_type()
             if self.type_camera is not None:
+                self.parent.setWindowTitle("MoilApp - " + video_source)
+                self.label_Application.setText("Camera: " + self.type_camera)
                 self.running_video(video_source)
 
     def onclick_open_camera(self):
@@ -154,6 +162,8 @@ class Controller(Ui_MainWindow):
         camera_source = self.winOpenCam.camera_source_used()
         self.type_camera = MoilUtils.select_camera_type()
         if self.type_camera is not None:
+            self.parent.setWindowTitle("MoilApp - " + self.type_camera)
+            self.label_Application.setText("Camera: " + self.type_camera)
             self.running_video(camera_source)
 
     def running_video(self, video_source):
@@ -172,6 +182,7 @@ class Controller(Ui_MainWindow):
         else:
             self.cam = True
             self.video_controller.next_frame_slot()
+            self.show_percentage()
 
     def cam_params_window(self):
         """
@@ -191,9 +202,9 @@ class Controller(Ui_MainWindow):
             self.panorama_view = False
             self.anypoint_view = False
             self.angle = 0
-            MoilUtils.showing_image(self.label_Original_Image, self.image, self.width_original_image)
-            MoilUtils.showing_image(self.label_Result_Image, self.image, self.width_result_image)
+            self.show_to_window()
             self.frame_navigator.hide()
+            self.label_34.hide()
             self.frame_panorama.hide()
 
     def show_to_window(self):
@@ -201,13 +212,16 @@ class Controller(Ui_MainWindow):
         Showing the processing result image into the frame UI.
 
         """
+        image = self.image.copy()
         if self.normal_view:
-            MoilUtils.showing_image(self.label_Original_Image,
-                                    self.image,
-                                    self.width_original_image)
-            MoilUtils.showing_image(self.label_Result_Image,
-                                    self.image,
-                                    self.width_result_image, self.angle)
+            self.point = (round(self.w / 2), round(self.h / 2))
+            image = MoilUtils.drawPoint(image, self.point)
+            MoilUtils.showing_original_image(self.label_Original_Image,
+                                             image,
+                                             self.width_original_image)
+            MoilUtils.showing_result_image(self.label_Result_Image,
+                                           self.image,
+                                           self.width_result_image, self.angle)
 
         else:
             if self.panorama_view:
@@ -228,22 +242,24 @@ class Controller(Ui_MainWindow):
                     cv2.INTER_CUBIC)
                 # self.result_image = self.result_image[round(rho):self.h, 0:self.w]
                 # print(self.result_image)
-                MoilUtils.showing_image(self.label_Original_Image,
-                                        self.image,
-                                        self.width_original_image)
+                # image = MoilUtils.drawPoint(image, point)
+                MoilUtils.showing_original_image(self.label_Original_Image,
+                                                 image,
+                                                 self.width_original_image)
             else:
                 image = MoilUtils.draw_polygon(self.image.copy(), self.mapX, self.mapY)
+                image = MoilUtils.drawPoint(image, self.point)
                 self.result_image = cv2.remap(
                     self.image,
                     self.mapX,
                     self.mapY,
                     cv2.INTER_CUBIC)
-                MoilUtils.showing_image(self.label_Original_Image,
-                                        image,
-                                        self.width_original_image)
-            MoilUtils.showing_image(self.label_Result_Image,
-                                    self.result_image,
-                                    self.width_result_image, self.angle)
+                MoilUtils.showing_original_image(self.label_Original_Image,
+                                                 image,
+                                                 self.width_original_image)
+            MoilUtils.showing_result_image(self.label_Result_Image,
+                                           self.result_image,
+                                           self.width_result_image, self.angle)
 
     def save_image(self):
         """
@@ -299,6 +315,77 @@ class Controller(Ui_MainWindow):
             self.h, self.w = self.image.shape[:2]
             img.close()
             self.show_to_window()
+
+    def cropImage(self, rect):
+        image = self.convertCv2ToQimage(self.image.copy())
+        ratio_x = self.w / self.label_Result_Image.width()
+        ratio_y = self.h / self.label_Result_Image.height()
+        x = rect.x() * ratio_x
+        y = rect.y() * ratio_y
+        width = rect.width() * ratio_x
+        height = rect.height() * ratio_y
+        rect = QtCore.QRect(x, y, width, height)
+        croppedImage = image.copy(rect)
+        return self.convertQImageToMat(croppedImage)
+
+    @classmethod
+    def convertCv2ToQimage(cls, im):
+        qim = QtGui.QImage()
+        if im is None:
+            return qim
+        if im.dtype == np.uint8:
+            if len(im.shape) == 2:
+                qim = QtGui.QImage(im.data, im.shape[1], im.shape[0], im.strides[0], QtGui.QImage.Format_Indexed8)
+                qim.setColorTable([QtGui.qRgb(i, i, i) for i in range(256)])
+            elif len(im.shape) == 3:
+                if im.shape[2] == 3:
+                    qim = QtGui.QImage(im.data, im.shape[1], im.shape[0], im.strides[0], QtGui.QImage.Format_RGB888)
+                elif im.shape[2] == 4:
+                    qim = QtGui.QImage(im.data, im.shape[1], im.shape[0], im.strides[0], QtGui.QImage.Format_ARGB32)
+        return qim
+
+    @classmethod
+    def convertQImageToMat(cls, incomingImage):
+        """  Converts a QImage into an opencv MAT format  """
+
+        incomingImage = incomingImage.convertToFormat(4)
+        width = incomingImage.width()
+        height = incomingImage.height()
+        ptr = incomingImage.bits()
+        ptr.setsize(incomingImage.byteCount())
+        arr = np.array(ptr).reshape(height, width, 4)  # Copies the data
+        return cv2.cvtColor(arr, cv2.COLOR_BGR2RGB)
+
+    def show_percentage(self):
+        self.comboBox_zoom.setCurrentIndex(0)
+        size = round((self.width_result_image / self.w) * 100)
+        self.comboBox_zoom.setItemText(0, (str(size) + "%"))
+
+    def combo_percentage_zoom(self):
+        percent = self.comboBox_zoom.currentIndex()
+        if percent == 1:
+            self.width_result_image = round((self.w * 50) / 100)
+            self.show_to_window()
+        elif percent == 2:
+            self.width_result_image = round((self.w * 75) / 100)
+            self.show_to_window()
+        elif percent == 3:
+            self.width_result_image = round((self.w * 100) / 100)
+            self.show_to_window()
+        elif percent == 4:
+            self.width_result_image = round((self.w * 125) / 100)
+            self.show_to_window()
+        elif percent == 5:
+            self.width_result_image = round((self.w * 150) / 100)
+            self.show_to_window()
+        elif percent == 6:
+            self.width_result_image = round((self.w * 175) / 100)
+            self.show_to_window()
+        elif percent == 7:
+            self.width_result_image = round((self.w * 200) / 100)
+            self.show_to_window()
+        else:
+            pass
 
     def reset_mode_view(self):
         """

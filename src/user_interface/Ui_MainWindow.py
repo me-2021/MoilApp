@@ -396,70 +396,76 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.btn_Rotate_Right.setIconSize(QtCore.QSize(35, 35))
         self.btn_Rotate_Right.setObjectName("btn_Rotate_Right")
         self.horizontalLayout_3.addWidget(self.frame_rotate)
+
         self.frame_zoom = QtWidgets.QFrame(self.centralwidget)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Fixed,
-            QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.frame_zoom.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(self.frame_zoom.sizePolicy().hasHeightForWidth())
         self.frame_zoom.setSizePolicy(sizePolicy)
-        self.frame_zoom.setMinimumSize(QtCore.QSize(110, 50))
+        self.frame_zoom.setMinimumSize(QtCore.QSize(200, 50))
         self.frame_zoom.setStyleSheet("background-color: #71D1BA;   \n"
                                       "border-radius: 10px;")
         self.frame_zoom.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_zoom.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_zoom.setObjectName("frame_zoom")
         self.btn_Zoom_in = QtWidgets.QPushButton(self.frame_zoom)
-        self.btn_Zoom_in.setGeometry(QtCore.QRect(60, 5, 40, 40))
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Fixed,
-            QtWidgets.QSizePolicy.Fixed)
+        self.btn_Zoom_in.setGeometry(QtCore.QRect(55, 5, 40, 40))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.btn_Zoom_in.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(self.btn_Zoom_in.sizePolicy().hasHeightForWidth())
         self.btn_Zoom_in.setSizePolicy(sizePolicy)
         self.btn_Zoom_in.setMinimumSize(QtCore.QSize(40, 30))
-        self.btn_Zoom_in.setStyleSheet(
-            "QPushButton{ background-color :  rgb(211, 215, 207);}\n"
-            "QPushButton::pressed{ background-color : #71AED1; }\n"
-            "border-radius: 10px;")
+        self.btn_Zoom_in.setStyleSheet("QPushButton{ background-color :  #71D1BA;}\n"
+                                        "QPushButton::pressed{ background-color : #71AED1; }\n"
+                                        "border-radius: 10px;")
         self.btn_Zoom_in.setText("")
-        icon12 = QtGui.QIcon()
-        icon12.addPixmap(
-            QtGui.QPixmap("images/zoom-in.png"),
-            QtGui.QIcon.Normal,
-            QtGui.QIcon.Off)
-        self.btn_Zoom_in.setIcon(icon12)
+        icon9 = QtGui.QIcon()
+        icon9.addPixmap(QtGui.QPixmap("images/zoom-in.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.btn_Zoom_in.setIcon(icon9)
         self.btn_Zoom_in.setIconSize(QtCore.QSize(40, 40))
         self.btn_Zoom_in.setObjectName("btn_Zoom_in")
         self.btn_Zoom_out = QtWidgets.QPushButton(self.frame_zoom)
-        self.btn_Zoom_out.setGeometry(QtCore.QRect(10, 5, 40, 40))
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Fixed,
-            QtWidgets.QSizePolicy.Fixed)
+        self.btn_Zoom_out.setGeometry(QtCore.QRect(5, 5, 40, 40))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.btn_Zoom_out.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(self.btn_Zoom_out.sizePolicy().hasHeightForWidth())
         self.btn_Zoom_out.setSizePolicy(sizePolicy)
         self.btn_Zoom_out.setMinimumSize(QtCore.QSize(40, 30))
-        self.btn_Zoom_out.setStyleSheet(
-            "QPushButton{ background-color :  rgb(211, 215, 207);}\n"
-            "QPushButton::pressed{ background-color : #71AED1; }\n"
-            "border-radius: 10px;")
+        self.btn_Zoom_out.setStyleSheet("QPushButton{ background-color :  #71D1BA;}\n"
+                                       "QPushButton::pressed{ background-color : #71AED1; }\n"
+                                       "border-radius: 10px;")
         self.btn_Zoom_out.setText("")
-        icon13 = QtGui.QIcon()
-        icon13.addPixmap(
-            QtGui.QPixmap("images/zoom-out.png"),
-            QtGui.QIcon.Normal,
-            QtGui.QIcon.Off)
-        self.btn_Zoom_out.setIcon(icon13)
+        icon10 = QtGui.QIcon()
+        icon10.addPixmap(QtGui.QPixmap("images/zoom-out.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.btn_Zoom_out.setIcon(icon10)
         self.btn_Zoom_out.setIconSize(QtCore.QSize(40, 40))
         self.btn_Zoom_out.setObjectName("btn_Zoom_out")
+        self.comboBox_zoom = QtWidgets.QComboBox(self.frame_zoom)
+        self.comboBox_zoom.setGeometry(QtCore.QRect(105, 7, 85, 36))
+        font = QtGui.QFont()
+        font.setFamily("DejaVu Serif")
+        font.setPointSize(12)
+        self.comboBox_zoom.setFont(font)
+        self.comboBox_zoom.setStyleSheet("border-radius: 5px;\n"
+                                         "border : 2px solid black;\n"
+                                         "QComboBox::editable:pressed\n"
+                                         "border : 2px solid;\n"
+                                         "border-color : yellow\n"
+                                         "")
+        self.comboBox_zoom.setObjectName("comboBox_zoom")
+        self.comboBox_zoom.addItem("")
+        self.comboBox_zoom.addItem("")
+        self.comboBox_zoom.addItem("")
+        self.comboBox_zoom.addItem("")
+        self.comboBox_zoom.addItem("")
+        self.comboBox_zoom.addItem("")
+        self.comboBox_zoom.addItem("")
+        self.comboBox_zoom.addItem("")
         self.horizontalLayout_3.addWidget(self.frame_zoom)
+
         self.frame_save = QtWidgets.QFrame(self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(
             QtWidgets.QSizePolicy.Fixed,
@@ -705,10 +711,13 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             self.label_Result_Image.sizePolicy().hasHeightForWidth())
         self.label_Result_Image.setSizePolicy(sizePolicy)
         self.label_Result_Image.setMinimumSize(QtCore.QSize(1200, 400))
-        self.label_Result_Image.setFrameShape(QtWidgets.QFrame.NoFrame)
+        # self.label_Result_Image.setFrameShape(QtWidgets.QFrame.Box)
         self.label_Result_Image.setText("")
         self.label_Result_Image.setAlignment(QtCore.Qt.AlignCenter)
         self.label_Result_Image.setObjectName("label_Result_Image")
+
+        self.rubberband = QtWidgets.QRubberBand(QtWidgets.QRubberBand.Rectangle, self.label_Result_Image)
+        self.setMouseTracking(True)
 
         self.button_menu = QtWidgets.QPushButton(self.scrollArea)
         self.button_menu.setGeometry(QtCore.QRect(10, 10, 40, 30))
@@ -732,6 +741,13 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.button_menu.setChecked(False)
         self.button_menu.setIconSize(QtCore.QSize(40, 30))
         self.button_menu.setObjectName("button_menu")
+
+        self.label_34 = QtWidgets.QLabel(self.scrollArea)
+        self.label_34.setGeometry(QtCore.QRect(180, 60, 80, 80))
+        self.label_34.setText("")
+        self.label_34.setPixmap(QtGui.QPixmap("images/north.png"))
+        self.label_34.setScaledContents(True)
+        self.label_34.setObjectName("label")
 
         self.frame_navigator = QtWidgets.QFrame(self.scrollArea)
         self.frame_navigator.setGeometry(QtCore.QRect(10, 40, 160, 290))
@@ -1510,6 +1526,15 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.btn_Zoom_out.setStatusTip(_translate("MainWindow", "Resize window size image on user interface view "
                                                                 "smaller"))
         self.btn_Zoom_out.setShortcut(_translate("MainWindow", "-"))
+        self.comboBox_zoom.setItemText(0, _translate("MainWindow", ""))
+        self.comboBox_zoom.setItemText(1, _translate("MainWindow", "50%"))
+        self.comboBox_zoom.setItemText(2, _translate("MainWindow", "75%"))
+        self.comboBox_zoom.setItemText(3, _translate("MainWindow", "100%"))
+        self.comboBox_zoom.setItemText(4, _translate("MainWindow", "125%"))
+        self.comboBox_zoom.setItemText(5, _translate("MainWindow", "150%"))
+        self.comboBox_zoom.setItemText(6, _translate("MainWindow", "175%"))
+        self.comboBox_zoom.setItemText(7, _translate("MainWindow", "200%"))
+
         self.label_Application.setText(_translate("MainWindow", "MoilApp"))
         self.btn_prev_video.setShortcut(_translate("MainWindow", "Ctrl+Left"))
         self.btn_play_pouse.setShortcut(_translate("MainWindow", "Space"))

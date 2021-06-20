@@ -49,18 +49,18 @@ class UiController(Ui_MainWindow):
         self.pushButton_3.clicked.connect(self.onclick_open_camera)
         self.btn_6view.clicked.connect(self.onclick_multiple_view)
         self.btn_ori_view.clicked.connect(self.onclick_original)
-        self.btn_view_1.clicked.connect(self.onclick_window_left_top)
-        self.btn_view_2.clicked.connect(self.onclick_window_top)
-        self.btn_view_3.clicked.connect(self.onclick_window_right_top)
+        self.btn_view_1.clicked.connect(self.onclick_window_left_down)
+        self.btn_view_2.clicked.connect(self.onclick_window_down)
+        self.btn_view_3.clicked.connect(self.onclick_window_right_down)
         self.btn_view_4.clicked.connect(self.onclick_window_left)
         self.btn_view_5.clicked.connect(self.onclick_window_middle)
         self.btn_view_6.clicked.connect(self.onclick_window_right)
-        self.label_image1.mousePressEvent = self.mouse_window_lt
-        self.label_image2.mousePressEvent = self.mouse_window_t
-        self.label_image3.mousePressEvent = self.mouse_window_rt
-        self.label_image4.mousePressEvent = self.mouse_window_l
-        self.label_image5.mousePressEvent = self.mouse_window_m
-        self.label_image6.mousePressEvent = self.mouse_window_r
+        self.label_image1.mousePressEvent = self.mouse_window_l
+        self.label_image2.mousePressEvent = self.mouse_window_m
+        self.label_image3.mousePressEvent = self.mouse_window_r
+        self.label_image4.mousePressEvent = self.mouse_window_ld
+        self.label_image5.mousePressEvent = self.mouse_window_d
+        self.label_image6.mousePressEvent = self.mouse_window_rd
         self.label_Original_image.wheelEvent = self.mouse_wheelEvent
         self.label_Original_image.mouseReleaseEvent = self.mouse_release_event
         self.parent.closeEvent = self.close_event
@@ -78,7 +78,7 @@ class UiController(Ui_MainWindow):
         self.camParams.show()
 
     def open_image(self):
-        filename = MoilUtils.select_file(self.parent, "Select Image", "",
+        filename = MoilUtils.select_file(self.parent, "Select Image", "../",
                                          "Image Files (*.jpeg *.jpg *.png *.gif *.bmg)")
         if filename:
             self.image = MoilUtils.read_image(filename)
@@ -97,7 +97,7 @@ class UiController(Ui_MainWindow):
         """
         video_source = MoilUtils.select_file(self.parent,
                                              "Select Video Files",
-                                             "",
+                                             "../",
                                              "Video Files (*.mp4 *.avi *.mpg *.gif *.mov)")
         if video_source:
             self.type_camera = MoilUtils.select_camera_type()
@@ -170,84 +170,15 @@ class UiController(Ui_MainWindow):
         self.btn_view_5.setChecked(False)
         self.btn_view_6.setChecked(False)
         if self.image is not None:
-            self.window_left_top()
-            self.window_top()
-            self.window_right_top()
             self.window_left()
             self.window_middle()
             self.window_right()
+            self.window_left_down()
+            self.window_down()
+            self.window_right_down()
             self.normal_view = False
             self.single_view = False
             self.multiple_view = True
-            self.show_to_window()
-
-    def window_left_top(self):
-        self.normal_view = False
-        self.single_view = True
-        self.multiple_view = False
-        self.window = 1
-        moildev = MoilUtils.connect_to_moildev(self.type_camera)
-        self.mapX_1, self.mapY_1, = moildev.getAnypointMaps(30, -50,
-                                                            self.zoom_any,
-                                                            self.anypoint_mode)
-
-    def onclick_window_left_top(self):
-        self.btn_ori_view.setChecked(False)
-        self.btn_6view.setChecked(False)
-        self.btn_view_1.setChecked(True)
-        self.btn_view_2.setChecked(False)
-        self.btn_view_3.setChecked(False)
-        self.btn_view_4.setChecked(False)
-        self.btn_view_5.setChecked(False)
-        self.btn_view_6.setChecked(False)
-        if self.image is not None:
-            self.window_left_top()
-            self.show_to_window()
-
-    def window_top(self):
-        self.normal_view = False
-        self.single_view = True
-        self.multiple_view = False
-        self.window = 2
-        moildev = MoilUtils.connect_to_moildev(self.type_camera)
-        self.mapX_2, self.mapY_2, = moildev.getAnypointMaps(50, 0,
-                                                            self.zoom_any,
-                                                            self.anypoint_mode)
-
-    def onclick_window_top(self):
-        self.btn_ori_view.setChecked(False)
-        self.btn_6view.setChecked(False)
-        self.btn_view_1.setChecked(False)
-        self.btn_view_2.setChecked(True)
-        self.btn_view_3.setChecked(False)
-        self.btn_view_4.setChecked(False)
-        self.btn_view_5.setChecked(False)
-        self.btn_view_6.setChecked(False)
-        if self.image is not None:
-            self.window_top()
-            self.show_to_window()
-
-    def window_right_top(self):
-        self.normal_view = False
-        self.single_view = True
-        self.multiple_view = False
-        self.window = 3
-        moildev = MoilUtils.connect_to_moildev(self.type_camera)
-        self.mapX_3, self.mapY_3, = moildev.getAnypointMaps(30, 50,
-                                                            self.zoom_any,
-                                                            self.anypoint_mode)
-
-    def onclick_window_right_top(self):
-        self.btn_ori_view.setChecked(False)
-        self.btn_6view.setChecked(False)
-        self.btn_view_1.setChecked(False)
-        self.btn_view_2.setChecked(False)
-        self.btn_view_3.setChecked(True)
-        self.btn_view_4.setChecked(False)
-        self.btn_view_5.setChecked(False)
-        self.btn_view_6.setChecked(False)
-        if self.image is not None:
-            self.window_right_top()
             self.show_to_window()
 
     def window_left(self):
@@ -256,7 +187,7 @@ class UiController(Ui_MainWindow):
         self.multiple_view = False
         self.window = 4
         moildev = MoilUtils.connect_to_moildev(self.type_camera)
-        self.mapX_4, self.mapY_4, = moildev.getAnypointMaps(0, -50,
+        self.mapX_1, self.mapY_1, = moildev.getAnypointMaps(0, -50,
                                                             self.zoom_any,
                                                             self.anypoint_mode)
 
@@ -279,7 +210,7 @@ class UiController(Ui_MainWindow):
         self.multiple_view = False
         self.window = 5
         moildev = MoilUtils.connect_to_moildev(self.type_camera)
-        self.mapX_5, self.mapY_5, = moildev.getAnypointMaps(0, 0,
+        self.mapX_2, self.mapY_2, = moildev.getAnypointMaps(0, 0,
                                                             self.zoom_any,
                                                             self.anypoint_mode)
 
@@ -302,7 +233,7 @@ class UiController(Ui_MainWindow):
         self.multiple_view = False
         self.window = 6
         moildev = MoilUtils.connect_to_moildev(self.type_camera)
-        self.mapX_6, self.mapY_6, = moildev.getAnypointMaps(0, 50,
+        self.mapX_3, self.mapY_3, = moildev.getAnypointMaps(0, 50,
                                                             self.zoom_any,
                                                             self.anypoint_mode)
 
@@ -319,17 +250,74 @@ class UiController(Ui_MainWindow):
             self.window_right()
             self.show_to_window()
 
-    def mouse_window_lt(self, e):
-        if e.button() == QtCore.Qt.LeftButton:
-            self.onclick_window_left_top()
+    def window_left_down(self):
+        self.normal_view = False
+        self.single_view = True
+        self.multiple_view = False
+        self.window = 1
+        moildev = MoilUtils.connect_to_moildev(self.type_camera)
+        self.mapX_4, self.mapY_4, = moildev.getAnypointMaps(-45, -50,
+                                                            self.zoom_any,
+                                                            self.anypoint_mode)
 
-    def mouse_window_t(self, e):
-        if e.button() == QtCore.Qt.LeftButton:
-            self.onclick_window_top()
+    def onclick_window_left_down(self):
+        self.btn_ori_view.setChecked(False)
+        self.btn_6view.setChecked(False)
+        self.btn_view_1.setChecked(True)
+        self.btn_view_2.setChecked(False)
+        self.btn_view_3.setChecked(False)
+        self.btn_view_4.setChecked(False)
+        self.btn_view_5.setChecked(False)
+        self.btn_view_6.setChecked(False)
+        if self.image is not None:
+            self.window_left_down()
+            self.show_to_window()
 
-    def mouse_window_rt(self, e):
-        if e.button() == QtCore.Qt.LeftButton:
-            self.onclick_window_right_top()
+    def window_down(self):
+        self.normal_view = False
+        self.single_view = True
+        self.multiple_view = False
+        self.window = 2
+        moildev = MoilUtils.connect_to_moildev(self.type_camera)
+        self.mapX_5, self.mapY_5, = moildev.getAnypointMaps(-70, 0,
+                                                            self.zoom_any,
+                                                            self.anypoint_mode)
+
+    def onclick_window_down(self):
+        self.btn_ori_view.setChecked(False)
+        self.btn_6view.setChecked(False)
+        self.btn_view_1.setChecked(False)
+        self.btn_view_2.setChecked(True)
+        self.btn_view_3.setChecked(False)
+        self.btn_view_4.setChecked(False)
+        self.btn_view_5.setChecked(False)
+        self.btn_view_6.setChecked(False)
+        if self.image is not None:
+            self.window_down()
+            self.show_to_window()
+
+    def window_right_down(self):
+        self.normal_view = False
+        self.single_view = True
+        self.multiple_view = False
+        self.window = 3
+        moildev = MoilUtils.connect_to_moildev(self.type_camera)
+        self.mapX_6, self.mapY_6, = moildev.getAnypointMaps(-45, 50,
+                                                            self.zoom_any,
+                                                            self.anypoint_mode)
+
+    def onclick_window_right_down(self):
+        self.btn_ori_view.setChecked(False)
+        self.btn_6view.setChecked(False)
+        self.btn_view_1.setChecked(False)
+        self.btn_view_2.setChecked(False)
+        self.btn_view_3.setChecked(True)
+        self.btn_view_4.setChecked(False)
+        self.btn_view_5.setChecked(False)
+        self.btn_view_6.setChecked(False)
+        if self.image is not None:
+            self.window_right_down()
+            self.show_to_window()
 
     def mouse_window_l(self, e):
         if e.button() == QtCore.Qt.LeftButton:
@@ -342,6 +330,18 @@ class UiController(Ui_MainWindow):
     def mouse_window_r(self, e):
         if e.button() == QtCore.Qt.LeftButton:
             self.onclick_window_right()
+
+    def mouse_window_ld(self, e):
+        if e.button() == QtCore.Qt.LeftButton:
+            self.onclick_window_left_down()
+
+    def mouse_window_d(self, e):
+        if e.button() == QtCore.Qt.LeftButton:
+            self.onclick_window_down()
+
+    def mouse_window_rd(self, e):
+        if e.button() == QtCore.Qt.LeftButton:
+            self.onclick_window_right_down()
 
     def mouse_wheelEvent(self, e):
         """

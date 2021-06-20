@@ -47,6 +47,7 @@ class AnypointView(object):
         self.parent.panorama_view = False
         self.parent.anypoint_view = True
         self.parent.angle = 0
+        self.parent.label_34.show()
         self.parent.frame_navigator.show()
         self.parent.frame_panorama.hide()
         self.parent.mapX, self.parent.mapY, = self.moildev.getAnypointMaps(
@@ -86,13 +87,14 @@ class AnypointView(object):
         self.alpha = 0
         self.beta = 0
         self.zoom_any = 4
+        self.parent.point = (round(self.parent.w / 2), round(self.parent.h / 2))
         self.anypoint()
 
     def __up(self):
         """
         The method showing anypoint widget_controller in specific area.
         """
-        self.parent.coordinate_point = None
+        self.parent.point = None
         if self.parent.radio_btn_mode_1.isChecked():
             self.alpha = 75
             self.beta = 0
@@ -105,7 +107,7 @@ class AnypointView(object):
         """
         The method showing anypoint widget_controller in specific area.
         """
-        self.parent.coordinate_point = None
+        self.parent.point = None
         if self.parent.radio_btn_mode_1.isChecked():
             self.alpha = 65
             self.beta = -90
@@ -118,7 +120,7 @@ class AnypointView(object):
         """
         The method showing anypoint widget_controller in specific area.
         """
-        self.parent.coordinate_point = None
+        self.parent.point = None
         if self.parent.radio_btn_mode_1.isChecked():
             self.alpha = 0
             self.beta = 0
@@ -131,7 +133,7 @@ class AnypointView(object):
         """
         The method showing anypoint widget_controller in specific area.
         """
-        self.parent.coordinate_point = None
+        self.parent.point = None
         if self.parent.radio_btn_mode_1.isChecked():
             self.alpha = 65
             self.beta = 90
@@ -144,7 +146,7 @@ class AnypointView(object):
         """
         The method showing anypoint widget_controller in specific area.
         """
-        self.parent.coordinate_point = None
+        self.parent.point = None
         if self.parent.radio_btn_mode_1.isChecked():
             self.alpha = 65
             self.beta = 180

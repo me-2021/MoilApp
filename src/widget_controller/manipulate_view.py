@@ -17,6 +17,7 @@ class ManipulateView(object):
             else:
                 self.parent.width_result_image += 100
             self.parent.show_to_window()
+            self.parent.show_percentage()
 
     def zoom_out(self):
         """
@@ -24,11 +25,12 @@ class ManipulateView(object):
 
         """
         if self.parent.image is not None:
-            if self.parent.width_result_image == 1000:
+            if self.parent.width_result_image == 320:
                 pass
             else:
                 self.parent.width_result_image -= 100
             self.parent.show_to_window()
+            self.parent.show_percentage()
 
     def rotate_left(self):
         """

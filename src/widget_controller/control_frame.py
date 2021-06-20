@@ -15,13 +15,16 @@ class FrameWidgets(object):
         if self.parent.button_menu.isChecked():
             if self.parent.anypoint_view:
                 self.parent.frame_navigator.hide()
+                self.parent.label_34.hide()
             elif self.parent.panorama_view:
                 self.parent.frame_panorama.hide()
+                self.parent.label_34.hide()
             else:
                 print("coming soon")
         else:
             if self.parent.anypoint_view:
                 self.parent.frame_navigator.show()
+                self.parent.label_34.show()
             elif self.parent.panorama_view:
                 self.parent.frame_panorama.show()
             else:

@@ -46,6 +46,7 @@ class PanoramaView(object):
         self.parent.angle = 0
         self.rho = self.moildev.getRhoFromAlpha(self.__pano_alpha_min)
         self.parent.frame_navigator.hide()
+        self.parent.label_34.hide()
         self.parent.frame_panorama.show()
         mapX, mapY, = self.moildev.getPanoramaMaps(
             10, self.__pano_alpha_max)

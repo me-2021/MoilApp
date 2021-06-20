@@ -38,12 +38,6 @@ class CoordinateSystem(object):
     def calculate_dis(self):
 
         print("~~~~~~~~~~~~ CoordinateSystem.calculate_dis(): !!! START !!! ~~~~~~~~~~~~~~")
-
-        # print("CoordinateSystem.calculate_dis(): self.cam1_3d_coordinate=", self.cam1_3d_coordinate)
-        # print("CoordinateSystem.calculate_dis(): self.cam2_3d_coordinate=", self.cam2_3d_coordinate)
-
-        # print("1", self.cam1_3d_coordinate)
-
         if self.point1_alpha_l == 0.0 or self.point1_beta_l == 0.0:
             print("A")
             print("CoordinateSystem.calculate_dis(): !!! No point1_alpha_l or No point1_beta_l !!!")

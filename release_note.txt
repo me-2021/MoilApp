@@ -1,0 +1,5 @@
+update 18/06/2021
+
+   1. show path image
+   2. showing camera type on user interface
+

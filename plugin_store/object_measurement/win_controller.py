@@ -22,6 +22,8 @@ class ControllerMain(Ui_MainWindow):
         self.clicked_time_r = 0
         self.width_image = 720
         self.disable_widget()
+        self.checkBox.setChecked(False)
+        self.delta_x.setValue(2.0)
         self.camParams = QtWidgets.QDialog()
         self.winCamParams = CameraParameters(self, self.camParams)
 
@@ -79,14 +81,11 @@ class ControllerMain(Ui_MainWindow):
         self.Label_image_L.update()
         label_w = self.Label_image_L.width()
         label_h = self.Label_image_L.height()
-        print(label_w)
-        print(label_w)
         w = self.moildev.get_imageWidth()
         h = self.moildev.get_imageHeight()
         self.ratio_x = w / label_w
         self.ratio_y = h / label_h
-        print(self.ratio_x)
-        print(self.ratio_y)
+        self.ratio_image_3.setText(str(self.ratio_x))
 
     def open_image(self):
         QtWidgets.QMessageBox.information(self.parent, "Information", "Select Source Image\nL -> R")
@@ -118,6 +117,8 @@ class ControllerMain(Ui_MainWindow):
 
     def ratio3D_Measurement(self, image_1, image_2, width=600):
         h, w = image_1.shape[:2]
+        size = w, h
+        self.Image_size_3.setText(str(size))
         r = width / float(w)
         hi = round(h * r)
         self.Label_image_L.setMaximumSize(QtCore.QSize(width, hi))
@@ -152,7 +153,7 @@ class ControllerMain(Ui_MainWindow):
         cam1_3d_coordinate.append(0)
         cam1_3d_coordinate.append(0)
 
-        cam2_3d_coordinate.append(6.6)
+        cam2_3d_coordinate.append(self.delta_x.value())
         cam2_3d_coordinate.append(0)
         cam2_3d_coordinate.append(0)
 
@@ -164,115 +165,137 @@ class ControllerMain(Ui_MainWindow):
         self.label_distanc_config.setText(str(round(dis, 2)))
 
     def mouse_label_image_left(self, e):
-        if e.button() == QtCore.Qt.LeftButton:
-            pos_x = round(e.x())
-            pos_y = round(e.y())
-            pos = '{},{}'.format(pos_y, pos_x)
-            pos = tuple(map(int, pos.split(',')))
-            if self.clicked_time_l == 0:
-                nearest = min(self.corner_list_1, key=lambda x: MoilUtils.distance(x, pos))
-                self.point_l_1 = (list(nearest)[1], list(nearest)[0])
-                coor_y = list(nearest)[0] * self.ratio_y
-                coor_x = list(nearest)[1] * self.ratio_x
-                point = (round(coor_y), round(coor_x))
-                self.point_1_image_1.setText(str(point))
-                label_clicked_x = round(coor_x)
-                label_clicked_y = round(coor_y)
-                delta_x = self.moildev.get_Icx() - label_clicked_x
-                delta_y = self.moildev.get_Icy() - label_clicked_y
-                alpha = MoilAlgorithm.get_alpha_griffey(delta_x, delta_y, self.ratio_x)
-                beta = MoilAlgorithm.get_beta(delta_x, delta_y)
-                print("alpha: {},Beta: {}".format(alpha, beta))
-                self.coordinate_sys.point1_alpha_l = alpha
-                self.coordinate_sys.point1_beta_l = beta
-                self.img_result_l = MoilUtils.drawPoint(self.img_result_l, self.Label_image_L, self.point_l_1)
-                self.show_to_ui_window()
+        if self.img_l is not None:
+            if e.button() == QtCore.Qt.LeftButton:
+                pos_x = round(e.x())
+                pos_y = round(e.y())
+                pos = '{},{}'.format(pos_y, pos_x)
+                pos = tuple(map(int, pos.split(',')))
+                if self.clicked_time_l == 0:
+                    if self.checkBox.isChecked():
+                        nearest = min(self.corner_list_1, key=lambda x: MoilUtils.distance(x, pos))
+                        self.point_l_1 = (list(nearest)[1], list(nearest)[0])
+                        coor_y = list(nearest)[0] * self.ratio_y
+                        coor_x = list(nearest)[1] * self.ratio_x
 
-                self.clicked_time_l = 1
+                    else:
+                        self.point_l_1 = pos_x, pos_y
+                        coor_y = pos_y * self.ratio_y
+                        coor_x = pos_x * self.ratio_x
 
-            elif self.clicked_time_l == 1:
-                nearest = min(self.corner_list_1, key=lambda x: MoilUtils.distance(x, pos))
-                self.point_l_2 = (list(nearest)[1], list(nearest)[0])
+                    point = (round(coor_y), round(coor_x))
+                    self.point_1_image_1.setText(str(point))
+                    label_clicked_x = round(coor_x)
+                    label_clicked_y = round(coor_y)
+                    delta_x = self.moildev.get_Icx() - label_clicked_x
+                    delta_y = self.moildev.get_Icy() - label_clicked_y
+                    alpha = MoilAlgorithm.get_alpha_griffey(delta_x, delta_y, self.ratio_x)
+                    beta = MoilAlgorithm.get_beta(delta_x, delta_y)
+                    print("alpha: {},Beta: {}".format(alpha, beta))
+                    self.coordinate_sys.point1_alpha_l = alpha
+                    self.coordinate_sys.point1_beta_l = beta
+                    self.img_result_l = MoilUtils.drawPoint(self.img_result_l, self.Label_image_L, self.point_l_1)
+                    self.show_to_ui_window()
 
-                coor_y = list(nearest)[0] * self.ratio_y
-                coor_x = list(nearest)[1] * self.ratio_x
-                point = (round(coor_y), round(coor_x))
-                self.point_2_image_1.setText(str(point))
-                label_clicked_x = round(coor_x)
-                label_clicked_y = round(coor_y)
-                self.delta_x = self.moildev.get_Icx() - label_clicked_x
-                self.delta_y = self.moildev.get_Icy() - label_clicked_y
-                alpha = MoilAlgorithm.get_alpha_griffey(self.delta_x, self.delta_y, self.ratio_x)
-                beta = MoilAlgorithm.get_beta(self.delta_x, self.delta_y)
-                print("alpha: {},Beta: {}".format(alpha, beta))
-                self.coordinate_sys.point2_alpha_l = alpha
-                self.coordinate_sys.point2_beta_l = beta
-                self.img_result_l = MoilUtils.drawPoint(self.img_result_l, self.Label_image_L, self.point_l_2)
-                self.img_result_l = MoilUtils.draw_line(self.img_result_l, self.point_l_1, self.point_l_2)
-                self.show_to_ui_window()
+                    self.clicked_time_l = 1
 
-                self.clicked_time_l = 0
+                elif self.clicked_time_l == 1:
+                    if self.checkBox.isChecked():
+                        nearest = min(self.corner_list_1, key=lambda x: MoilUtils.distance(x, pos))
+                        self.point_l_2 = (list(nearest)[1], list(nearest)[0])
+                        coor_y = list(nearest)[0] * self.ratio_y
+                        coor_x = list(nearest)[1] * self.ratio_x
 
-            else:
-                print("No Left Image !!!")
+                    else:
+                        self.point_l_2 = pos_x, pos_y
+                        coor_y = pos_y * self.ratio_y
+                        coor_x = pos_x * self.ratio_x
+
+                    point = (round(coor_y), round(coor_x))
+                    self.point_2_image_1.setText(str(point))
+                    label_clicked_x = round(coor_x)
+                    label_clicked_y = round(coor_y)
+                    delta_x = self.moildev.get_Icx() - label_clicked_x
+                    delta_y = self.moildev.get_Icy() - label_clicked_y
+                    alpha = MoilAlgorithm.get_alpha_griffey(delta_x, delta_y, self.ratio_x)
+                    beta = MoilAlgorithm.get_beta(delta_x, delta_y)
+                    print("alpha: {},Beta: {}".format(alpha, beta))
+                    self.coordinate_sys.point2_alpha_l = alpha
+                    self.coordinate_sys.point2_beta_l = beta
+                    self.img_result_l = MoilUtils.drawPoint(self.img_result_l, self.Label_image_L, self.point_l_2)
+                    self.img_result_l = MoilUtils.draw_line(self.img_result_l, self.point_l_1, self.point_l_2)
+                    self.show_to_ui_window()
+
+                    self.clicked_time_l = 0
+
+                else:
+                    print("No Left Image !!!")
 
     def mouse_label_image_right(self, e):
         """ Get the position coordinate from mouse event"""
-        if e.button() == QtCore.Qt.LeftButton:
-            pos_x = round(e.x())
-            pos_y = round(e.y())
-            pos = '{},{}'.format(pos_y, pos_x)
-            pos = tuple(map(int, pos.split(',')))
-            if self.clicked_time_r == 0:
-                nearest = min(self.corner_list_2, key=lambda x: MoilUtils.distance(x, pos))
-                self.point_r_1 = (list(nearest)[1], list(nearest)[0])
+        if self.img_r is not None:
+            if e.button() == QtCore.Qt.LeftButton:
+                pos_x = round(e.x())
+                pos_y = round(e.y())
+                pos = '{},{}'.format(pos_y, pos_x)
+                pos = tuple(map(int, pos.split(',')))
+                if self.clicked_time_r == 0:
+                    if self.checkBox.isChecked():
+                        nearest = min(self.corner_list_2, key=lambda x: MoilUtils.distance(x, pos))
+                        self.point_r_1 = (list(nearest)[1], list(nearest)[0])
+                        coor_y = list(nearest)[0] * self.ratio_y
+                        coor_x = list(nearest)[1] * self.ratio_x
+                    else:
+                        self.point_r_1 = pos_x, pos_y
+                        coor_y = pos_y * self.ratio_y
+                        coor_x = pos_x * self.ratio_x
 
-                coor_y = list(nearest)[0] * self.ratio_y
-                coor_x = list(nearest)[1] * self.ratio_x
-                point = (round(coor_y), round(coor_x))
-                self.point_1_image_2.setText(str(point))
-                label_clicked_x = round(coor_x)
-                label_clicked_y = round(coor_y)
-                delta_x = self.moildev.get_Icx() - label_clicked_x
-                delta_y = self.moildev.get_Icy() - label_clicked_y
+                    point = (round(coor_y), round(coor_x))
+                    self.point_1_image_2.setText(str(point))
+                    label_clicked_x = round(coor_x)
+                    label_clicked_y = round(coor_y)
+                    delta_x = self.moildev.get_Icx() - label_clicked_x
+                    delta_y = self.moildev.get_Icy() - label_clicked_y
 
-                alpha = MoilAlgorithm.get_alpha_griffey(delta_x, delta_y, self.ratio_x)
-                beta = MoilAlgorithm.get_beta(delta_x, delta_y)
-                print("alpha: {},Beta: {}".format(alpha, beta))
-                self.coordinate_sys.point1_alpha_r = alpha
-                self.coordinate_sys.point1_beta_r = beta
+                    alpha = MoilAlgorithm.get_alpha_griffey(delta_x, delta_y, self.ratio_x)
+                    beta = MoilAlgorithm.get_beta(delta_x, delta_y)
+                    print("alpha: {},Beta: {}".format(alpha, beta))
+                    self.coordinate_sys.point1_alpha_r = alpha
+                    self.coordinate_sys.point1_beta_r = beta
+                    self.img_result_r = MoilUtils.drawPoint(self.img_result_r, self.Label_Image_R, self.point_r_1)
+                    self.show_to_ui_window()
+                    self.clicked_time_r = 1
 
-                self.img_result_r = MoilUtils.drawPoint(self.img_result_r, self.Label_Image_R, self.point_r_1)
+                elif self.clicked_time_r == 1:
+                    if self.checkBox.isChecked():
+                        nearest = min(self.corner_list_2, key=lambda x: MoilUtils.distance(x, pos))
+                        self.point_r_2 = (list(nearest)[1], list(nearest)[0])
+                        coor_y = list(nearest)[0] * self.ratio_y
+                        coor_x = list(nearest)[1] * self.ratio_x
+                    else:
+                        self.point_r_2 = pos_x, pos_y
+                        coor_y = pos_y * self.ratio_y
+                        coor_x = pos_x * self.ratio_x
 
-                self.show_to_ui_window()
+                    point = (round(coor_y), round(coor_x))
+                    self.point_2_image_2.setText(str(point))
+                    label_clicked_x = round(coor_x)
+                    label_clicked_y = round(coor_y)
+                    delta_x = self.moildev.get_Icx() - label_clicked_x
+                    delta_y = self.moildev.get_Icy() - label_clicked_y
+                    alpha = MoilAlgorithm.get_alpha_griffey(delta_x, delta_y, self.ratio_x)
+                    beta = MoilAlgorithm.get_beta(delta_x, delta_y)
+                    print("alpha: {},Beta: {}".format(alpha, beta))
+                    self.coordinate_sys.point2_alpha_r = alpha
+                    self.coordinate_sys.point2_beta_r = beta
+                    self.img_result_r = MoilUtils.drawPoint(self.img_result_r, self.Label_Image_R, self.point_r_2)
+                    self.img_result_r = MoilUtils.draw_line(self.img_result_r, self.point_r_1, self.point_r_2)
+                    self.show_to_ui_window()
 
-                self.clicked_time_r = 1
+                    self.clicked_time_r = 0
 
-            elif self.clicked_time_r == 1:
-                nearest = min(self.corner_list_2, key=lambda x: MoilUtils.distance(x, pos))
-                self.point_r_2 = (list(nearest)[1], list(nearest)[0])
-
-                coor_y = list(nearest)[0] * self.ratio_y
-                coor_x = list(nearest)[1] * self.ratio_x
-                point = (round(coor_y), round(coor_x))
-                self.point_2_image_2.setText(str(point))
-                label_clicked_x = round(coor_x)
-                label_clicked_y = round(coor_y)
-                self.delta_x = self.moildev.get_Icx() - label_clicked_x
-                self.delta_y = self.moildev.get_Icy() - label_clicked_y
-                alpha = MoilAlgorithm.get_alpha_griffey(self.delta_x, self.delta_y, self.ratio_x)
-                beta = MoilAlgorithm.get_beta(self.delta_x, self.delta_y)
-                print("alpha: {},Beta: {}".format(alpha, beta))
-                self.coordinate_sys.point2_alpha_r = alpha
-                self.coordinate_sys.point2_beta_r = beta
-                self.img_result_r = MoilUtils.drawPoint(self.img_result_r, self.Label_Image_R, self.point_r_2)
-                self.img_result_r = MoilUtils.draw_line(self.img_result_r, self.point_r_1, self.point_r_2)
-                self.show_to_ui_window()
-
-                self.clicked_time_r = 0
-
-            else:
-                print("No Left Image !!!")
+                else:
+                    print("No Left Image !!!")
 
     def show_to_ui_window(self):
         MoilUtils.showing_image_object_measurement(self.Label_image_L,

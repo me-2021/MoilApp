@@ -13,6 +13,6 @@ source ./venv/bin/activate
 pip install pip --upgrade
 echo -e "2. Install the requirements library"
 pip install -r requirement.txt
-c++ -O3 -Wall -shared -std=c++11 -fPIC $(python3 -m pybind11 --includes) src/Exif/exif.cpp -o src/Exif/exif$(python3-config --extension-suffix) `pkg-config --cflags --libs python` -I/usr/local/include -L/usr/local/lib -lexiv2
+c++ -O3 -Wall -shared -std=c++11 -fPIC $(python3 -m pybind11 --includes) src/Exif/exif.cpp -o src/Exif/exif$(python3-config --extension-suffix) `pkg-config --cflags --libs python3` -I/usr/local/include -L/usr/local/lib -lexiv2
 echo -e ""
 echo -e ">>Good Luck, Haryanto<<"

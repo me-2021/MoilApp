@@ -118,10 +118,10 @@ class MoilUtils(object):
 
         x = 0
         while x < wi:
-            a = mapX[0, ]
-            b = mapY[0, ]
-            ee = mapX[-1, ]
-            f = mapY[-1, ]
+            a = mapX[0,]
+            b = mapY[0,]
+            ee = mapX[-1,]
+            f = mapY[-1,]
 
             if a[x] == 0. or b[x] == 0.:
                 pass
@@ -293,7 +293,27 @@ class MoilUtils(object):
         return dir_save
 
     @classmethod
-    def showing_image(cls, label, image, width_image, angle=0):
+    def showing_image(cls, label, image, width_image):
+        """
+        Showing image to the window in user interface.
+
+        Args:
+            label ():
+            image ():
+            width_image ():
+
+        Returns:
+
+        """
+        height = cls.calculate_height(image, width_image)
+        image = cls.resize_image(image, width_image)
+        label.setMinimumSize(QtCore.QSize(width_image, height))
+        image = QtGui.QImage(image.data, image.shape[1], image.shape[0],
+                             QtGui.QImage.Format_RGB888).rgbSwapped()
+        label.setPixmap(QtGui.QPixmap.fromImage(image))
+
+    @classmethod
+    def showing_result_image(cls, label, image, width_image, angle=0):
         """
         Showing image to the window in user interface.
 
@@ -309,8 +329,31 @@ class MoilUtils(object):
         height = cls.calculate_height(image, width_image)
         image = cls.resize_image(image, width_image)
         image = MoilUtils.rotate(image, angle)
+        h, w = image.shape[:2]
+        w1 = round((w / 2) - 10)
+        h1 = round(h / 2)
+        w2 = round((w / 2) + 10)
+        h2 = round(h / 2)
+
+        w3 = round(w / 2)
+        h3 = round((h / 2) - 10)
+        w4 = round(w / 2)
+        h4 = round((h / 2)) + 10
+
+        cv2.line(image, (w1, h1), (w2, h2), (0, 255, 0), 2)
+        cv2.line(image, (w3, h3), (w4, h4), (0, 255, 0), 2)
+
         label.setMinimumSize(QtCore.QSize(width_image, height))
-        # label.setMaximumSize(QtCore.QSize(width_image, height))
+        image = QtGui.QImage(image.data, image.shape[1], image.shape[0],
+                             QtGui.QImage.Format_RGB888).rgbSwapped()
+        label.setPixmap(QtGui.QPixmap.fromImage(image))
+
+    @classmethod
+    def showing_original_image(cls, label, image, width_image, angle=0):
+        height = cls.calculate_height(image, width_image)
+        image = cls.resize_image(image, width_image)
+        image = MoilUtils.rotate(image, angle)
+        label.setMinimumSize(QtCore.QSize(width_image, height))
         image = QtGui.QImage(image.data, image.shape[1], image.shape[0],
                              QtGui.QImage.Format_RGB888).rgbSwapped()
         label.setPixmap(QtGui.QPixmap.fromImage(image))
@@ -414,18 +457,22 @@ class MoilUtils(object):
         return coor
 
     @classmethod
-    def drawPoint(cls, image, label_image, coordinatePoint):
+    def drawPoint(cls, image, coordinatePoint):
         """
 
         Args:
             image ():
-            label_image ():
             coordinatePoint ():
 
         Returns:
 
         """
-        cv2.circle(image, coordinatePoint, 3, (0, 255, 0), -1)
+        if coordinatePoint is not None:
+            w, h = image.shape[:2]
+            if h >= 1000:
+                cv2.circle(image, coordinatePoint, 10, (0, 255, 0), 20, -1)
+            else:
+                cv2.circle(image, coordinatePoint, 6, (0, 255, 0), 12, -1)
         return image
 
     @classmethod

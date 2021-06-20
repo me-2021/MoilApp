@@ -709,7 +709,7 @@ border-radius: 10px;</string>
           </property>
           <property name="minimumSize">
            <size>
-            <width>100</width>
+            <width>200</width>
             <height>50</height>
            </size>
           </property>
@@ -754,7 +754,7 @@ border-radius: 10px;</string>
            </property>
            <property name="icon">
             <iconset>
-             <normaloff>images/zoom-in.png</normaloff>images/zoom-in.png</iconset>
+             <normaloff>../src/images/zoom-in.png</normaloff>../src/images/zoom-in.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -766,7 +766,7 @@ border-radius: 10px;</string>
             <string>=</string>
            </property>
           </widget>
-          <widget class="QPushButton" name="btn_Zoom_out">
+          <widget class="QPushButton" name="btn_Zoom_in">
            <property name="geometry">
             <rect>
              <x>5</x>
@@ -797,7 +797,7 @@ border-radius: 10px;</string>
            </property>
            <property name="icon">
             <iconset>
-             <normaloff>images/zoom-out.png</normaloff>images/zoom-out.png</iconset>
+             <normaloff>../src/images/zoom-out.png</normaloff>../src/images/zoom-out.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -808,6 +808,70 @@ border-radius: 10px;</string>
            <property name="shortcut">
             <string>-</string>
            </property>
+          </widget>
+          <widget class="QComboBox" name="comboBox_zoom">
+           <property name="geometry">
+            <rect>
+             <x>105</x>
+             <y>7</y>
+             <width>85</width>
+             <height>36</height>
+            </rect>
+           </property>
+           <property name="font">
+            <font>
+             <family>DejaVu Serif</family>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border-radius: 5px;
+border : 2px solid black;
+QComboBox::editable:pressed
+border : 2px solid;
+border-color : yellow
+</string>
+           </property>
+           <item>
+            <property name="text">
+             <string>50%</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>75%</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>90%</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>100%</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>120%</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>150%</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>175%</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>200%</string>
+            </property>
+           </item>
           </widget>
          </widget>
         </item>
