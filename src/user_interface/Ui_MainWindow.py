@@ -889,7 +889,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                                            "border-radius: 10px;")
         self.btn_center_view.setText("")
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap("images/C.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon4.addPixmap(QtGui.QPixmap("images/Center.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_center_view.setIcon(icon4)
         self.btn_center_view.setIconSize(QtCore.QSize(30, 40))
         self.btn_center_view.setObjectName("btn_center_view")

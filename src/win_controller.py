@@ -50,7 +50,7 @@ class Controller(Ui_MainWindow):
         self.point = None
         self.result_image = None
         self.width_original_image = 300
-        self.width_result_image = 1400
+        self.width_result_image = 1380
         self.angle = 0
         self.connect_event()
 
@@ -109,13 +109,13 @@ class Controller(Ui_MainWindow):
         metadata image.
 
         """
-        self.reset_mode_view()
-        if self.cam:
-            self.video_controller.stop_video()
-            self.cap.release()
         filename = MoilUtils.select_file(self.parent, "Image Files", "../SourceImage", "(*.jpeg *.jpg *.png *.gif "
                                                                                        "*.bmg)")
         if filename:
+            self.reset_mode_view()
+            if self.cam:
+                self.video_controller.stop_video()
+                self.cap.release()
             self.parent.setWindowTitle("MoilApp - " + filename)
             img = MetaImage(filename)
             self.type_camera = img.read_comment()
@@ -135,12 +135,12 @@ class Controller(Ui_MainWindow):
         to select the type of camera.
 
         """
-        self.reset_mode_view()
         video_source = MoilUtils.select_file(self.parent,
                                              "Select Video Files",
                                              "../",
                                              "Video Files (*.mp4 *.avi *.mpg *.gif *.mov)")
         if video_source:
+            self.reset_mode_view()
             self.type_camera = MoilUtils.select_camera_type()
             if self.type_camera is not None:
                 self.parent.setWindowTitle("MoilApp - " + video_source)
@@ -177,8 +177,8 @@ class Controller(Ui_MainWindow):
         """
         self.video_controller.set_button_enable()
         self.cap = cv2.VideoCapture(video_source)
-        success, image = self.cap.read()
-        self.w = image.shape[1]
+        success, self.image = self.cap.read()
+        self.w = self.image.shape[1]
         if success:
             self.cam = True
             self.video_controller.next_frame_slot()
@@ -200,6 +200,7 @@ class Controller(Ui_MainWindow):
 
         """
         if self.image is not None:
+            self.reset_mode_view()
             self.normal_view = True
             self.panorama_view = False
             self.anypoint_view = False
@@ -320,19 +321,20 @@ class Controller(Ui_MainWindow):
             self.show_to_window()
 
     def cropImage(self, rect):
-        if self.result_image is None:
-            image = self.convertCv2ToQimage(self.image.copy())
+        if self.cam:
+            return None
         else:
-            image = self.convertCv2ToQimage(self.result_image.copy())
-        ratio_x = self.w / self.label_Result_Image.width()
-        ratio_y = self.h / self.label_Result_Image.height()
-        x = rect.x() * ratio_x
-        y = rect.y() * ratio_y
-        width = rect.width() * ratio_x
-        height = rect.height() * ratio_y
-        rect = QtCore.QRect(x, y, width, height)
-        croppedImage = image.copy(rect)
-        return self.convertQImageToMat(croppedImage)
+            image = self.convertCv2ToQimage(self.image.copy()) if self.result_image is None \
+                else self.convertCv2ToQimage(self.result_image.copy())
+            ratio_x = self.w / self.label_Result_Image.width()
+            ratio_y = self.h / self.label_Result_Image.height()
+            x = rect.x() * ratio_x
+            y = rect.y() * ratio_y
+            width = rect.width() * ratio_x
+            height = rect.height() * ratio_y
+            rect = QtCore.QRect(x, y, width, height)
+            croppedImage = image.copy(rect)
+            return self.convertQImageToMat(croppedImage)
 
     @classmethod
     def convertCv2ToQimage(cls, im):
@@ -383,6 +385,8 @@ class Controller(Ui_MainWindow):
         Update the properties widget_controller when you reset.
 
         """
+        self.result_image = None
+        self.width_result_image = 1380
         self.normal_view = True
         self.btn_Record_video.setChecked(False)
 

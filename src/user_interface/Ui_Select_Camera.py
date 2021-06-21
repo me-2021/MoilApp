@@ -130,7 +130,7 @@ class Ui_Dialog(QtWidgets.QWidget):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "Select Camera Source !!"))
         self.label_45.setText(_translate("Dialog", "Select Source cam:"))
         self.comboBox.setItemText(0, _translate("Dialog", "USB Camera"))
         self.comboBox.setItemText(1, _translate("Dialog", "Stream Camera"))

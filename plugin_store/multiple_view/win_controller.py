@@ -83,6 +83,7 @@ class UiController(Ui_MainWindow):
         if filename:
             self.image = MoilUtils.read_image(filename)
             img = MetaImage(filename)
+            self.parent.setWindowTitle("MoilApp - " + filename)
             self.type_camera = img.read_comment()
             if self.type_camera:
                 self.cam = False
@@ -101,6 +102,7 @@ class UiController(Ui_MainWindow):
                                              "Video Files (*.mp4 *.avi *.mpg *.gif *.mov)")
         if video_source:
             self.type_camera = MoilUtils.select_camera_type()
+            self.parent.setWindowTitle("MoilApp - " + video_source)
             if self.type_camera is not None:
                 self.running_video(video_source)
                 self.onclick_original()

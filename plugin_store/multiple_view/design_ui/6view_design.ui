@@ -87,6 +87,55 @@
        </widget>
       </item>
       <item>
+       <spacer name="horizontalSpacer_6">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_camera">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>400</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>DejaVu Serif Condensed</family>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">border-color: rgb(66, 69, 183);
+background-color: #71D1BA;
+border-radius: 10px;</string>
+        </property>
+        <property name="text">
+         <string>Camera type: </string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="horizontalSpacer_5">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -338,7 +387,7 @@ border-radius: 10px;</string>
              <enum>QFrame::Box</enum>
             </property>
             <property name="text">
-             <string>Right View</string>
+             <string>6. Right Button View</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -371,7 +420,7 @@ border-radius: 10px;</string>
              <enum>QFrame::Box</enum>
             </property>
             <property name="text">
-             <string>Midle View</string>
+             <string>5. Button View</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -404,7 +453,7 @@ border-radius: 10px;</string>
              <enum>QFrame::Box</enum>
             </property>
             <property name="text">
-             <string>Left Top View</string>
+             <string>1. Left view</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -463,7 +512,7 @@ border-radius: 10px;</string>
              <enum>QFrame::Box</enum>
             </property>
             <property name="text">
-             <string>Left View</string>
+             <string>4. Left Button View</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -509,7 +558,7 @@ border-radius: 10px;</string>
              <enum>QFrame::Box</enum>
             </property>
             <property name="text">
-             <string>Right Top View</string>
+             <string>3. Right View</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -542,7 +591,7 @@ border-radius: 10px;</string>
              <enum>QFrame::Box</enum>
             </property>
             <property name="text">
-             <string>Top View</string>
+             <string>2. Center View</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>

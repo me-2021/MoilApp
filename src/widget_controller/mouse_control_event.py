@@ -147,11 +147,14 @@ class MouseController(object):
         rect = self.parent.rubberband.geometry()
         if rect.width() > 20 and rect.height() > 20:
             selectedImage = self.parent.cropImage(rect)
-            # cv2.imshow("zone area", selectedImage)
-            MoilUtils.showing_image(self.parent.label_Result_Image, selectedImage, 1200)
             self.parent.rubberband.hide()
-            self.parent.comboBox_zoom.setCurrentIndex(8)
-            self.parent.comboBox_zoom.setItemText(8, "Zoom Area")
+            if selectedImage is None:
+                QtWidgets.QMessageBox.information(
+                    None, "Information", "The Zoom area in video and camera mode \n Under Developing !!!")
+            else:
+                MoilUtils.showing_image(self.parent.label_Result_Image, selectedImage, 1200)
+                self.parent.comboBox_zoom.setCurrentIndex(8)
+                self.parent.comboBox_zoom.setItemText(8, "Zoom Area")
 
         if e.button() == QtCore.Qt.RightButton:
             if self.parent.image is None:
