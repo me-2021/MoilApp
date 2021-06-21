@@ -4,7 +4,7 @@ Writer: Haryanto
 
 update 18/06/2021
 
-   1. show path image
+   1. show path image in title apps
    2. showing camera type on user interface
    3. create combobox to show the list of persentage zoom image
    4. showing the value of recent persentage when zoom image 
@@ -17,4 +17,5 @@ update 21/06/2021
    4. record video both original imaga and result processing
    5. draw center point and coordinate position in anypoint mode
    6. add arrow direction in anypoint mode
+   7. reconstruct code
 

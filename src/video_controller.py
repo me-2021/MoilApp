@@ -299,7 +299,7 @@ class VideoController(object):
 
                 if self.videoDir is None or self.videoDir == "":
                     self.videoDir = MoilUtils.selectDir()
-                print(self.videoDir)
+                # print(self.videoDir)
                 if self.videoDir:
                     name = self.videoDir + "/" + filename + "_" + str(ss) + ".avi"
                     answer = QtWidgets.QMessageBox.information(

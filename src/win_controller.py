@@ -119,7 +119,7 @@ class Controller(Ui_MainWindow):
             self.parent.setWindowTitle("MoilApp - " + filename)
             img = MetaImage(filename)
             self.type_camera = img.read_comment()
-            print(self.type_camera)
+            # print(self.type_camera)
             self.image = MoilUtils.read_image(filename)
             self.h, self.w = self.image.shape[:2]
             self.video_controller.set_button_disable()
@@ -368,34 +368,15 @@ class Controller(Ui_MainWindow):
             self.comboBox_zoom.addItem("")
         self.comboBox_zoom.setCurrentIndex(8)
         size = round((self.width_result_image / self.w) * 100)
-        # self.comboBox_zoom.addItem((str(size) + "%"))
         self.comboBox_zoom.setItemText(8, (str(size) + "%"))
 
     def combo_percentage_zoom(self):
-        self.comboBox_zoom.removeItem(8)
-        percent = self.comboBox_zoom.currentIndex()
-        if percent == 0:
-            print("here")
-            self.width_result_image = round((self.w * 25) / 100)
-            print(self.width_result_image)
-        elif percent == 1:
-            self.width_result_image = round((self.w * 50) / 100)
-        elif percent == 2:
-            self.width_result_image = round((self.w * 75) / 100)
-        elif percent == 3:
-            self.width_result_image = round((self.w * 100) / 100)
-        elif percent == 4:
-            self.width_result_image = round((self.w * 125) / 100)
-        elif percent == 5:
-            self.width_result_image = round((self.w * 150) / 100)
-        elif percent == 6:
-            self.width_result_image = round((self.w * 175) / 100)
-        elif percent == 7:
-            self.width_result_image = round((self.w * 200) / 100)
-        else:
-            pass
-        # print(self.width_result_image)
-        self.show_to_window()
+        if self.image is not None:
+            self.comboBox_zoom.removeItem(8)
+            percent = self.comboBox_zoom.currentText()
+            percent = int(percent.replace("%", ""))
+            self.width_result_image = round((self.w * percent) / 100)
+            self.show_to_window()
 
     def reset_mode_view(self):
         """

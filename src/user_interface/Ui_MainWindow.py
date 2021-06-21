@@ -418,8 +418,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.btn_Zoom_in.setSizePolicy(sizePolicy)
         self.btn_Zoom_in.setMinimumSize(QtCore.QSize(40, 30))
         self.btn_Zoom_in.setStyleSheet("QPushButton{ background-color :  #71D1BA;}\n"
-                                        "QPushButton::pressed{ background-color : #71AED1; }\n"
-                                        "border-radius: 10px;")
+                                       "QPushButton::pressed{ background-color : #71AED1; }\n"
+                                       "border-radius: 10px;")
         self.btn_Zoom_in.setText("")
         icon9 = QtGui.QIcon()
         icon9.addPixmap(QtGui.QPixmap("images/zoom-in.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -435,8 +435,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.btn_Zoom_out.setSizePolicy(sizePolicy)
         self.btn_Zoom_out.setMinimumSize(QtCore.QSize(40, 30))
         self.btn_Zoom_out.setStyleSheet("QPushButton{ background-color :  #71D1BA;}\n"
-                                       "QPushButton::pressed{ background-color : #71AED1; }\n"
-                                       "border-radius: 10px;")
+                                        "QPushButton::pressed{ background-color : #71AED1; }\n"
+                                        "border-radius: 10px;")
         self.btn_Zoom_out.setText("")
         icon10 = QtGui.QIcon()
         icon10.addPixmap(QtGui.QPixmap("images/zoom-out.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -456,7 +456,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                                          "border-color : yellow\n"
                                          "")
         self.comboBox_zoom.setObjectName("comboBox_zoom")
-        self.comboBox_zoom.addItem("")
         self.comboBox_zoom.addItem("")
         self.comboBox_zoom.addItem("")
         self.comboBox_zoom.addItem("")
@@ -1293,7 +1292,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.horizontalLayout.addLayout(self.verticalLayout)
         MainWindow.setCentralWidget(self.centralwidget)
 
-
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1723, 28))
         font = QtGui.QFont()
@@ -1511,7 +1509,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.label_2.setText(_translate("MainWindow", "Help"))
         self.btn_show_help.setShortcut(_translate("MainWindow", "Ctrl+Shift+/"))
         self.btn_Open_Image.setToolTip(_translate("MainWindow", "Load Image"))
-        self.btn_Open_Image.setStatusTip(_translate("MainWindow","Open image from local directory"))
+        self.btn_Open_Image.setStatusTip(_translate("MainWindow", "Open image from local directory"))
         self.btn_Open_Image.setShortcut(_translate("MainWindow", "Ctrl+I"))
         self.btn_Open_Video.setToolTip(_translate("MainWindow", "Load Video"))
         self.btn_Open_Video.setStatusTip(_translate("MainWindow", "Open Video file from local directory"))
@@ -1521,7 +1519,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                                                                 "or usb camera"))
         self.btn_Open_Cam.setShortcut(_translate("MainWindow", "Ctrl+C"))
         self.btn_Zoom_in.setToolTip(_translate("MainWindow", "Zoom in"))
-        self.btn_Zoom_in.setStatusTip(_translate("MainWindow", "Resize window size image on user interface view larger"))
+        self.btn_Zoom_in.setStatusTip(
+            _translate("MainWindow", "Resize window size image on user interface view larger"))
         self.btn_Zoom_in.setShortcut(_translate("MainWindow", "="))
         self.btn_Zoom_out.setToolTip(_translate("MainWindow", "Zoom out"))
         self.btn_Zoom_out.setStatusTip(_translate("MainWindow", "Resize window size image on user interface view "
@@ -1535,7 +1534,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.comboBox_zoom.setItemText(5, _translate("MainWindow", "150%"))
         self.comboBox_zoom.setItemText(6, _translate("MainWindow", "175%"))
         self.comboBox_zoom.setItemText(7, _translate("MainWindow", "200%"))
-        self.comboBox_zoom.setItemText(8, _translate("MainWindow", ""))
 
         self.label_Application.setText(_translate("MainWindow", "MoilApp"))
         self.btn_prev_video.setShortcut(_translate("MainWindow", "Ctrl+Left"))
