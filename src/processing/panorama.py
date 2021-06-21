@@ -34,6 +34,7 @@ class PanoramaView(object):
             if self.parent.type_camera:
                 self.moildev = MoilUtils.connect_to_moildev(self.parent.type_camera)
                 self.__panorama()
+                self.parent.show_percentage()
 
     def __panorama(self):
         """

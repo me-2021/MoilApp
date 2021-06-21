@@ -113,7 +113,8 @@ class Controller(Ui_MainWindow):
         if self.cam:
             self.video_controller.stop_video()
             self.cap.release()
-        filename = MoilUtils.select_file(self.parent, "Image Files", "../", "(*.jpeg *.jpg *.png *.gif *.bmg)")
+        filename = MoilUtils.select_file(self.parent, "Image Files", "../SourceImage", "(*.jpeg *.jpg *.png *.gif "
+                                                                                       "*.bmg)")
         if filename:
             self.parent.setWindowTitle("MoilApp - " + filename)
             img = MetaImage(filename)
@@ -176,13 +177,14 @@ class Controller(Ui_MainWindow):
         """
         self.video_controller.set_button_enable()
         self.cap = cv2.VideoCapture(video_source)
-        _, image = self.cap.read()
-        if image is None:
-            QtWidgets.QMessageBox.information(self.parent, "Information", "No source camera founded")
-        else:
+        success, image = self.cap.read()
+        self.w = image.shape[1]
+        if success:
             self.cam = True
             self.video_controller.next_frame_slot()
             self.show_percentage()
+        else:
+            QtWidgets.QMessageBox.information(self.parent, "Information", "No source camera founded")
 
     def cam_params_window(self):
         """
@@ -206,6 +208,7 @@ class Controller(Ui_MainWindow):
             self.frame_navigator.hide()
             self.label_34.hide()
             self.frame_panorama.hide()
+            self.show_percentage()
 
     def show_to_window(self):
         """
@@ -317,7 +320,10 @@ class Controller(Ui_MainWindow):
             self.show_to_window()
 
     def cropImage(self, rect):
-        image = self.convertCv2ToQimage(self.image.copy())
+        if self.result_image is None:
+            image = self.convertCv2ToQimage(self.image.copy())
+        else:
+            image = self.convertCv2ToQimage(self.result_image.copy())
         ratio_x = self.w / self.label_Result_Image.width()
         ratio_y = self.h / self.label_Result_Image.height()
         x = rect.x() * ratio_x
@@ -357,35 +363,39 @@ class Controller(Ui_MainWindow):
         return cv2.cvtColor(arr, cv2.COLOR_BGR2RGB)
 
     def show_percentage(self):
-        self.comboBox_zoom.setCurrentIndex(0)
+        count = self.comboBox_zoom.count()
+        if count == 8:
+            self.comboBox_zoom.addItem("")
+        self.comboBox_zoom.setCurrentIndex(8)
         size = round((self.width_result_image / self.w) * 100)
-        self.comboBox_zoom.setItemText(0, (str(size) + "%"))
+        # self.comboBox_zoom.addItem((str(size) + "%"))
+        self.comboBox_zoom.setItemText(8, (str(size) + "%"))
 
     def combo_percentage_zoom(self):
+        self.comboBox_zoom.removeItem(8)
         percent = self.comboBox_zoom.currentIndex()
-        if percent == 1:
+        if percent == 0:
+            print("here")
+            self.width_result_image = round((self.w * 25) / 100)
+            print(self.width_result_image)
+        elif percent == 1:
             self.width_result_image = round((self.w * 50) / 100)
-            self.show_to_window()
         elif percent == 2:
             self.width_result_image = round((self.w * 75) / 100)
-            self.show_to_window()
         elif percent == 3:
             self.width_result_image = round((self.w * 100) / 100)
-            self.show_to_window()
         elif percent == 4:
             self.width_result_image = round((self.w * 125) / 100)
-            self.show_to_window()
         elif percent == 5:
             self.width_result_image = round((self.w * 150) / 100)
-            self.show_to_window()
         elif percent == 6:
             self.width_result_image = round((self.w * 175) / 100)
-            self.show_to_window()
         elif percent == 7:
             self.width_result_image = round((self.w * 200) / 100)
-            self.show_to_window()
         else:
             pass
+        # print(self.width_result_image)
+        self.show_to_window()
 
     def reset_mode_view(self):
         """

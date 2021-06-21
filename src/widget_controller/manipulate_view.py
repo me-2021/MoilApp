@@ -12,7 +12,7 @@ class ManipulateView(object):
 
         """
         if self.parent.image is not None:
-            if self.parent.width_result_image == 4000:
+            if self.parent.width_result_image > 6000:
                 pass
             else:
                 self.parent.width_result_image += 100
@@ -25,7 +25,7 @@ class ManipulateView(object):
 
         """
         if self.parent.image is not None:
-            if self.parent.width_result_image == 320:
+            if self.parent.width_result_image < 600:
                 pass
             else:
                 self.parent.width_result_image -= 100

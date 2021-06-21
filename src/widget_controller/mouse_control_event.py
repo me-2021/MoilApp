@@ -1,6 +1,7 @@
 from PyQt5 import QtCore, QtWidgets
 from processing.anypoint import AnypointView
 from moilutils.moilutils import MoilUtils
+import cv2
 
 
 class MouseController(object):
@@ -74,6 +75,7 @@ class MouseController(object):
             else:
                 self.anypoint.resetAlphaBeta()
                 self.anypoint.process_to_anypoint()
+                self.parent.show_percentage()
 
     def mouse_wheelEvent(self, e):
         """
@@ -84,13 +86,13 @@ class MouseController(object):
             if modifiers == QtCore.Qt.ControlModifier:
                 wheel_counter = e.angleDelta()
                 if wheel_counter.y() / 120 == -1:
-                    if self.parent.width_result_image == 320:
+                    if self.parent.width_result_image < 600:
                         pass
                     else:
                         self.parent.width_result_image -= 100
 
-                if wheel_counter.y() / 120 == 1:
-                    if self.parent.width_result_image == 4000:
+                elif wheel_counter.y() / 120 == 1:
+                    if self.parent.width_result_image > 6000:
                         pass
                     else:
                         self.parent.width_result_image += 100
@@ -145,10 +147,11 @@ class MouseController(object):
         rect = self.parent.rubberband.geometry()
         if rect.width() > 20 and rect.height() > 20:
             selectedImage = self.parent.cropImage(rect)
-            MoilUtils.showing_image(self.parent.label_Result_Image, selectedImage, 1380)
+            # cv2.imshow("zone area", selectedImage)
+            MoilUtils.showing_image(self.parent.label_Result_Image, selectedImage, 1200)
             self.parent.rubberband.hide()
-            self.parent.comboBox_zoom.setCurrentIndex(0)
-            self.parent.comboBox_zoom.setItemText(0, "Zoom Area")
+            self.parent.comboBox_zoom.setCurrentIndex(8)
+            self.parent.comboBox_zoom.setItemText(8, "Zoom Area")
 
         if e.button() == QtCore.Qt.RightButton:
             if self.parent.image is None:

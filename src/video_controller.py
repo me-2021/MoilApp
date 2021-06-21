@@ -16,8 +16,6 @@ class VideoController(object):
             MainWindow ():
         """
         self.parent = MainWindow
-        self.w = None
-        self.h = None
         self.fps = None
         self.pos_frame = None
         self.frame_count = None
@@ -30,6 +28,7 @@ class VideoController(object):
         self.videoDir = None
         self.video_writer = None
         self.timer = QtCore.QTimer()
+        self.timer.timeout.connect(self.next_frame_slot)
         self.parent.btn_play_pouse.clicked.connect(self.onclick_play_pause_button)
         self.parent.btn_stop_video.clicked.connect(self.stop_video)
         self.parent.btn_prev_video.clicked.connect(self.prev_video)
@@ -66,14 +65,10 @@ class VideoController(object):
         looping the frame showing in label user interface.
 
         """
-        _, self.parent.image = self.parent.cap.read()
-        if self.parent.image is None:
-            self.pause_video()
-        else:
-            self.h, self.w = self.parent.image.shape[:2]
+        success, self.parent.image = self.parent.cap.read()
+        if success:
             self.fps = self.parent.cap.get(cv2.CAP_PROP_FPS)
             self.pos_frame = self.parent.cap.get(cv2.CAP_PROP_POS_FRAMES)
-            # self.pos_msec = self.parent.cap.get(cv2.CAP_PROP_POS_MSEC)
             self.frame_count = float(self.parent.cap.get(cv2.CAP_PROP_FRAME_COUNT))
             duration_sec = int(self.frame_count / self.fps)
             self.minutes = duration_sec // 60
@@ -86,11 +81,10 @@ class VideoController(object):
             self.controller()
             self.parent.show_to_window()
             if self.parent.btn_Record_video.isChecked():
-                self.video_writer.write(self.parent.image)
-            # else:
-            #     self.parent.show_to_window()
-            #     if self.parent.btn_Record_video.isChecked():
-            #         print("coming soon")
+                image = self.parent.image if self.parent.result_image is None else self.parent.result_image
+                self.video_writer.write(image)
+        else:
+            self.stop_video()
 
     def reset_time(self):
         """
@@ -144,18 +138,14 @@ class VideoController(object):
         if self.parent.cap.isOpened():
             self.parent.btn_play_pouse.setIcon(
                 QtGui.QIcon("images/pause.png"))
-            self.timer.timeout.connect(self.next_frame_slot)
-            self.timer.start(1000. / self.fps)
-        else:
-            pass
+            self.timer.start(1000/self.fps)
 
     def controller(self):
         """
         Manage the video to setup the current timer.
 
         """
-        dst_value = self.pos_frame * \
-            (self.parent.slider_Video.maximum() + 1) / self.frame_count
+        dst_value = self.pos_frame * (self.parent.slider_Video.maximum() + 1) / self.frame_count
         self.parent.slider_Video.blockSignals(True)
         self.parent.slider_Video.setValue(dst_value)
         self.parent.slider_Video.blockSignals(False)
@@ -164,7 +154,7 @@ class VideoController(object):
         current.setAlignment(QtCore.Qt.AlignCenter)
         current.setText("%02d : %02d" % (self.minute, self.sec))
 
-        if self.minutes > 1000:
+        if self.minute > 1000:
             "this is for live camera, when the times more than 1000 minutes, it will set to 00:00"
             my_label3 = self.parent.label_time_end
             my_label3.setAlignment(QtCore.Qt.AlignCenter)
@@ -237,12 +227,11 @@ class VideoController(object):
 
         """
         if self.parent.cap.isOpened():
-            dst_frame = self.frame_count * value / self.parent.slider_Video.maximum() + 1
+            dst_frame = self.frame_count * value / self.parent.slider_Video.maximum()
             self.parent.cap.set(cv2.CAP_PROP_POS_FRAMES, dst_frame)
             self.next_frame_slot()
-            self.timer.stop()
-        else:
-            pass
+            self.pause_video()
+            self.play = False
 
     def recordVideo(self):
         """

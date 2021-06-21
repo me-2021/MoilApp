@@ -37,6 +37,7 @@ class AnypointView(object):
             if self.parent.type_camera:
                 self.moildev = MoilUtils.connect_to_moildev(self.parent.type_camera)
                 self.anypoint()
+                self.parent.show_percentage()
 
     def anypoint(self):
         """
@@ -120,7 +121,7 @@ class AnypointView(object):
         """
         The method showing anypoint widget_controller in specific area.
         """
-        self.parent.point = None
+        self.parent.point = (round(self.parent.w / 2), round(self.parent.h / 2))
         if self.parent.radio_btn_mode_1.isChecked():
             self.alpha = 0
             self.beta = 0

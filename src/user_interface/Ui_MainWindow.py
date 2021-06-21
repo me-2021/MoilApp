@@ -464,6 +464,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.comboBox_zoom.addItem("")
         self.comboBox_zoom.addItem("")
         self.comboBox_zoom.addItem("")
+        self.comboBox_zoom.addItem("")
         self.horizontalLayout_3.addWidget(self.frame_zoom)
 
         self.frame_save = QtWidgets.QFrame(self.centralwidget)
@@ -1526,7 +1527,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.btn_Zoom_out.setStatusTip(_translate("MainWindow", "Resize window size image on user interface view "
                                                                 "smaller"))
         self.btn_Zoom_out.setShortcut(_translate("MainWindow", "-"))
-        self.comboBox_zoom.setItemText(0, _translate("MainWindow", ""))
+        self.comboBox_zoom.setItemText(0, _translate("MainWindow", "25%"))
         self.comboBox_zoom.setItemText(1, _translate("MainWindow", "50%"))
         self.comboBox_zoom.setItemText(2, _translate("MainWindow", "75%"))
         self.comboBox_zoom.setItemText(3, _translate("MainWindow", "100%"))
@@ -1534,6 +1535,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.comboBox_zoom.setItemText(5, _translate("MainWindow", "150%"))
         self.comboBox_zoom.setItemText(6, _translate("MainWindow", "175%"))
         self.comboBox_zoom.setItemText(7, _translate("MainWindow", "200%"))
+        self.comboBox_zoom.setItemText(8, _translate("MainWindow", ""))
 
         self.label_Application.setText(_translate("MainWindow", "MoilApp"))
         self.btn_prev_video.setShortcut(_translate("MainWindow", "Ctrl+Left"))
