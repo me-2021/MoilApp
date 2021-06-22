@@ -19,3 +19,7 @@ update 21/06/2021
    6. add arrow direction in anypoint mode
    7. reconstruct code
 
+update 22/06/2021
+   1. add plugin template
+   2. modify record video that can combine original and result frame on same file
+
