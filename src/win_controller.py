@@ -56,6 +56,7 @@ class Controller(Ui_MainWindow):
 
         self.openCam = QtWidgets.QDialog()
         self.winOpenCam = OpenCameraSource(self, self.openCam)
+        # self.label.mapFromGlobal()
 
         self.camParams = QtWidgets.QDialog()
         self.winCamParams = CameraParameters(self, self.camParams)
@@ -79,6 +80,7 @@ class Controller(Ui_MainWindow):
         """
         # action from menubar
         self.parent.closeEvent = self.closeEvent
+        self.parent.resizeEvent = self.resizeEvent
         self.actionExit.triggered.connect(self.onclick_exit)
         self.actionLoad_Image.triggered.connect(self.open_image)
         self.actionLoad_Video.triggered.connect(self.onclick_load_video)
@@ -217,8 +219,9 @@ class Controller(Ui_MainWindow):
 
         """
         image = self.image.copy()
+        h, w = image.shape[:2]
         if self.normal_view:
-            self.point = (round(self.w / 2), round(self.h / 2))
+            self.point = (round(w / 2), round(h / 2))
             image = MoilUtils.drawPoint(image, self.point)
             MoilUtils.showing_original_image(self.label_Original_Image,
                                              image,
@@ -274,12 +277,14 @@ class Controller(Ui_MainWindow):
         if self.image is not None:
             image = self.image if self.normal_view else self.result_image
             if self.dir_save is None or self.dir_save == "":
+                self.video_controller.pause_video()
                 self.dir_save = MoilUtils.selectDir(self)
             if self.dir_save:
                 MoilUtils.save_image(image, self.dir_save, self.type_camera)
                 self.addWidget(image)
                 QtWidgets.QMessageBox.information(
                     self.parent, "Information", "Image saved !!\n\nLoc @: " + self.dir_save)
+                self.video_controller.play_video()
 
     def addWidget(self, image):
         """
@@ -322,12 +327,13 @@ class Controller(Ui_MainWindow):
 
     def cropImage(self, rect):
         if self.cam:
-            return None
+            pass
         else:
             image = self.convertCv2ToQimage(self.image.copy()) if self.result_image is None \
                 else self.convertCv2ToQimage(self.result_image.copy())
-            ratio_x = self.w / self.label_Result_Image.width()
-            ratio_y = self.h / self.label_Result_Image.height()
+            height = MoilUtils.calculate_height(self.image, self.width_result_image)
+            ratio_x = self.w / self.width_result_image
+            ratio_y = self.h / height
             x = rect.x() * ratio_x
             y = rect.y() * ratio_y
             width = rect.width() * ratio_x
@@ -355,7 +361,6 @@ class Controller(Ui_MainWindow):
     @classmethod
     def convertQImageToMat(cls, incomingImage):
         """  Converts a QImage into an opencv MAT format  """
-
         incomingImage = incomingImage.convertToFormat(4)
         width = incomingImage.width()
         height = incomingImage.height()
@@ -397,8 +402,7 @@ class Controller(Ui_MainWindow):
 
         """
         QtWidgets.QMessageBox.information(
-            self.parent, "Accessibility", "MoilApp Accessibility\n"
-                                          "Please connect to your devices and input your password\n\n"
+            self.parent, "Accessibility", "MoilApp Accessibility\n\n"
                                           "Information !!\n"
                                           "Crtl + I\t: Open Image\n"
                                           "Ctrl + V\t: Open Video\n"

@@ -123,15 +123,17 @@ class MouseController(object):
                             self.anypoint.zoom_any -= 1
                             self.anypoint.anypoint()
 
-    def mouse_result_press(self, e):
-        self.parent.rubberband.hide()
-        self.origin = self.parent.label_Result_Image.mapFromParent(e.pos())
-        self.parent.rubberband.setGeometry(QtCore.QRect(self.origin, QtCore.QSize()))
-        self.parent.rubberband.show()
+    def mouse_result_press(self, event):
+        if self.parent.image is not None:
+            self.parent.rubberband.hide()
+            self.origin = event.pos()  # self.parent.label_Result_Image.mapFromParent(event.pos())
+            self.parent.rubberband.setGeometry(QtCore.QRect(self.origin, QtCore.QSize()))
+            self.parent.rubberband.show()
 
     def mouseMoveEvent(self, event):
-        if self.parent.rubberband.isVisible():
-            self.parent.rubberband.setGeometry(QtCore.QRect(self.origin, event.pos()))
+        if self.parent.image is not None:
+            if self.parent.rubberband.isVisible():
+                self.parent.rubberband.setGeometry(QtCore.QRect(self.origin, event.pos()))
 
     def mouse_release_event(self, e):
         """
@@ -144,22 +146,20 @@ class MouseController(object):
         Returns:
             None.
         """
-        rect = self.parent.rubberband.geometry()
-        if rect.width() > 20 and rect.height() > 20:
-            selectedImage = self.parent.cropImage(rect)
-            self.parent.rubberband.hide()
-            if selectedImage is None:
-                QtWidgets.QMessageBox.information(
-                    None, "Information", "The Zoom area in video and camera mode \n Under Developing !!!")
-            else:
-                MoilUtils.showing_image(self.parent.label_Result_Image, selectedImage, 1200)
-                self.parent.comboBox_zoom.setCurrentIndex(8)
-                self.parent.comboBox_zoom.setItemText(8, "Zoom Area")
+        if self.parent.image is not None:
+            rect = self.parent.rubberband.geometry()
+            if rect.width() > 20 and rect.height() > 20:
+                selectedImage = self.parent.cropImage(rect)
+                self.parent.rubberband.hide()
+                if selectedImage is None:
+                    QtWidgets.QMessageBox.information(
+                        None, "Information", "The Zoom area in video and camera mode \n Under Developing !!!")
+                else:
+                    MoilUtils.showing_result_image(self.parent.label_Result_Image, selectedImage, 1200)
+                    self.parent.comboBox_zoom.setCurrentIndex(8)
+                    self.parent.comboBox_zoom.setItemText(8, "Zoom Area")
 
-        if e.button() == QtCore.Qt.RightButton:
-            if self.parent.image is None:
-                pass
-            else:
+            if e.button() == QtCore.Qt.RightButton:
                 self.menuMouseEvent(e)
 
     def menuMouseEvent(self, e):

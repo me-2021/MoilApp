@@ -343,6 +343,7 @@ class MoilUtils(object):
         cv2.line(image, (w1, h1), (w2, h2), (0, 255, 0), 2)
         cv2.line(image, (w3, h3), (w4, h4), (0, 255, 0), 2)
 
+        label.setMaximumSize(QtCore.QSize(width_image, height))
         label.setMinimumSize(QtCore.QSize(width_image, height))
         image = QtGui.QImage(image.data, image.shape[1], image.shape[0],
                              QtGui.QImage.Format_RGB888).rgbSwapped()

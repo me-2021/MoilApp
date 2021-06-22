@@ -710,7 +710,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         sizePolicy.setHeightForWidth(
             self.label_Result_Image.sizePolicy().hasHeightForWidth())
         self.label_Result_Image.setSizePolicy(sizePolicy)
-        self.label_Result_Image.setMinimumSize(QtCore.QSize(1200, 400))
+        # self.label_Result_Image.setMinimumSize(QtCore.QSize(600, 400))
+        # self.label_Result_Image.setMaximumSize(QtCore.QSize(600, 400))
         # self.label_Result_Image.setFrameShape(QtWidgets.QFrame.Box)
         self.label_Result_Image.setText("")
         self.label_Result_Image.setAlignment(QtCore.Qt.AlignCenter)
@@ -1383,7 +1384,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         font.setFamily("DejaVu Serif")
         font.setPointSize(12)
         self.actionMaximize.setFont(font)
-        # self.actionMaximize.setCheckable(True)
         self.actionMaximize.setObjectName("actionMaximize")
 
         self.actionMinimize = QtWidgets.QAction(MainWindow)
@@ -1391,7 +1391,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         font.setFamily("DejaVu Serif")
         font.setPointSize(12)
         self.actionMinimize.setFont(font)
-        # self.actionMinimize.setCheckable(True)
         self.actionMinimize.setObjectName("actionMinimize")
 
         self.actionAdd_Apps = QtWidgets.QAction(MainWindow)

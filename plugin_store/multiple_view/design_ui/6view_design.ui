@@ -38,6 +38,9 @@
           <height>30</height>
          </size>
         </property>
+        <property name="shortcut">
+         <string>Ctrl+I</string>
+        </property>
        </widget>
       </item>
       <item>
@@ -60,6 +63,9 @@
           <width>30</width>
           <height>30</height>
          </size>
+        </property>
+        <property name="shortcut">
+         <string>Ctrl+V</string>
         </property>
        </widget>
       </item>
@@ -112,7 +118,7 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>400</width>
+          <width>300</width>
           <height>0</height>
          </size>
         </property>
@@ -673,6 +679,9 @@ border-radius: 10px;</string>
           <property name="text">
            <string>Normal</string>
           </property>
+          <property name="shortcut">
+           <string>N</string>
+          </property>
           <property name="checkable">
            <bool>true</bool>
           </property>
@@ -701,6 +710,9 @@ border-radius: 10px;</string>
           <property name="text">
            <string>6-View</string>
           </property>
+          <property name="shortcut">
+           <string>M</string>
+          </property>
           <property name="checkable">
            <bool>true</bool>
           </property>
@@ -727,6 +739,9 @@ border-radius: 10px;</string>
            </font>
           </property>
           <property name="text">
+           <string>1</string>
+          </property>
+          <property name="shortcut">
            <string>1</string>
           </property>
           <property name="checkable">
@@ -757,6 +772,9 @@ border-radius: 10px;</string>
           <property name="text">
            <string>2</string>
           </property>
+          <property name="shortcut">
+           <string>2</string>
+          </property>
           <property name="checkable">
            <bool>true</bool>
           </property>
@@ -783,6 +801,9 @@ border-radius: 10px;</string>
            </font>
           </property>
           <property name="text">
+           <string>3</string>
+          </property>
+          <property name="shortcut">
            <string>3</string>
           </property>
           <property name="checkable">
@@ -813,6 +834,9 @@ border-radius: 10px;</string>
           <property name="text">
            <string>4</string>
           </property>
+          <property name="shortcut">
+           <string>4</string>
+          </property>
           <property name="checkable">
            <bool>true</bool>
           </property>
@@ -841,6 +865,9 @@ border-radius: 10px;</string>
           <property name="text">
            <string>5</string>
           </property>
+          <property name="shortcut">
+           <string>5</string>
+          </property>
           <property name="checkable">
            <bool>true</bool>
           </property>
@@ -867,6 +894,9 @@ border-radius: 10px;</string>
            </font>
           </property>
           <property name="text">
+           <string>6</string>
+          </property>
+          <property name="shortcut">
            <string>6</string>
           </property>
           <property name="checkable">
@@ -923,6 +953,9 @@ border-radius: 10px;</string>
               <height>30</height>
              </size>
             </property>
+            <property name="shortcut">
+             <string>Left</string>
+            </property>
            </widget>
           </item>
           <item>
@@ -951,6 +984,9 @@ border-radius: 10px;</string>
               <width>30</width>
               <height>30</height>
              </size>
+            </property>
+            <property name="shortcut">
+             <string>Space</string>
             </property>
            </widget>
           </item>
@@ -981,6 +1017,9 @@ border-radius: 10px;</string>
               <height>30</height>
              </size>
             </property>
+            <property name="shortcut">
+             <string>S</string>
+            </property>
            </widget>
           </item>
           <item>
@@ -1009,6 +1048,9 @@ border-radius: 10px;</string>
               <width>30</width>
               <height>30</height>
              </size>
+            </property>
+            <property name="shortcut">
+             <string>Right</string>
             </property>
            </widget>
           </item>

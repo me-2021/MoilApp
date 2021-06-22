@@ -64,6 +64,7 @@ class UiController(Ui_MainWindow):
         self.label_Original_image.wheelEvent = self.mouse_wheelEvent
         self.label_Original_image.mouseReleaseEvent = self.mouse_release_event
         self.parent.closeEvent = self.close_event
+        self.actionAccesibility.triggered.connect(self.onclick_accessibility)
 
     def hide_widget_for_original(self):
         self.scrollArea_3.hide()
@@ -88,6 +89,7 @@ class UiController(Ui_MainWindow):
             if self.type_camera:
                 self.cam = False
                 self.onclick_original()
+                self.label_camera.setText("Camera type: " + self.type_camera)
                 self.video_controller.set_button_disable()
 
     def load_video(self):
@@ -105,6 +107,7 @@ class UiController(Ui_MainWindow):
             self.parent.setWindowTitle("MoilApp - " + video_source)
             if self.type_camera is not None:
                 self.running_video(video_source)
+                self.label_camera.setText("Camera type: " + self.type_camera)
                 self.onclick_original()
 
     def running_video(self, video_source):
@@ -141,6 +144,7 @@ class UiController(Ui_MainWindow):
         self.type_camera = MoilUtils.select_camera_type()
         if self.type_camera is not None:
             self.running_video(camera_source)
+            self.label_camera.setText("Camera type: " + self.type_camera)
             self.onclick_original()
 
     def onclick_original(self):
@@ -460,7 +464,7 @@ class UiController(Ui_MainWindow):
         Showing the message box to show help information obout this application.
 
         """
-        Help.help_moildev_apps()
+        Help.about_us()
 
     def show_to_window(self):
         """
@@ -527,3 +531,30 @@ class UiController(Ui_MainWindow):
     def close_event(self, e):
         self.openCam.close()
         self.camParams.close()
+
+    def onclick_accessibility(self):
+        """
+        Open prompt for accessibility MoilApp
+        Returns:
+
+        """
+        QtWidgets.QMessageBox.information(
+            self.parent, "Accessibility", "MoilApp  Multiple View Accessibility\n\n"
+                                          "Information !!\n"
+                                          "Crtl + I\t: Open Image\n"
+                                          "Ctrl + V\t: Open Video\n"
+                                          "Ctrl + C\t: Open cam\n"
+                                          "Left\t: Prev video\n"
+                                          "Space\t: play/pause video\n"
+                                          "s \t: Stop video\n"
+                                          "Right\t: skip video\n"
+                                          "n\t: Normal View\n"
+                                          "m\t: Multiple View\n"
+                                          "1\t: Open View 1\n"
+                                          "2\t: Open View 2\n"
+                                          "3\t: Open View 3\n"
+                                          "4\t: Open View 4\n"
+                                          "5\t: Open View 5\n"
+                                          "6\t: Open View 6\n"
+                                          
+                                          "Ctrl+Shift+/\t:show help\n\n")
