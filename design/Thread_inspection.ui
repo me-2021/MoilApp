@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1920</width>
-    <height>637</height>
+    <height>510</height>
    </rect>
   </property>
   <property name="font">
@@ -1313,7 +1313,7 @@ border-radius: 10px;</string>
            <x>0</x>
            <y>0</y>
            <width>1450</width>
-           <height>431</height>
+           <height>304</height>
           </rect>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -1840,7 +1840,7 @@ border-radius: 10px;</string>
            <x>0</x>
            <y>0</y>
            <width>338</width>
-           <height>266</height>
+           <height>139</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_5"/>

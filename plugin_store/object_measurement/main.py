@@ -1,7 +1,5 @@
-from .win_controller import ControllerMain
+from .controller import ControllerMain
 from base_plugin import Plugin
-import sys
-from PyQt5 import QtWidgets
 
 
 class ObjectMeasurement(Plugin):
@@ -27,11 +25,3 @@ class ObjectMeasurement(Plugin):
         """
         self.apps = ControllerMain(argument)
         argument.show()
-
-# if __name__ == "__main__":
-#     app = QtWidgets.QApplication(sys.argv)
-#     MainWindow = QtWidgets.QMainWindow()
-#     ui = Controller(MainWindow)
-#     # ui.setupUi(MainWindow)
-#     MainWindow.show()
-#     sys.exit(app.exec_())

@@ -5,7 +5,7 @@
 #########################################################################
 import sys
 from PyQt5 import QtWidgets
-from win_controller import Controller
+from Moilapp_Controller import Controller
 
 
 def main():

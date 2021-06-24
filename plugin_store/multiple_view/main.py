@@ -1,4 +1,4 @@
-from .win_controller import UiController
+from .controller import UiController
 from base_plugin import Plugin
 import sys
 from PyQt5 import QtWidgets

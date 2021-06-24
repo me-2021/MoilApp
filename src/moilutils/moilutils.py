@@ -11,7 +11,7 @@ from Moildev.Moildev import Moildev
 
 
 class MoilUtils(object):
-    camera_params = "cam_params/camera_parameters.json"
+    camera_params = "camera/camera_parameters.json"
 
     def __init__(self):
         super(MoilUtils, self).__init__()
@@ -170,8 +170,8 @@ class MoilUtils(object):
         points4 = s.T.reshape((-1, 1, 2))
 
         # Draw polyline on original image
-        cv2.polylines(image, np.int32([points]), False, (0, 255, 0), 10)
-        cv2.polylines(image, np.int32([points2]), False, (0, 255, 0), 10)
+        cv2.polylines(image, np.int32([points]), False, (0, 0, 255), 10)
+        cv2.polylines(image, np.int32([points2]), False, (255, 0, 0), 10)
         cv2.polylines(image, np.int32([points3]), False, (0, 255, 0), 10)
         cv2.polylines(image, np.int32([points4]), False, (0, 255, 0), 10)
         return image
@@ -197,7 +197,33 @@ class MoilUtils(object):
         return result
 
     @classmethod
+    def read_camera_type(cls, image_file):
+        """
+        Read the camera used from metadata image.
+
+        Args:
+            image_file ():
+
+        Returns:
+
+        """
+        img = MetaImage(image_file)
+        camera_type = img.read_comment()
+        img.close()
+        return camera_type
+
+    @classmethod
     def save_image(cls, image, dir_save, type_camera):
+        """
+        saved image
+        Args:
+            image ():
+            dir_save ():
+            type_camera ():
+
+        Returns:
+
+        """
         ss = datetime.datetime.now().strftime("%m%d%H_%M%S")
         name = dir_save + "/" + str(ss) + ".png"
         cv2.imwrite(name, image)
@@ -242,7 +268,7 @@ class MoilUtils(object):
     @classmethod
     def rotate(cls, src, angle, center=None, scale=1.0):
         """
-        Turn an image in a clockwise or counterclockwise direction.
+        Turn an image in a clockwise or counterclockwise direction depend on angle value given.
 
         Args:
             src: original image
@@ -264,6 +290,12 @@ class MoilUtils(object):
     def connect_to_moildev(cls, type_camera, parent=None):
         """
         Connect to Moildev SDK, need provide camera parameter database and type of camera.
+
+        Args:
+            type_camera ():
+            parent ():
+
+        Returns:
 
         """
         if type_camera:
@@ -293,31 +325,12 @@ class MoilUtils(object):
         return dir_save
 
     @classmethod
-    def showing_image(cls, label, image, width_image):
+    def show_image_to_label(cls, label, image, width_image, angle=0, plusIcon=False):
         """
         Showing image to the window in user interface.
 
         Args:
-            label ():
-            image ():
-            width_image ():
-
-        Returns:
-
-        """
-        height = cls.calculate_height(image, width_image)
-        image = cls.resize_image(image, width_image)
-        label.setMinimumSize(QtCore.QSize(width_image, height))
-        image = QtGui.QImage(image.data, image.shape[1], image.shape[0],
-                             QtGui.QImage.Format_RGB888).rgbSwapped()
-        label.setPixmap(QtGui.QPixmap.fromImage(image))
-
-    @classmethod
-    def showing_result_image(cls, label, image, width_image, angle=0):
-        """
-        Showing image to the window in user interface.
-
-        Args:
+            plusIcon ():
             label ():
             image ():
             width_image ():
@@ -326,35 +339,26 @@ class MoilUtils(object):
         Returns:
 
         """
+
         height = cls.calculate_height(image, width_image)
         image = cls.resize_image(image, width_image)
         image = MoilUtils.rotate(image, angle)
-        h, w = image.shape[:2]
-        w1 = round((w / 2) - 10)
-        h1 = round(h / 2)
-        w2 = round((w / 2) + 10)
-        h2 = round(h / 2)
+        if plusIcon:
+            # draw plus icon on image and show to label
+            h, w = image.shape[:2]
+            w1 = round((w / 2) - 10)
+            h1 = round(h / 2)
+            w2 = round((w / 2) + 10)
+            h2 = round(h / 2)
+            w3 = round(w / 2)
+            h3 = round((h / 2) - 10)
+            w4 = round(w / 2)
+            h4 = round((h / 2)) + 10
+            cv2.line(image, (w1, h1), (w2, h2), (0, 255, 0), 2)
+            cv2.line(image, (w3, h3), (w4, h4), (0, 255, 0), 2)
 
-        w3 = round(w / 2)
-        h3 = round((h / 2) - 10)
-        w4 = round(w / 2)
-        h4 = round((h / 2)) + 10
-
-        cv2.line(image, (w1, h1), (w2, h2), (0, 255, 0), 2)
-        cv2.line(image, (w3, h3), (w4, h4), (0, 255, 0), 2)
-
+        label.setMinimumSize(QtCore.QSize(width_image, height))
         label.setMaximumSize(QtCore.QSize(width_image, height))
-        label.setMinimumSize(QtCore.QSize(width_image, height))
-        image = QtGui.QImage(image.data, image.shape[1], image.shape[0],
-                             QtGui.QImage.Format_RGB888).rgbSwapped()
-        label.setPixmap(QtGui.QPixmap.fromImage(image))
-
-    @classmethod
-    def showing_original_image(cls, label, image, width_image, angle=0):
-        height = cls.calculate_height(image, width_image)
-        image = cls.resize_image(image, width_image)
-        image = MoilUtils.rotate(image, angle)
-        label.setMinimumSize(QtCore.QSize(width_image, height))
         image = QtGui.QImage(image.data, image.shape[1], image.shape[0],
                              QtGui.QImage.Format_RGB888).rgbSwapped()
         label.setPixmap(QtGui.QPixmap.fromImage(image))
@@ -362,9 +366,10 @@ class MoilUtils(object):
     @classmethod
     def corner_detect(cls, image, sigma=3, threshold=0.01):
         """
+        Corner detection using haris corner detection method. it will return list of corner for every point.
 
         Args:
-            image ():
+            image (): the image source
             sigma ():
             threshold ():
 
@@ -422,12 +427,13 @@ class MoilUtils(object):
         return corner_list
 
     @classmethod
-    def draw_corners(cls, corners, image):
+    def draw_corners(cls, image, corners):
         """
+        Drawing corner from corner on the image
 
         Args:
-            corners ():
             image ():
+            corners ():
 
         Returns:
 
@@ -443,12 +449,13 @@ class MoilUtils(object):
     @classmethod
     def __get_corner_list(cls, corners):
         """
+        This is private function to reshape corner list to another shape that can use in drawing corner.
 
         Args:
-            corners ():
+            corners (): corner point.
 
         Returns:
-
+            coordinate point for very corner.
         """
         coor = []
         for h, w, r in corners:
@@ -458,49 +465,68 @@ class MoilUtils(object):
         return coor
 
     @classmethod
-    def drawPoint(cls, image, coordinatePoint):
+    def drawPoint(cls, image, coordinatePoint, radius):
         """
+        Drawing point on the image.
 
         Args:
             image ():
             coordinatePoint ():
+            radius ():
 
         Returns:
 
         """
+
         if coordinatePoint is not None:
             w, h = image.shape[:2]
             if h >= 1000:
-                cv2.circle(image, coordinatePoint, 10, (0, 255, 0), 20, -1)
+                cv2.circle(image, coordinatePoint, radius, (0, 255, 0), 20, -1)
             else:
-                cv2.circle(image, coordinatePoint, 6, (0, 255, 0), 12, -1)
+                cv2.circle(image, coordinatePoint, radius, (0, 255, 0), -1)
         return image
 
     @classmethod
-    def draw_line(cls, image, coordinate_point_1, coordinate_point_2):
+    def draw_line(cls, image, coordinate_point_1=None, coordinate_point_2=None):
         """
 
         Args:
             image ():
-            label_image ():
-            coordinatePoint ():
+            coordinate_point_1 ():
+            coordinate_point_2 ():
 
         Returns:
 
         """
-        cv2.line(image, coordinate_point_1, coordinate_point_2, (0, 255, 0), 1)
+        # draw anypoint line
+        if coordinate_point_1 is None:
+            h, w = image.shape[:2]
+            if h >= 1000:
+                cv2.line(image, (0, 0), (0, h), (255, 0, 0), 10)
+                cv2.line(image, (0, 0), (w, 0), (0, 0, 255), 10)
+                cv2.line(image, (0, h), (w, h), (0, 255, 0), 10)
+                cv2.line(image, (w, 0), (w, h), (0, 255, 0), 10)
+            else:
+                cv2.line(image, (0, 0), (0, h), (255, 0, 0), 2)
+                cv2.line(image, (0, 0), (w, 0), (0, 0, 255), 2)
+                cv2.line(image, (0, h), (w, h), (0, 255, 0), 2)
+                cv2.line(image, (w, 0), (w, h), (0, 255, 0), 2)
+        else:
+            # this for draw line on image
+            cv2.line(image, coordinate_point_1, coordinate_point_2, (0, 255, 0), 1)
         return image
 
     @classmethod
     def distance(cls, point_a, point_b):
         """
         Returns the distance between two points.
+
         Args:
             point_a ():
             point_b ():
 
         Returns:
-
+            distance between 2 point
         """
         x0, y0 = point_a
         x1, y1 = point_b
@@ -509,6 +535,7 @@ class MoilUtils(object):
     @classmethod
     def convert_to_gray(cls, image):
         """
+        Convert rgb to grayscale.
 
         Args:
             image ():
@@ -518,27 +545,3 @@ class MoilUtils(object):
         """
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         return gray
-
-    @classmethod
-    def showing_image_object_measurement(cls, label, image, width_image, angle=0):
-        """
-        Showing image to the window in user interface.
-
-        Args:
-            label ():
-            image ():
-            width_image ():
-            angle ():
-
-        Returns:
-
-        """
-        height = cls.calculate_height(image, width_image)
-        image = cls.resize_image(image, width_image)
-        image = MoilUtils.rotate(image, angle)
-        label.setMinimumSize(QtCore.QSize(width_image, height))
-        # label.resize(width_image, height)
-        # label.setMaximumSize(QtCore.QSize(width_image, height))
-        image = QtGui.QImage(image.data, image.shape[1], image.shape[0],
-                             QtGui.QImage.Format_RGB888).rgbSwapped()
-        label.setPixmap(QtGui.QPixmap.fromImage(image))

@@ -1,5 +1,5 @@
-from PyQt5 import QtWidgets, QtGui, QtCore
 import shutil
+from PyQt5 import QtWidgets, QtGui, QtCore
 from moilutils.moilutils import MoilUtils
 from plugin_collection import PluginCollection
 
@@ -141,7 +141,7 @@ class PluginController(object):
             None.
         """
         dir_plugin = QtWidgets.QFileDialog.getExistingDirectory(
-            self.main_controller.parent, 'Select Application Folder')
+            self.main_controller.parent, 'Select Application Folder', "../plugin_store")
         if dir_plugin:
             original = dir_plugin
             target = 'plugins/'
