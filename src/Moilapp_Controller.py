@@ -365,6 +365,8 @@ class Controller(Ui_MainWindow):
             self.image = MoilUtils.read_image(filename)
             self.h, self.w = self.image.shape[:2]
             self.show_to_window()
+            if self.listWidget.count() == 1:
+                self.listWidget.selectionModel().reset()
 
     def cropImage(self, rect):
         image = self.convertCv2ToQimage(self.image.copy()) if self.result_image is None \
@@ -380,7 +382,7 @@ class Controller(Ui_MainWindow):
         croppedImage = image.copy(rect)
         point_1 = (round(x), round(y))
         point_2 = (round(x + width), round(y + height))
-        ori_image = self.image.copy() if self.normal_view else self.result_image
+        ori_image = self.image.copy() if self.normal_view else self.result_image.copy()
         image = MoilUtils.draw_rectangle(ori_image, point_1, point_2)
         return image, self.convertQImageToMat(croppedImage)
 
@@ -566,6 +568,8 @@ class Controller(Ui_MainWindow):
         Returns:
 
         """
+        if self.cam:
+            self.video_controller.pause_video()
         reply = QtWidgets.QMessageBox.question(
             self.parent,
             'Message',
@@ -579,6 +583,8 @@ class Controller(Ui_MainWindow):
                     self.control_plugin.plugin_win[i].close()
             self.openCam.close()
             self.camParams.close()
+            if self.cam:
+                self.cap.release()
             event.accept()
         else:
             event.ignore()
