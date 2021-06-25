@@ -1,6 +1,5 @@
 from .user_interface.ui_mainwindow import Ui_MainWindow
 from moilutils import MoilUtils
-from Exif.exif_lib import MetaImage
 from help import Help
 import datetime
 import cv2
@@ -103,9 +102,8 @@ class UiController(Ui_MainWindow):
         if filename:
             self.image = MoilUtils.read_image(filename)
             self.h, self.w = self.image.shape[:2]
-            img = MetaImage(filename)
-            self.parent.setWindowTitle("MultiView - " + filename)
-            self.type_camera = img.read_comment()
+            self.parent.setWindowTitle("Multi View - " + filename)
+            self.type_camera = MoilUtils.read_camera_type(filename)
             if self.type_camera:
                 self.cam = False
                 self.onclick_original()
@@ -125,7 +123,7 @@ class UiController(Ui_MainWindow):
                                              "Video Files (*.mp4 *.avi *.mpg *.gif *.mov)")
         if video_source:
             self.type_camera = MoilUtils.select_camera_type()
-            self.parent.setWindowTitle("MultiView - " + video_source)
+            self.parent.setWindowTitle("Multi View - " + video_source)
             if self.type_camera is not None:
                 self.running_video(video_source)
                 self.label_camera.setText("Camera type: " + self.type_camera)
@@ -473,8 +471,7 @@ class UiController(Ui_MainWindow):
 
         """
         filename = self.dir_save + "/" + self.listWidget.currentItem().text()
-        img = MetaImage(filename)
-        self.type_camera = img.read_comment()
+        self.type_camera = MoilUtils.read_camera_type(filename)
         if self.cam:
             self.video_controller.pause_video()
         self.image = MoilUtils.read_image(filename)

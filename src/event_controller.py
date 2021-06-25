@@ -72,10 +72,12 @@ class MouseEvent(object):
         if self.parent.image is not None:
             if self.parent.normal_view:
                 pass
-            else:
+            elif self.parent.anypoint_view:
                 self.parent.anypoint.resetAlphaBeta()
                 self.parent.anypoint.process_to_anypoint()
                 self.parent.show_percentage()
+            else:
+                pass
 
     def mouse_wheelEvent(self, e):
         """
@@ -132,8 +134,11 @@ class MouseEvent(object):
 
     def mouseMoveEvent(self, event):
         if self.parent.image is not None:
-            if self.parent.rubberband.isVisible():
-                self.parent.rubberband.setGeometry(QtCore.QRect(self.origin, event.pos()))
+            if self.parent.zoom_area:
+                pass
+            else:
+                if self.parent.rubberband.isVisible():
+                    self.parent.rubberband.setGeometry(QtCore.QRect(self.origin, event.pos()))
 
     def mouse_release_event(self, e):
         """
@@ -149,15 +154,13 @@ class MouseEvent(object):
         if self.parent.image is not None:
             rect = self.parent.rubberband.geometry()
             if rect.width() > 20 and rect.height() > 20:
-                selectedImage = self.parent.cropImage(rect)
+                image, selectedImage = self.parent.cropImage(rect)
                 self.parent.rubberband.hide()
-                if selectedImage is None:
-                    QtWidgets.QMessageBox.information(
-                        None, "Information", "The Zoom area in video and camera mode \n Under Developing !!!")
-                else:
-                    MoilUtils.show_image_to_label(self.parent.label_Result_Image, selectedImage, 1200)
-                    self.parent.comboBox_zoom.setCurrentIndex(8)
-                    self.parent.comboBox_zoom.setItemText(8, "Zoom Area")
+                MoilUtils.show_image_to_label(self.parent.label_Original_Image, image, 300)
+                MoilUtils.show_image_to_label(self.parent.label_Result_Image, selectedImage, 1200)
+                self.parent.comboBox_zoom.setCurrentIndex(8)
+                self.parent.comboBox_zoom.setItemText(8, "Zoom Area")
+                self.parent.zoom_area = True
 
             if e.button() == QtCore.Qt.RightButton:
                 self.menuMouseEvent(e)

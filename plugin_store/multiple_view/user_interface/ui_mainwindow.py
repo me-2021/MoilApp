@@ -26,7 +26,7 @@ class Ui_MainWindow(object):
         self.btn_open_image.setMinimumSize(QtCore.QSize(0, 40))
         self.btn_open_image.setText("")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("icon/video.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("icon/open_image.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_open_image.setIcon(icon)
         self.btn_open_image.setIconSize(QtCore.QSize(30, 30))
         self.btn_open_image.setObjectName("btn_open_image")
@@ -35,7 +35,7 @@ class Ui_MainWindow(object):
         self.btn_open_video.setMinimumSize(QtCore.QSize(0, 40))
         self.btn_open_video.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("icon/open_cam.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("icon/video.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_open_video.setIcon(icon1)
         self.btn_open_video.setIconSize(QtCore.QSize(35, 30))
         self.btn_open_video.setObjectName("btn_open_video")
@@ -44,7 +44,7 @@ class Ui_MainWindow(object):
         self.btn_open_camera.setMinimumSize(QtCore.QSize(0, 40))
         self.btn_open_camera.setText("")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("icon/open_image.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap("icon/open_cam.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_open_camera.setIcon(icon2)
         self.btn_open_camera.setIconSize(QtCore.QSize(30, 30))
         self.btn_open_camera.setObjectName("btn_open_camera")
@@ -727,7 +727,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Multi View"))
         self.btn_open_image.setShortcut(_translate("MainWindow", "Ctrl+V"))
         self.btn_open_camera.setShortcut(_translate("MainWindow", "Ctrl+I"))
         self.coombo_zoom.setItemText(0, _translate("MainWindow", "25%"))

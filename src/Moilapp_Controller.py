@@ -46,6 +46,7 @@ class Controller(Ui_MainWindow):
         self.mapY = None
         self.mapX_pano = None
         self.mapY_pano = None
+        self.zoom_area = False
         self.type_camera = "Raspi"
         self.num = 0
         self.pos_x = 0
@@ -75,7 +76,7 @@ class Controller(Ui_MainWindow):
         self.video_controller.set_button_disable()
         self.frame_panorama.hide()
         self.frame_navigator.hide()
-        self.label_34.hide()
+        # self.label_34.hide()
         self.connect_event()
 
     def connect_event(self):
@@ -126,6 +127,21 @@ class Controller(Ui_MainWindow):
         self.btn_Rotate_Right.clicked.connect(self.manipulate.rotate_right)
         self.btn_Zoom_in.clicked.connect(self.manipulate.zoom_in)
         self.btn_Zoom_out.clicked.connect(self.manipulate.zoom_out)
+        self.btn_clear.clicked.connect(self.onclick_clear)
+
+    def onclick_clear(self):
+        if self.cam:
+            self.video_controller.stop_video()
+            self.cap.release()
+            self.video_controller.set_button_disable()
+        self.label_Result_Image.clear()
+        self.label_Result_Image.setMaximumSize(QtCore.QSize(1080, 810))
+        self.label_Result_Image.setMinimumSize(QtCore.QSize(1080, 810))
+        self.label_Original_Image.clear()
+        self.reset_mode_view()
+        self.comboBox_zoom.removeItem(8)
+        self.comboBox_zoom.setCurrentIndex(0)
+        self.image = None
 
     def open_image(self):
         """
@@ -230,7 +246,7 @@ class Controller(Ui_MainWindow):
             self.angle = 0
             self.show_to_window()
             self.frame_navigator.hide()
-            self.label_34.hide()
+            # self.label_34.hide()
             self.frame_panorama.hide()
             self.show_percentage()
 
@@ -239,6 +255,7 @@ class Controller(Ui_MainWindow):
         Showing the processing result image into the frame UI.
 
         """
+        self.zoom_area = False
         image = self.image.copy()
         h, w = image.shape[:2]
         radius = 6 if self.h < 800 else 10
@@ -307,7 +324,7 @@ class Controller(Ui_MainWindow):
                 self.video_controller.pause_video()
                 self.dir_save = MoilUtils.selectDir(self)
             if self.dir_save:
-                MoilUtils.save_image(image, self.dir_save, self.type_camera)
+                self.name_saved = MoilUtils.save_image(image, self.dir_save, self.type_camera)
                 self.addWidget(image)
                 QtWidgets.QMessageBox.information(
                     self.parent, "Information", "Image saved !!\n\nLoc @: " + self.dir_save)
@@ -332,7 +349,7 @@ class Controller(Ui_MainWindow):
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(imagePixmap))
         new_widget.setIcon(icon)
-        new_widget.setText(str(datetime.datetime.now().strftime("%m%d%H_%M%S")) + ".png")
+        new_widget.setText(str(self.name_saved) + ".png")
         self.listWidget.addItem(new_widget)
 
     def saved_image_activated(self):
@@ -350,21 +367,22 @@ class Controller(Ui_MainWindow):
             self.show_to_window()
 
     def cropImage(self, rect):
-        if self.cam:
-            pass
-        else:
-            image = self.convertCv2ToQimage(self.image.copy()) if self.result_image is None \
-                else self.convertCv2ToQimage(self.result_image.copy())
-            height = MoilUtils.calculate_height(self.image, self.width_result_image)
-            ratio_x = self.w / self.width_result_image
-            ratio_y = self.h / height
-            x = rect.x() * ratio_x
-            y = rect.y() * ratio_y
-            width = rect.width() * ratio_x
-            height = rect.height() * ratio_y
-            rect = QtCore.QRect(x, y, width, height)
-            croppedImage = image.copy(rect)
-            return self.convertQImageToMat(croppedImage)
+        image = self.convertCv2ToQimage(self.image.copy()) if self.result_image is None \
+            else self.convertCv2ToQimage(self.result_image.copy())
+        height = MoilUtils.calculate_height(self.image, self.width_result_image)
+        ratio_x = self.w / self.width_result_image
+        ratio_y = self.h / height
+        x = rect.x() * ratio_x
+        y = rect.y() * ratio_y
+        width = rect.width() * ratio_x
+        height = rect.height() * ratio_y
+        rect = QtCore.QRect(x, y, width, height)
+        croppedImage = image.copy(rect)
+        point_1 = (round(x), round(y))
+        point_2 = (round(x + width), round(y + height))
+        ori_image = self.image.copy() if self.normal_view else self.result_image
+        image = MoilUtils.draw_rectangle(ori_image, point_1, point_2)
+        return image, self.convertQImageToMat(croppedImage)
 
     @classmethod
     def convertCv2ToQimage(cls, im):
@@ -419,6 +437,8 @@ class Controller(Ui_MainWindow):
         self.normal_view = True
         self.anypoint.resetAlphaBeta()
         self.btn_Record_video.setChecked(False)
+        self.frame_navigator.hide()
+        self.frame_panorama.hide()
 
     def control_frame_view_button(self):
         """
@@ -429,16 +449,16 @@ class Controller(Ui_MainWindow):
         if self.button_menu.isChecked():
             if self.anypoint_view:
                 self.frame_navigator.hide()
-                self.label_34.hide()
+                # self.label_34.hide()
             elif self.panorama_view:
                 self.frame_panorama.hide()
-                self.label_34.hide()
+                # self.label_34.hide()
             else:
                 print("coming soon")
         else:
             if self.anypoint_view:
                 self.frame_navigator.show()
-                self.label_34.show()
+                # self.label_34.show()
             elif self.panorama_view:
                 self.frame_panorama.show()
             else:

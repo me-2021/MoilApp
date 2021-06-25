@@ -158,6 +158,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
         self.verticalLayout_4.addWidget(self.frame_feature)
+
         self.frame_help = QtWidgets.QFrame(self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -239,6 +240,59 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.label_2.setAlignment(QtCore.Qt.AlignCenter)
         self.label_2.setObjectName("label_2")
         self.verticalLayout_4.addWidget(self.frame_help)
+
+        #################################
+        self.frame_clear = QtWidgets.QFrame(self.centralwidget)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.frame_clear.sizePolicy().hasHeightForWidth())
+        self.frame_clear.setSizePolicy(sizePolicy)
+        self.frame_clear.setMinimumSize(QtCore.QSize(60, 95))
+        self.frame_clear.setStyleSheet("background-color: #71D1BA;   \n"
+                                       "border-radius: 10px;")
+        self.frame_clear.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame_clear.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_clear.setObjectName("frame_clear")
+
+        self.label_clear = QtWidgets.QLabel(self.frame_clear)
+        self.label_clear.setGeometry(QtCore.QRect(5, 10, 50, 25))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.label_clear.sizePolicy().hasHeightForWidth())
+        self.label_clear.setSizePolicy(sizePolicy)
+        self.label_clear.setMinimumSize(QtCore.QSize(50, 25))
+        font = QtGui.QFont()
+        font.setFamily("DejaVu Serif")
+        font.setPointSize(12)
+        self.label_clear.setFont(font)
+        self.label_clear.setStyleSheet("border-color: rgb(66, 69, 183);\n"
+                                       "border-radius: 5px;\n"
+                                       "background-color: #71D1BA; ")
+        self.label_clear.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_clear.setObjectName("label_clear")
+
+        self.btn_clear = QtWidgets.QPushButton(self.frame_clear)
+        self.btn_clear.setGeometry(QtCore.QRect(5, 40, 50, 40))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.btn_clear.sizePolicy().hasHeightForWidth())
+        self.btn_clear.setSizePolicy(sizePolicy)
+        self.btn_clear.setMinimumSize(QtCore.QSize(40, 45))
+        self.btn_clear.setStyleSheet("QPushButton{ background-color :  rgb(211, 215, 207);}\n"
+                                     "QPushButton::pressed{ background-color : #71AED1; }\n"
+                                     "border-radius: 10px;")
+        self.btn_clear.setText("")
+        icon4 = QtGui.QIcon()
+        icon4.addPixmap(QtGui.QPixmap("icon/clear.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.btn_clear.setIcon(icon4)
+        self.btn_clear.setIconSize(QtCore.QSize(40, 40))
+        self.btn_clear.setObjectName("btn_clear")
+        self.verticalLayout_4.addWidget(self.frame_clear)
+
+        # ++++++++++++++++++++++++++++++++++++++++
 
         spacerItem1 = QtWidgets.QSpacerItem(
             20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
@@ -743,12 +797,12 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.button_menu.setIconSize(QtCore.QSize(40, 30))
         self.button_menu.setObjectName("button_menu")
 
-        self.label_34 = QtWidgets.QLabel(self.scrollArea)
-        self.label_34.setGeometry(QtCore.QRect(180, 60, 80, 80))
-        self.label_34.setText("")
-        self.label_34.setPixmap(QtGui.QPixmap("icon/north.png"))
-        self.label_34.setScaledContents(True)
-        self.label_34.setObjectName("label")
+        # self.label_34 = QtWidgets.QLabel(self.scrollArea)
+        # self.label_34.setGeometry(QtCore.QRect(180, 60, 80, 80))
+        # self.label_34.setText("")
+        # self.label_34.setPixmap(QtGui.QPixmap("icon/north.png"))
+        # self.label_34.setScaledContents(True)
+        # self.label_34.setObjectName("label")
 
         self.frame_navigator = QtWidgets.QFrame(self.scrollArea)
         self.frame_navigator.setGeometry(QtCore.QRect(10, 40, 160, 290))
@@ -1506,6 +1560,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.btn_panorama.setToolTip(_translate("MainWindow", "Panorama View"))
         self.btn_panorama.setStatusTip(_translate("MainWindow", "Panorama View"))
         self.label_2.setText(_translate("MainWindow", "Help"))
+        self.label_clear.setText(_translate("MainWindow", "Clear"))
         self.btn_show_help.setShortcut(_translate("MainWindow", "Ctrl+Shift+/"))
         self.btn_Open_Image.setToolTip(_translate("MainWindow", "Load Image"))
         self.btn_Open_Image.setStatusTip(_translate("MainWindow", "Open image from local directory"))

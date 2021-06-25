@@ -230,22 +230,23 @@ class MoilUtils(object):
         img = MetaImage(name)
         img.modify_comment(type_camera)
         img.close()
+        return ss
 
     @classmethod
-    def calculate_height(cls, image, image_width):
+    def calculate_height(cls, image, width):
         """
         Calculate the height image with the same ratio with the size original image.
 
         Args:
             image: original image
-            image_width: size image we want
+            width: size image we want
 
         Returns:
             height: height image
         """
 
         h, w = image.shape[:2]
-        r = image_width / float(w)
+        r = width / float(w)
         height = round(h * r)
         return height
 
@@ -262,7 +263,7 @@ class MoilUtils(object):
         """
         image = cv2.imread(image_path)
         if image is None:
-            raise FileNotFoundError("`{}` not cannot be loaded".format(image_path))
+            raise FileNotFoundError("`{}` cannot be loaded".format(image_path))
         return image
 
     @classmethod
@@ -325,7 +326,7 @@ class MoilUtils(object):
         return dir_save
 
     @classmethod
-    def show_image_to_label(cls, label, image, width_image, angle=0, plusIcon=False):
+    def show_image_to_label(cls, label, image, width, angle=0, plusIcon=False):
         """
         Showing image to the window in user interface.
 
@@ -333,15 +334,15 @@ class MoilUtils(object):
             plusIcon ():
             label ():
             image ():
-            width_image ():
+            width ():
             angle ():
 
         Returns:
 
         """
 
-        height = cls.calculate_height(image, width_image)
-        image = cls.resize_image(image, width_image)
+        height = cls.calculate_height(image, width)
+        image = cls.resize_image(image, width)
         image = MoilUtils.rotate(image, angle)
         if plusIcon:
             # draw plus icon on image and show to label
@@ -357,11 +358,16 @@ class MoilUtils(object):
             cv2.line(image, (w1, h1), (w2, h2), (0, 255, 0), 2)
             cv2.line(image, (w3, h3), (w4, h4), (0, 255, 0), 2)
 
-        label.setMinimumSize(QtCore.QSize(width_image, height))
-        label.setMaximumSize(QtCore.QSize(width_image, height))
+        label.setMinimumSize(QtCore.QSize(width, height))
+        label.setMaximumSize(QtCore.QSize(width, height))
         image = QtGui.QImage(image.data, image.shape[1], image.shape[0],
                              QtGui.QImage.Format_RGB888).rgbSwapped()
         label.setPixmap(QtGui.QPixmap.fromImage(image))
+
+    @classmethod
+    def draw_rectangle(cls, image, point_1, point_2, thickness=5):
+        image = cv2.rectangle(image, point_1, point_2, (0, 0, 225), thickness)
+        return image
 
     @classmethod
     def corner_detect(cls, image, sigma=3, threshold=0.01):
@@ -465,7 +471,7 @@ class MoilUtils(object):
         return coor
 
     @classmethod
-    def drawPoint(cls, image, coordinatePoint, radius):
+    def drawPoint(cls, image, coordinatePoint, radius=5):
         """
         Drawing point on the image.
 
@@ -487,19 +493,19 @@ class MoilUtils(object):
         return image
 
     @classmethod
-    def draw_line(cls, image, coordinate_point_1=None, coordinate_point_2=None):
+    def draw_line(cls, image, coordinatePoint_1=None, coordinatePoint_2=None):
         """
 
         Args:
             image ():
-            coordinate_point_1 ():
-            coordinate_point_2 ():
+            coordinatePoint_1 ():
+            coordinatePoint_2 ():
 
         Returns:
 
         """
         # draw anypoint line
-        if coordinate_point_1 is None:
+        if coordinatePoint_1 is None:
             h, w = image.shape[:2]
             if h >= 1000:
                 cv2.line(image, (0, 0), (0, h), (255, 0, 0), 10)
@@ -513,7 +519,7 @@ class MoilUtils(object):
                 cv2.line(image, (w, 0), (w, h), (0, 255, 0), 2)
         else:
             # this for draw line on image
-            cv2.line(image, coordinate_point_1, coordinate_point_2, (0, 255, 0), 1)
+            cv2.line(image, coordinatePoint_1, coordinatePoint_2, (0, 255, 0), 1)
         return image
 
     @classmethod

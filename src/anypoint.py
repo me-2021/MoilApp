@@ -50,7 +50,7 @@ class Anypoint(object):
         self.parent.panorama_view = False
         self.parent.anypoint_view = True
         self.parent.angle = 0
-        self.parent.label_34.show()
+        # self.parent.label_34.show()
         self.parent.frame_navigator.show()
         self.parent.frame_panorama.hide()
         self.parent.mapX, self.parent.mapY, = self.moildev.getAnypointMaps(
