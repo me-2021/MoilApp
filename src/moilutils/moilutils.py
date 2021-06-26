@@ -12,9 +12,58 @@ from Moildev.Moildev import Moildev
 
 class MoilUtils(object):
     camera_params = "camera/camera_parameters.json"
+    camera_type = None
 
     def __init__(self):
         super(MoilUtils, self).__init__()
+
+    @classmethod
+    def select_camera_type(cls):
+        """
+        Select the camera type prompt.
+
+        """
+        with open(cls.camera_params) as f:
+            data = json.load(f)
+        new_list = []
+        for key in data.keys():
+            new_list.append(key)
+        Dialog = QtWidgets.QDialog()
+        Dialog.setObjectName("Dialog")
+        Dialog.setWindowTitle("Select Camera !!!")
+        Dialog.resize(240, 120)
+        buttonBox = QtWidgets.QDialogButtonBox(Dialog)
+        buttonBox.setGeometry(QtCore.QRect(20, 80, 200, 32))
+        buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        buttonBox.setStandardButtons(
+            QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
+        buttonBox.setObjectName("buttonBox")
+        comboBox_cam_type = QtWidgets.QComboBox(Dialog)
+        comboBox_cam_type.setGeometry(QtCore.QRect(20, 40, 200, 30))
+        comboBox_cam_type.setObjectName("comboBox")
+        comboBox_cam_type.addItems(new_list)
+        label = QtWidgets.QLabel(Dialog)
+        label.setGeometry(QtCore.QRect(10, 10, 220, 30))
+        font = QtGui.QFont()
+        font.setFamily("DejaVu Serif")
+        font.setPointSize(13)
+        label.setFont(font)
+        label.setAlignment(QtCore.Qt.AlignCenter)
+        label.setObjectName("label")
+        label.setText("Select the camera type !!!")
+        buttonBox.accepted.connect(lambda: cls.accept_btn(Dialog, comboBox_cam_type))
+        buttonBox.rejected.connect(lambda: cls.reject_btn(Dialog))
+        Dialog.exec_()
+        return cls.camera_type
+
+    @classmethod
+    def accept_btn(cls, dialog, msg):
+        dialog.accept()
+        cls.camera_type = msg.currentText()
+
+    @classmethod
+    def reject_btn(cls, dialog):
+        dialog.reject()
 
     @classmethod
     def select_file(cls, parent, title, dir_path, file_filter):
@@ -51,47 +100,6 @@ class MoilUtils(object):
         dirname = os.path.basename(srcpath)
         dstpath = os.path.join(dstdir, dirname)
         shutil.copytree(srcpath, dstpath)
-
-    @classmethod
-    def select_camera_type(cls):
-        """
-        Select the camera type prompt.
-
-        """
-        with open(cls.camera_params) as f:
-            data = json.load(f)
-        new_list = []
-        for key in data.keys():
-            new_list.append(key)
-        Dialog = QtWidgets.QDialog()
-        Dialog.setObjectName("Dialog")
-        Dialog.setWindowTitle("Select Camera !!!")
-        Dialog.resize(240, 120)
-        buttonBox = QtWidgets.QDialogButtonBox(Dialog)
-        buttonBox.setGeometry(QtCore.QRect(20, 80, 200, 32))
-        buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        buttonBox.setStandardButtons(
-            QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
-        buttonBox.setObjectName("buttonBox")
-        comboBox_cam_type = QtWidgets.QComboBox(Dialog)
-        comboBox_cam_type.setGeometry(QtCore.QRect(20, 40, 200, 30))
-        comboBox_cam_type.setObjectName("comboBox")
-        comboBox_cam_type.addItems(new_list)
-        label = QtWidgets.QLabel(Dialog)
-        label.setGeometry(QtCore.QRect(10, 10, 220, 30))
-        font = QtGui.QFont()
-        font.setFamily("DejaVu Serif")
-        font.setPointSize(13)
-        label.setFont(font)
-        label.setAlignment(QtCore.Qt.AlignCenter)
-        label.setObjectName("label")
-        label.setText("Select the camera type !!!")
-
-        buttonBox.accepted.connect(Dialog.accept)
-        buttonBox.rejected.connect(Dialog.reject)
-
-        Dialog.exec_()
-        return comboBox_cam_type.currentText()
 
     @classmethod
     def draw_polygon(cls, image, mapX, mapY):

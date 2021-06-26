@@ -269,48 +269,47 @@ class Controller(Ui_MainWindow):
                                           self.image,
                                           self.width_result_image, self.angle, plusIcon=True)
 
+        elif self.panorama_view:
+            # image = MoilUtils.draw_polygon(
+            #     self.image.copy(),
+            #     self.mapX_pano,
+            #     self.mapY_pano)
+            mapX = np.load(
+                './maps_pano/mapX.npy')
+            mapY = np.load(
+                './maps_pano/mapY.npy')
+            # rho = self.panorama.rho
+
+            self.result_image = cv2.remap(
+                self.image.copy(),
+                mapX,
+                mapY,
+                cv2.INTER_CUBIC)
+            # self.result_image = self.result_image[round(rho):self.h, 0:self.w]
+            # print(self.result_image)
+            image = MoilUtils.drawPoint(image, self.point, radius)
+            MoilUtils.show_image_to_label(self.label_Original_Image,
+                                          image,
+                                          self.width_original_image)
+            MoilUtils.show_image_to_label(self.label_Result_Image,
+                                          self.result_image,
+                                          self.width_result_image, self.angle)
+
         else:
-            if self.panorama_view:
-                # image = MoilUtils.draw_polygon(
-                #     self.image.copy(),
-                #     self.mapX_pano,
-                #     self.mapY_pano)
-                mapX = np.load(
-                    './maps_pano/mapX.npy')
-                mapY = np.load(
-                    './maps_pano/mapY.npy')
-                # rho = self.panorama.rho
-
-                self.result_image = cv2.remap(
-                    self.image.copy(),
-                    mapX,
-                    mapY,
-                    cv2.INTER_CUBIC)
-                # self.result_image = self.result_image[round(rho):self.h, 0:self.w]
-                # print(self.result_image)
-                image = MoilUtils.drawPoint(image, self.point, radius)
-                MoilUtils.show_image_to_label(self.label_Original_Image,
-                                              image,
-                                              self.width_original_image)
-                MoilUtils.show_image_to_label(self.label_Result_Image,
-                                              self.result_image,
-                                              self.width_result_image, self.angle, plusIcon=True)
-
-            else:
-                image = MoilUtils.draw_polygon(self.image.copy(), self.mapX, self.mapY)
-                image = MoilUtils.drawPoint(image, self.point, radius)
-                self.result_image = cv2.remap(
-                    self.image,
-                    self.mapX,
-                    self.mapY,
-                    cv2.INTER_CUBIC)
-                result = MoilUtils.draw_line(self.result_image.copy())
-                MoilUtils.show_image_to_label(self.label_Result_Image,
-                                              result,
-                                              self.width_result_image, self.angle, plusIcon=True)
-                MoilUtils.show_image_to_label(self.label_Original_Image,
-                                              image,
-                                              self.width_original_image)
+            image = MoilUtils.draw_polygon(self.image.copy(), self.mapX, self.mapY)
+            image = MoilUtils.drawPoint(image, self.point, radius)
+            self.result_image = cv2.remap(
+                self.image,
+                self.mapX,
+                self.mapY,
+                cv2.INTER_CUBIC)
+            result = MoilUtils.draw_line(self.result_image.copy())
+            MoilUtils.show_image_to_label(self.label_Result_Image,
+                                          result,
+                                          self.width_result_image, self.angle, plusIcon=True)
+            MoilUtils.show_image_to_label(self.label_Original_Image,
+                                          image,
+                                          self.width_original_image)
 
     def save_image(self):
         """

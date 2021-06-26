@@ -44,7 +44,6 @@ class MouseEvent(object):
                 coordinate_X = round(pos_x * ratio_x)
                 coordinate_Y = round(pos_y * ratio_y)
                 self.parent.point = (coordinate_X, coordinate_Y)
-                # print(coordinate_X, coordinate_Y)
                 if self.parent.normal_view:
                     pass
 

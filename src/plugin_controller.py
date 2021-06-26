@@ -1,4 +1,6 @@
 import shutil
+import os
+from pathlib import Path
 from PyQt5 import QtWidgets, QtGui, QtCore
 from moilutils.moilutils import MoilUtils
 from plugin_collection import PluginCollection
@@ -144,12 +146,17 @@ class PluginController(object):
             self.main_controller.parent, 'Select Application Folder', "../plugin_store")
         if dir_plugin:
             original = dir_plugin
+            name_plug = os.path.basename(os.path.normpath(original))
             target = 'plugins/'
-            MoilUtils.copy_directory(original, target)
-            self.plugins.reload_plugins()
-            new_list = self.plugins.name_application
-            self.main_controller.comboBox.clear()
-            self.main_controller.comboBox.addItems(new_list)
-            self.init_plugin_win()
-            QtWidgets.QMessageBox.information(None, "Information", "Plugins was successfully added !!")
+            name_exist = Path(target+name_plug)
+            if name_exist.exists():
+                QtWidgets.QMessageBox.information(None, "Information", "Plugins already exist!!")
+            else:
+                MoilUtils.copy_directory(original, target)
+                self.plugins.reload_plugins()
+                new_list = self.plugins.name_application
+                self.main_controller.comboBox.clear()
+                self.main_controller.comboBox.addItems(new_list)
+                self.init_plugin_win()
+                QtWidgets.QMessageBox.information(None, "Information", "Plugins was successfully added !!")
 
