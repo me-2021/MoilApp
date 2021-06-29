@@ -161,7 +161,7 @@ class VideoController(object):
         current.setAlignment(QtCore.Qt.AlignCenter)
         current.setText("%02d : %02d" % (self.minute, self.sec))
 
-        if self.minute > 1000:
+        if self.minutes < 0:
             "this is for live camera, when the times more than 1000 minutes, it will set to 00:00"
             my_label3 = self.parent.label_time_end
             my_label3.setAlignment(QtCore.Qt.AlignCenter)

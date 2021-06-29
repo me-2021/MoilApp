@@ -141,6 +141,8 @@ class Controller(Ui_MainWindow):
         self.reset_mode_view()
         self.comboBox_zoom.removeItem(8)
         self.comboBox_zoom.setCurrentIndex(0)
+        self.label_Application.setText("MoilApp")
+        self.parent.setWindowTitle("MoilApp")
         self.image = None
 
     def open_image(self):
@@ -158,6 +160,7 @@ class Controller(Ui_MainWindow):
                 self.cap.release()
             self.parent.setWindowTitle("MoilApp - " + filename)
             self.type_camera = MoilUtils.read_camera_type(filename)
+            # print(self.type_camera)
             self.image = MoilUtils.read_image(filename)
             self.h, self.w = self.image.shape[:2]
             self.video_controller.set_button_disable()
@@ -215,8 +218,8 @@ class Controller(Ui_MainWindow):
         self.video_controller.set_button_enable()
         self.cap = cv2.VideoCapture(video_source)
         success, self.image = self.cap.read()
-        self.h, self.w = self.image.shape[:2]
         if success:
+            self.h, self.w = self.image.shape[:2]
             self.cam = True
             self.video_controller.next_frame_slot()
             self.show_percentage()
