@@ -35,7 +35,7 @@ class Anypoint(object):
         """
         if self.parent.image is not None:
             if self.parent.type_camera:
-                self.moildev = MoilUtils.connect_to_moildev(self.parent.type_camera)
+                self.moildev = MoilUtils.connectToMoildev(self.parent.type_camera)
                 self.anypoint()
                 self.parent.show_percentage()
 

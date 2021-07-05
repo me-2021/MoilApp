@@ -151,17 +151,17 @@ class Controller(Ui_MainWindow):
         metadata image.
 
         """
-        filename = MoilUtils.select_file(self.parent, "Image Files", "../SourceImage", "(*.jpeg *.jpg *.png *.gif "
-                                                                                       "*.bmg)")
+        filename = MoilUtils.selectFile(self.parent, "Image Files", "../SourceImage", "(*.jpeg *.jpg *.png *.gif "
+                                                                                      "*.bmg)")
         if filename:
             self.reset_mode_view()
             if self.cam:
                 self.video_controller.stop_video()
                 self.cap.release()
             self.parent.setWindowTitle("MoilApp - " + filename)
-            self.type_camera = MoilUtils.read_camera_type(filename)
+            self.type_camera = MoilUtils.readCameraType(filename)
             # print(self.type_camera)
-            self.image = MoilUtils.read_image(filename)
+            self.image = MoilUtils.readImage(filename)
             self.h, self.w = self.image.shape[:2]
             self.video_controller.set_button_disable()
             self.show_to_window()
@@ -175,13 +175,13 @@ class Controller(Ui_MainWindow):
         to select the type of camera.
 
         """
-        video_source = MoilUtils.select_file(self.parent,
-                                             "Select Video Files",
-                                             "../",
-                                             "Video Files (*.mp4 *.avi *.mpg *.gif *.mov)")
+        video_source = MoilUtils.selectFile(self.parent,
+                                            "Select Video Files",
+                                            "../",
+                                            "Video Files (*.mp4 *.avi *.mpg *.gif *.mov)")
         if video_source:
             self.reset_mode_view()
-            self.type_camera = MoilUtils.select_camera_type()
+            self.type_camera = MoilUtils.selectCameraType()
             if self.type_camera is not None:
                 self.parent.setWindowTitle("MoilApp - " + video_source)
                 self.label_Application.setText("Camera: " + self.type_camera)
@@ -201,7 +201,7 @@ class Controller(Ui_MainWindow):
         """
         self.reset_mode_view()
         camera_source = self.winOpenCam.camera_source_used()
-        self.type_camera = MoilUtils.select_camera_type()
+        self.type_camera = MoilUtils.selectCameraType()
         if self.type_camera is not None:
             self.parent.setWindowTitle("MoilApp - " + self.type_camera)
             self.label_Application.setText("Camera: " + self.type_camera)
@@ -265,12 +265,12 @@ class Controller(Ui_MainWindow):
         if self.normal_view:
             self.point = (round(w / 2), round(h / 2))
             image = MoilUtils.drawPoint(image, self.point, radius)
-            MoilUtils.show_image_to_label(self.label_Original_Image,
-                                          image,
-                                          self.width_original_image)
-            MoilUtils.show_image_to_label(self.label_Result_Image,
-                                          self.image,
-                                          self.width_result_image, self.angle, plusIcon=True)
+            MoilUtils.showImageToLabel(self.label_Original_Image,
+                                       image,
+                                       self.width_original_image)
+            MoilUtils.showImageToLabel(self.label_Result_Image,
+                                       self.image,
+                                       self.width_result_image, self.angle, plusIcon=True)
 
         elif self.panorama_view:
             # image = MoilUtils.draw_polygon(
@@ -291,28 +291,28 @@ class Controller(Ui_MainWindow):
             # self.result_image = self.result_image[round(rho):self.h, 0:self.w]
             # print(self.result_image)
             image = MoilUtils.drawPoint(image, self.point, radius)
-            MoilUtils.show_image_to_label(self.label_Original_Image,
-                                          image,
-                                          self.width_original_image)
-            MoilUtils.show_image_to_label(self.label_Result_Image,
-                                          self.result_image,
-                                          self.width_result_image, self.angle)
+            MoilUtils.showImageToLabel(self.label_Original_Image,
+                                       image,
+                                       self.width_original_image)
+            MoilUtils.showImageToLabel(self.label_Result_Image,
+                                       self.result_image,
+                                       self.width_result_image, self.angle)
 
         else:
-            image = MoilUtils.draw_polygon(self.image.copy(), self.mapX, self.mapY)
+            image = MoilUtils.drawPolygon(self.image.copy(), self.mapX, self.mapY)
             image = MoilUtils.drawPoint(image, self.point, radius)
             self.result_image = cv2.remap(
                 self.image,
                 self.mapX,
                 self.mapY,
                 cv2.INTER_CUBIC)
-            result = MoilUtils.draw_line(self.result_image.copy())
-            MoilUtils.show_image_to_label(self.label_Result_Image,
-                                          result,
-                                          self.width_result_image, self.angle, plusIcon=True)
-            MoilUtils.show_image_to_label(self.label_Original_Image,
-                                          image,
-                                          self.width_original_image)
+            result = MoilUtils.drawLine(self.result_image.copy())
+            MoilUtils.showImageToLabel(self.label_Result_Image,
+                                       result,
+                                       self.width_result_image, self.angle, plusIcon=True)
+            MoilUtils.showImageToLabel(self.label_Original_Image,
+                                       image,
+                                       self.width_original_image)
 
     def save_image(self):
         """
@@ -324,9 +324,9 @@ class Controller(Ui_MainWindow):
             image = self.image if self.normal_view else self.result_image
             if self.dir_save is None or self.dir_save == "":
                 self.video_controller.pause_video()
-                self.dir_save = MoilUtils.selectDir(self)
+                self.dir_save = MoilUtils.selectDirectory(self)
             if self.dir_save:
-                self.name_saved = MoilUtils.save_image(image, self.dir_save, self.type_camera)
+                self.name_saved = MoilUtils.saveImage(image, self.dir_save, self.type_camera)
                 self.addWidget(image)
                 QtWidgets.QMessageBox.information(
                     self.parent, "Information", "Image saved !!\n\nLoc @: " + self.dir_save)
@@ -338,11 +338,11 @@ class Controller(Ui_MainWindow):
             image (): the image saved.
 
         """
-        height = MoilUtils.calculate_height(self.image, 140)
+        height = MoilUtils.calculateHeight(self.image, 140)
         self.listWidget.setIconSize(QtCore.QSize(140, height))
         new_widget = QtWidgets.QListWidgetItem()
 
-        image_ = MoilUtils.resize_image(image, 140)
+        image_ = MoilUtils.resizeImage(image, 140)
         imagePixmap = QtGui.QImage(
             image_.data,
             image_.shape[1],
@@ -360,11 +360,11 @@ class Controller(Ui_MainWindow):
 
         """
         filename = self.dir_save + "/" + self.listWidget.currentItem().text()
-        self.type_camera = MoilUtils.read_camera_type(filename)
+        self.type_camera = MoilUtils.readCameraType(filename)
         if self.cam:
             self.video_controller.pause_video()
             self.reset_mode_view()
-            self.image = MoilUtils.read_image(filename)
+            self.image = MoilUtils.readImage(filename)
             self.h, self.w = self.image.shape[:2]
             self.show_to_window()
             if self.listWidget.count() == 1:
@@ -373,7 +373,7 @@ class Controller(Ui_MainWindow):
     def cropImage(self, rect):
         image = self.convertCv2ToQimage(self.image.copy()) if self.result_image is None \
             else self.convertCv2ToQimage(self.result_image.copy())
-        height = MoilUtils.calculate_height(self.image, self.width_result_image)
+        height = MoilUtils.calculateHeight(self.image, self.width_result_image)
         ratio_x = self.w / self.width_result_image
         ratio_y = self.h / height
         x = rect.x() * ratio_x
@@ -385,7 +385,7 @@ class Controller(Ui_MainWindow):
         point_1 = (round(x), round(y))
         point_2 = (round(x + width), round(y + height))
         ori_image = self.image.copy() if self.normal_view else self.result_image.copy()
-        image = MoilUtils.draw_rectangle(ori_image, point_1, point_2)
+        image = MoilUtils.drawRectangle(ori_image, point_1, point_2)
         return image, self.convertQImageToMat(croppedImage)
 
     @classmethod
@@ -492,6 +492,8 @@ class Controller(Ui_MainWindow):
         self.slider_Video.hide()
         self.label_time_end.hide()
         self.frame_apps.hide()
+        self.frame_clear.hide()
+        self.statusbar.hide()
 
     def minimize_view(self):
         """
@@ -517,6 +519,8 @@ class Controller(Ui_MainWindow):
         self.slider_Video.show()
         self.label_time_end.show()
         self.frame_apps.show()
+        self.frame_clear.show()
+        self.statusbar.show()
 
     def onclick_accessibility(self):
         """

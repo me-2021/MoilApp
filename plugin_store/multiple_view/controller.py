@@ -97,13 +97,13 @@ class UiController(Ui_MainWindow):
         self.camParams.show()
 
     def open_image(self):
-        filename = MoilUtils.select_file(self.parent, "Select Image", "../SourceImage",
-                                         "Image Files (*.jpeg *.jpg *.png *.gif *.bmg)")
+        filename = MoilUtils.selectFile(self.parent, "Select Image", "../SourceImage",
+                                        "Image Files (*.jpeg *.jpg *.png *.gif *.bmg)")
         if filename:
-            self.image = MoilUtils.read_image(filename)
+            self.image = MoilUtils.readImage(filename)
             self.h, self.w = self.image.shape[:2]
             self.parent.setWindowTitle("Multi View - " + filename)
-            self.type_camera = MoilUtils.read_camera_type(filename)
+            self.type_camera = MoilUtils.readCameraType(filename)
             if self.type_camera:
                 self.cam = False
                 self.onclick_original()
@@ -117,12 +117,12 @@ class UiController(Ui_MainWindow):
         to select the type of camera.
 
         """
-        video_source = MoilUtils.select_file(self.parent,
-                                             "Select Video Files",
-                                             "../",
-                                             "Video Files (*.mp4 *.avi *.mpg *.gif *.mov)")
+        video_source = MoilUtils.selectFile(self.parent,
+                                            "Select Video Files",
+                                            "../",
+                                            "Video Files (*.mp4 *.avi *.mpg *.gif *.mov)")
         if video_source:
-            self.type_camera = MoilUtils.select_camera_type()
+            self.type_camera = MoilUtils.selectCameraType()
             self.parent.setWindowTitle("Multi View - " + video_source)
             if self.type_camera is not None:
                 self.running_video(video_source)
@@ -160,7 +160,7 @@ class UiController(Ui_MainWindow):
         this function provide 2 source namely USB cam and Streaming Cam from Raspberry pi.
         """
         camera_source = self.winOpenCam.camera_source_used()
-        self.type_camera = MoilUtils.select_camera_type()
+        self.type_camera = MoilUtils.selectCameraType()
         if self.type_camera is not None:
             self.running_video(camera_source)
             self.label_camera.setText("Camera type: " + self.type_camera)
@@ -211,7 +211,7 @@ class UiController(Ui_MainWindow):
         self.single_view = True
         self.multiple_view = False
         self.window = 1
-        moildev = MoilUtils.connect_to_moildev(self.type_camera)
+        moildev = MoilUtils.connectToMoildev(self.type_camera)
         self.mapX_1, self.mapY_1, = moildev.getAnypointMaps(0, -50,
                                                             self.zoom_any,
                                                             self.anypoint_mode)
@@ -234,7 +234,7 @@ class UiController(Ui_MainWindow):
         self.single_view = True
         self.multiple_view = False
         self.window = 2
-        moildev = MoilUtils.connect_to_moildev(self.type_camera)
+        moildev = MoilUtils.connectToMoildev(self.type_camera)
         self.mapX_2, self.mapY_2, = moildev.getAnypointMaps(0, 0,
                                                             self.zoom_any,
                                                             self.anypoint_mode)
@@ -257,7 +257,7 @@ class UiController(Ui_MainWindow):
         self.single_view = True
         self.multiple_view = False
         self.window = 3
-        moildev = MoilUtils.connect_to_moildev(self.type_camera)
+        moildev = MoilUtils.connectToMoildev(self.type_camera)
         self.mapX_3, self.mapY_3, = moildev.getAnypointMaps(0, 50,
                                                             self.zoom_any,
                                                             self.anypoint_mode)
@@ -280,7 +280,7 @@ class UiController(Ui_MainWindow):
         self.single_view = True
         self.multiple_view = False
         self.window = 4
-        moildev = MoilUtils.connect_to_moildev(self.type_camera)
+        moildev = MoilUtils.connectToMoildev(self.type_camera)
         self.mapX_4, self.mapY_4, = moildev.getAnypointMaps(-45, -50,
                                                             self.zoom_any,
                                                             self.anypoint_mode)
@@ -303,7 +303,7 @@ class UiController(Ui_MainWindow):
         self.single_view = True
         self.multiple_view = False
         self.window = 5
-        moildev = MoilUtils.connect_to_moildev(self.type_camera)
+        moildev = MoilUtils.connectToMoildev(self.type_camera)
         self.mapX_5, self.mapY_5, = moildev.getAnypointMaps(-70, 0,
                                                             self.zoom_any,
                                                             self.anypoint_mode)
@@ -326,7 +326,7 @@ class UiController(Ui_MainWindow):
         self.single_view = True
         self.multiple_view = False
         self.window = 6
-        moildev = MoilUtils.connect_to_moildev(self.type_camera)
+        moildev = MoilUtils.connectToMoildev(self.type_camera)
         self.mapX_6, self.mapY_6, = moildev.getAnypointMaps(-45, 50,
                                                             self.zoom_any,
                                                             self.anypoint_mode)
@@ -435,9 +435,9 @@ class UiController(Ui_MainWindow):
         if self.image is not None:
             image_save = self.image if self.normal_view else self.image_result
             if self.dir_save is None or self.dir_save == "":
-                self.dir_save = MoilUtils.selectDir()
+                self.dir_save = MoilUtils.selectDirectory()
             if self.dir_save:
-                MoilUtils.save_image(image_save, self.dir_save, self.type_camera)
+                MoilUtils.saveImage(image_save, self.dir_save, self.type_camera)
                 self.addWidget(image_save)
                 QtWidgets.QMessageBox.information(
                     self.parent, "Information", "Image saved !!\n\nLoc @: " + self.dir_save)
@@ -449,11 +449,11 @@ class UiController(Ui_MainWindow):
             image_save (): the image saved.
 
         """
-        height = MoilUtils.calculate_height(self.image, 200)
+        height = MoilUtils.calculateHeight(self.image, 200)
         self.listWidget.setIconSize(QtCore.QSize(200, height))
         new_widget = QtWidgets.QListWidgetItem()
 
-        image_ = MoilUtils.resize_image(image_save, 200)
+        image_ = MoilUtils.resizeImage(image_save, 200)
         imagePixmap = QtGui.QImage(
             image_.data,
             image_.shape[1],
@@ -471,10 +471,10 @@ class UiController(Ui_MainWindow):
 
         """
         filename = self.dir_save + "/" + self.listWidget.currentItem().text()
-        self.type_camera = MoilUtils.read_camera_type(filename)
+        self.type_camera = MoilUtils.readCameraType(filename)
         if self.cam:
             self.video_controller.pause_video()
-        self.image = MoilUtils.read_image(filename)
+        self.image = MoilUtils.readImage(filename)
         self.show_to_window()
 
     @classmethod
@@ -492,9 +492,9 @@ class UiController(Ui_MainWindow):
         """
         global image, image_ori
         if self.normal_view:
-            MoilUtils.show_image_to_label(self.label_Original_image,
-                                          self.image,
-                                          self.width_result_image, self.angle)
+            MoilUtils.showImageToLabel(self.label_Original_image,
+                                       self.image,
+                                       self.width_result_image, self.angle)
 
         elif self.multiple_view:
             self.frame_2.hide()
@@ -505,7 +505,7 @@ class UiController(Ui_MainWindow):
             image_1 = cv2.remap(self.image.copy(), self.mapX_1, self.mapY_1, cv2.INTER_CUBIC)
             MoilUtils.show_image_to_label(self.label_image1, image_1, self.width_result_multi)
             image_2 = cv2.remap(self.image.copy(), self.mapX_2, self.mapY_2, cv2.INTER_CUBIC)
-            MoilUtils.show_image_to_label(self.label_image2, image_2, self.width_result_multi)
+            MoilUtils.showImageToLabel(self.label_image2, image_2, self.width_result_multi)
             image_3 = cv2.remap(self.image.copy(), self.mapX_3, self.mapY_3, cv2.INTER_CUBIC)
             MoilUtils.show_image_to_label(self.label_image3, image_3, self.width_result_multi)
             image_4 = cv2.remap(self.image.copy(), self.mapX_4, self.mapY_4, cv2.INTER_CUBIC)
@@ -523,30 +523,30 @@ class UiController(Ui_MainWindow):
             self.scrollArea_3.hide()
             if self.window == 1:
                 self.image_result = cv2.remap(self.image.copy(), self.mapX_1, self.mapY_1, cv2.INTER_CUBIC)
-                image_ori = MoilUtils.draw_polygon(self.image.copy(), self.mapX_1, self.mapY_1)
+                image_ori = MoilUtils.drawPolygon(self.image.copy(), self.mapX_1, self.mapY_1)
             elif self.window == 2:
                 self.image_result = cv2.remap(self.image.copy(), self.mapX_2, self.mapY_2, cv2.INTER_CUBIC)
-                image_ori = MoilUtils.draw_polygon(self.image.copy(), self.mapX_2, self.mapY_2)
+                image_ori = MoilUtils.drawPolygon(self.image.copy(), self.mapX_2, self.mapY_2)
             elif self.window == 3:
                 self.image_result = cv2.remap(self.image.copy(), self.mapX_3, self.mapY_3, cv2.INTER_CUBIC)
-                image_ori = MoilUtils.draw_polygon(self.image.copy(), self.mapX_3, self.mapY_3)
+                image_ori = MoilUtils.drawPolygon(self.image.copy(), self.mapX_3, self.mapY_3)
             elif self.window == 4:
                 self.image_result = cv2.remap(self.image.copy(), self.mapX_4, self.mapY_4, cv2.INTER_CUBIC)
-                image_ori = MoilUtils.draw_polygon(self.image.copy(), self.mapX_4, self.mapY_4)
+                image_ori = MoilUtils.drawPolygon(self.image.copy(), self.mapX_4, self.mapY_4)
             elif self.window == 5:
                 self.image_result = cv2.remap(self.image.copy(), self.mapX_5, self.mapY_5, cv2.INTER_CUBIC)
-                image_ori = MoilUtils.draw_polygon(self.image.copy(), self.mapX_5, self.mapY_5)
+                image_ori = MoilUtils.drawPolygon(self.image.copy(), self.mapX_5, self.mapY_5)
             elif self.window == 6:
                 self.image_result = cv2.remap(self.image.copy(), self.mapX_6, self.mapY_6, cv2.INTER_CUBIC)
-                image_ori = MoilUtils.draw_polygon(self.image.copy(), self.mapX_6, self.mapY_6)
+                image_ori = MoilUtils.drawPolygon(self.image.copy(), self.mapX_6, self.mapY_6)
 
-            result = MoilUtils.draw_line(self.image_result)
-            MoilUtils.show_image_to_label(self.label_Original_image,
-                                          result,
-                                          self.width_result_image, self.angle)
-            MoilUtils.show_image_to_label(self.label,
-                                          image_ori,
-                                          self.width_ori_image)
+            result = MoilUtils.drawLine(self.image_result)
+            MoilUtils.showImageToLabel(self.label_Original_image,
+                                       result,
+                                       self.width_result_image, self.angle)
+            MoilUtils.showImageToLabel(self.label,
+                                       image_ori,
+                                       self.width_ori_image)
 
     def show_percentage(self):
         count = self.coombo_zoom.count()

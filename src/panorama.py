@@ -35,7 +35,7 @@ class Panorama(object):
             #     self.parent.video_controller.pause_video()
             self.parent.anypoint.resetAlphaBeta()
             if self.parent.type_camera:
-                self.moildev = MoilUtils.connect_to_moildev(self.parent.type_camera)
+                self.moildev = MoilUtils.connectToMoildev(self.parent.type_camera)
                 self.__panorama()
                 self.parent.show_percentage()
 

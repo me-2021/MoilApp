@@ -155,8 +155,8 @@ class MouseEvent(object):
             if rect.width() > 20 and rect.height() > 20:
                 image, selectedImage = self.parent.cropImage(rect)
                 self.parent.rubberband.hide()
-                MoilUtils.show_image_to_label(self.parent.label_Original_Image, image, 300)
-                MoilUtils.show_image_to_label(self.parent.label_Result_Image, selectedImage, 1200)
+                MoilUtils.showImageToLabel(self.parent.label_Original_Image, image, 300)
+                MoilUtils.showImageToLabel(self.parent.label_Result_Image, selectedImage, 1200)
                 self.parent.comboBox_zoom.setCurrentIndex(8)
                 self.parent.comboBox_zoom.setItemText(8, "Zoom Area")
                 self.parent.zoom_area = True

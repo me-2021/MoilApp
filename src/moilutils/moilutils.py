@@ -18,7 +18,7 @@ class MoilUtils(object):
         super(MoilUtils, self).__init__()
 
     @classmethod
-    def select_camera_type(cls):
+    def selectCameraType(cls):
         """
         Select the camera type prompt.
 
@@ -51,22 +51,22 @@ class MoilUtils(object):
         label.setAlignment(QtCore.Qt.AlignCenter)
         label.setObjectName("label")
         label.setText("Select the camera type !!!")
-        buttonBox.accepted.connect(lambda: cls.accept_btn(Dialog, comboBox_cam_type))
-        buttonBox.rejected.connect(lambda: cls.reject_btn(Dialog))
+        buttonBox.accepted.connect(lambda: cls.__accept_btn(Dialog, comboBox_cam_type))
+        buttonBox.rejected.connect(lambda: cls.__reject_btn(Dialog))
         Dialog.exec_()
         return cls.camera_type
 
     @classmethod
-    def accept_btn(cls, dialog, msg):
+    def __accept_btn(cls, dialog, msg):
         dialog.accept()
         cls.camera_type = msg.currentText()
 
     @classmethod
-    def reject_btn(cls, dialog):
+    def __reject_btn(cls, dialog):
         dialog.reject()
 
     @classmethod
-    def select_file(cls, parent, title, dir_path, file_filter):
+    def selectFile(cls, parent, title, dir_path, file_filter):
         """
         Find the file path from the directory computer.
 
@@ -86,7 +86,7 @@ class MoilUtils(object):
         return file_path
 
     @classmethod
-    def copy_directory(cls, srcpath, dstdir):
+    def copyDirectory(cls, srcpath, dstdir):
         """
         Copy directory.
 
@@ -102,7 +102,7 @@ class MoilUtils(object):
         shutil.copytree(srcpath, dstpath)
 
     @classmethod
-    def draw_polygon(cls, image, mapX, mapY):
+    def drawPolygon(cls, image, mapX, mapY):
         """
         Draw polygon from mapX and mapY given in the original image.
 
@@ -185,7 +185,7 @@ class MoilUtils(object):
         return image
 
     @classmethod
-    def resize_image(cls, image, width):
+    def resizeImage(cls, image, width):
         """
         Resize image original with our size we want
 
@@ -205,7 +205,7 @@ class MoilUtils(object):
         return result
 
     @classmethod
-    def read_camera_type(cls, image_file):
+    def readCameraType(cls, image_file):
         """
         Read the camera used from metadata image.
 
@@ -221,7 +221,7 @@ class MoilUtils(object):
         return camera_type
 
     @classmethod
-    def save_image(cls, image, dir_save, type_camera):
+    def saveImage(cls, image, dir_save, type_camera):
         """
         saved image
         Args:
@@ -241,7 +241,7 @@ class MoilUtils(object):
         return ss
 
     @classmethod
-    def calculate_height(cls, image, width):
+    def calculateHeight(cls, image, width):
         """
         Calculate the height image with the same ratio with the size original image.
 
@@ -259,7 +259,7 @@ class MoilUtils(object):
         return height
 
     @classmethod
-    def read_image(cls, image_path):
+    def readImage(cls, image_path):
         """
         Reading the image from given file path using openCV.
 
@@ -275,7 +275,7 @@ class MoilUtils(object):
         return image
 
     @classmethod
-    def rotate(cls, src, angle, center=None, scale=1.0):
+    def rotateImage(cls, src, angle, center=None, scale=1.0):
         """
         Turn an image in a clockwise or counterclockwise direction depend on angle value given.
 
@@ -296,7 +296,7 @@ class MoilUtils(object):
         return rotated
 
     @classmethod
-    def connect_to_moildev(cls, type_camera, parent=None):
+    def connectToMoildev(cls, type_camera, parent=None):
         """
         Connect to Moildev SDK, need provide camera parameter database and type of camera.
 
@@ -321,7 +321,7 @@ class MoilUtils(object):
         return moildev
 
     @classmethod
-    def selectDir(cls, parent=None):
+    def selectDirectory(cls, parent=None):
         """
         Select directory to save image. This function create to make it not always ask the directory by open dialog,
         after directory save not None, it will pass open dialog prompt.
@@ -334,7 +334,7 @@ class MoilUtils(object):
         return dir_save
 
     @classmethod
-    def show_image_to_label(cls, label, image, width, angle=0, plusIcon=False):
+    def showImageToLabel(cls, label, image, width, angle=0, plusIcon=False):
         """
         Showing image to the window in user interface.
 
@@ -349,9 +349,9 @@ class MoilUtils(object):
 
         """
 
-        height = cls.calculate_height(image, width)
-        image = cls.resize_image(image, width)
-        image = MoilUtils.rotate(image, angle)
+        height = cls.calculateHeight(image, width)
+        image = cls.resizeImage(image, width)
+        image = MoilUtils.rotateImage(image, angle)
         if plusIcon:
             # draw plus icon on image and show to label
             h, w = image.shape[:2]
@@ -373,12 +373,12 @@ class MoilUtils(object):
         label.setPixmap(QtGui.QPixmap.fromImage(image))
 
     @classmethod
-    def draw_rectangle(cls, image, point_1, point_2, thickness=5):
+    def drawRectangle(cls, image, point_1, point_2, thickness=5):
         image = cv2.rectangle(image, point_1, point_2, (0, 0, 225), thickness)
         return image
 
     @classmethod
-    def corner_detect(cls, image, sigma=3, threshold=0.01):
+    def cornerDetection(cls, image, sigma=3, threshold=0.01):
         """
         Corner detection using haris corner detection method. it will return list of corner for every point.
 
@@ -393,7 +393,7 @@ class MoilUtils(object):
         # height, width = image.shape
         # shape = (height, width)
         # Calculate the dx,dy gradients of the image (np.gradient doesnt work)
-        image = MoilUtils.convert_to_gray(image)
+        image = MoilUtils.convertToGray(image)
         dx = cv2.Sobel(image, cv2.CV_64F, 1, 0, ksize=5)
         dy = cv2.Sobel(image, cv2.CV_64F, 0, 1, ksize=5)
         # Get angle for rotation
@@ -441,7 +441,7 @@ class MoilUtils(object):
         return corner_list
 
     @classmethod
-    def draw_corners(cls, image, corners):
+    def drawCorners(cls, image, corners):
         """
         Drawing corner from corner on the image
 
@@ -501,7 +501,7 @@ class MoilUtils(object):
         return image
 
     @classmethod
-    def draw_line(cls, image, coordinatePoint_1=None, coordinatePoint_2=None):
+    def drawLine(cls, image, coordinatePoint_1=None, coordinatePoint_2=None):
         """
 
         Args:
@@ -547,7 +547,7 @@ class MoilUtils(object):
         return math.fabs(x0 - x1) + math.fabs(y0 - y1)
 
     @classmethod
-    def convert_to_gray(cls, image):
+    def convertToGray(cls, image):
         """
         Convert rgb to grayscale.
 

@@ -228,7 +228,7 @@ class Moildev(object):
         lib.cleanup_moildev.restype = ctypes.c_void_p
         return lib.cleanup_moildev(self.__moildev)
 
-    def get_Icx(self):
+    def getIcx(self):
         """
         Get center image from width image (x axis).
 
@@ -237,7 +237,7 @@ class Moildev(object):
         """
         return self.__Icx
 
-    def get_Icy(self):
+    def getIcy(self):
         """
         Get center image from height image (y axis).
 
@@ -246,7 +246,7 @@ class Moildev(object):
         """
         return self.__Icy
 
-    def get_imageWidth(self):
+    def getImageWidth(self):
         """
         Get image width.
 
@@ -255,7 +255,7 @@ class Moildev(object):
         """
         return self.__imageWidth
 
-    def get_imageHeight(self):
+    def getImageHeight(self):
         """Get image height.
 
         :return: image height
@@ -263,7 +263,7 @@ class Moildev(object):
         """
         return self.__imageHeight
 
-    def get_calibration_ratio(self):
+    def getCalibrationRatio(self):
         """
 
         Returns:
@@ -524,7 +524,7 @@ class Moildev(object):
             iC_beta_degree)
         return self.__map_x, self.__map_y
 
-    def reverse_image(self, image, alpha_max, alpha, beta):
+    def reverseImage(self, image, alpha_max, alpha, beta):
         """To generate the image reverse image from panorama that can change the focus direction from the original
         images. The panorama reverse image centered at the 3D direction with alpha_max = max of alpha and beta =
         iC_beta_degree.
@@ -612,7 +612,7 @@ class Moildev(object):
         """
         return self.__alphaToRho_Table[round(alpha * 10)]
 
-    def get_alpha_beta(self, coordinateX, coordinateY, mode=1):
+    def getAlphaBeta(self, coordinateX, coordinateY, mode=1):
         """Get the alpha beta from specific coordinate image.
 
         Args:

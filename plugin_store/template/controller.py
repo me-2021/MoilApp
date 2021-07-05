@@ -21,7 +21,6 @@ class UiController(Ui_MainWindow):
         self.panorama_view = False
         self.anypoint_view = False
         self.cam = False
-        self.moildev = None
         self.point = None
         self.moildev = None
         self.window = None
@@ -150,13 +149,13 @@ class UiController(Ui_MainWindow):
         Returns:
             showing to the window in user interface..
         """
-        filename = MoilUtils.select_file(self.parent, "Select Image", "../SourceImage",
-                                         "Image Files (*.jpeg *.jpg *.png *.gif *.bmg)")
+        filename = MoilUtils.selectFile(self.parent, "Select Image", "../SourceImage",
+                                        "Image Files (*.jpeg *.jpg *.png *.gif *.bmg)")
         if filename:
-            self.image = MoilUtils.read_image(filename)
+            self.image = MoilUtils.readImage(filename)
             self.h, self.w = self.image.shape[:2]
             self.parent.setWindowTitle(self.title + " - " + filename)
-            self.type_camera = MoilUtils.read_camera_type(filename)
+            self.type_camera = MoilUtils.readCameraType(filename)
             if self.type_camera:
                 self.cam = False
                 self.onclick_normal()
@@ -172,12 +171,12 @@ class UiController(Ui_MainWindow):
         Returns:
 
         """
-        video_source = MoilUtils.select_file(self.parent,
-                                             "Select Video Files",
-                                             "../",
-                                             "Video Files (*.mp4 *.avi *.mpg *.gif *.mov)")
+        video_source = MoilUtils.selectFile(self.parent,
+                                            "Select Video Files",
+                                            "../",
+                                            "Video Files (*.mp4 *.avi *.mpg *.gif *.mov)")
         if video_source:
-            self.type_camera = MoilUtils.select_camera_type()
+            self.type_camera = MoilUtils.selectCameraType()
             self.parent.setWindowTitle(self.title + " - " + video_source)
             if self.type_camera is not None:
                 self.running_video(video_source)
@@ -215,7 +214,7 @@ class UiController(Ui_MainWindow):
         this function provide 2 source namely USB cam and Streaming Cam from Raspberry pi.
         """
         camera_source = self.winOpenCam.camera_source_used()
-        self.type_camera = MoilUtils.select_camera_type()
+        self.type_camera = MoilUtils.selectCameraType()
         if self.type_camera is not None:
             self.running_video(camera_source)
             self.label_camera.setText("Camera type: " + self.type_camera)
@@ -247,7 +246,7 @@ class UiController(Ui_MainWindow):
         """
         if self.image is not None:
             if self.type_camera:
-                self.moildev = MoilUtils.connect_to_moildev(self.type_camera)
+                self.moildev = MoilUtils.connectToMoildev(self.type_camera)
                 self.anypoint()
                 self.show_percentage()
                 self.frame_navigator.show()
@@ -374,7 +373,7 @@ class UiController(Ui_MainWindow):
     def onclick_panorama(self):
         if self.image is not None:
             if self.type_camera:
-                self.moildev = MoilUtils.connect_to_moildev(self.type_camera)
+                self.moildev = MoilUtils.connectToMoildev(self.type_camera)
                 self.panorama()
                 self.show_percentage()
                 self.frame_panorama.show()
@@ -444,7 +443,7 @@ class UiController(Ui_MainWindow):
         if self.normal_view:
             pass
         if self.anypoint_view:
-            self.alpha, self.beta = self.moildev.get_alpha_beta(
+            self.alpha, self.beta = self.moildev.getAlphaBeta(
                 coordinate_X, coordinate_Y, self.anypoint_mode)
             self.anypoint()
 
@@ -475,7 +474,7 @@ class UiController(Ui_MainWindow):
                     pass
 
                 if self.anypoint_view:
-                    self.alpha, self.beta = self.moildev.get_alpha_beta(
+                    self.alpha, self.beta = self.moildev.getAlphaBeta(
                         coordinate_X, coordinate_Y, self.anypoint_mode)
                     self.anypoint()
 
@@ -575,9 +574,9 @@ class UiController(Ui_MainWindow):
         if self.image is not None:
             image_save = self.image if self.normal_view else self.result_image
             if self.dir_save is None or self.dir_save == "":
-                self.dir_save = MoilUtils.selectDir()
+                self.dir_save = MoilUtils.selectDirectory()
             if self.dir_save:
-                MoilUtils.save_image(image_save, self.dir_save, self.type_camera)
+                MoilUtils.saveImage(image_save, self.dir_save, self.type_camera)
                 self.addWidget(image_save)
                 QtWidgets.QMessageBox.information(
                     self.parent, "Information", "Image saved !!\n\nLoc @: " + self.dir_save)
@@ -589,11 +588,11 @@ class UiController(Ui_MainWindow):
             image_save (): the image saved.
 
         """
-        height = MoilUtils.calculate_height(self.image, 160)
+        height = MoilUtils.calculateHeight(self.image, 160)
         self.listWidget.setIconSize(QtCore.QSize(160, height))
         new_widget = QtWidgets.QListWidgetItem()
 
-        image_ = MoilUtils.resize_image(image_save, 160)
+        image_ = MoilUtils.resizeImage(image_save, 160)
         imagePixmap = QtGui.QImage(
             image_.data,
             image_.shape[1],
@@ -611,10 +610,10 @@ class UiController(Ui_MainWindow):
 
         """
         filename = self.dir_save + "/" + self.listWidget.currentItem().text()
-        self.type_camera = MoilUtils.read_camera_type(filename)
+        self.type_camera = MoilUtils.readCameraType(filename)
         if self.cam:
             self.video_controller.pause_video()
-        self.image = MoilUtils.read_image(filename)
+        self.image = MoilUtils.readImage(filename)
         self.show_to_window()
 
     def reset_mode_view(self):
@@ -671,27 +670,27 @@ class UiController(Ui_MainWindow):
         """
         radius = 6 if self.h < 800 else 10
         if self.normal_view:
-            MoilUtils.show_image_to_label(self.label_result,
-                                          self.image,
-                                          self.width_result_image, self.angle, plusIcon=False)
+            MoilUtils.showImageToLabel(self.label_result,
+                                       self.image,
+                                       self.width_result_image, self.angle, plusIcon=False)
 
         else:
             self.result_image = cv2.remap(self.image, self.mapX, self.mapY, cv2.INTER_CUBIC)
             if self.anypoint_view:
-                image = MoilUtils.draw_polygon(self.image.copy(), self.mapX, self.mapY)
+                image = MoilUtils.drawPolygon(self.image.copy(), self.mapX, self.mapY)
                 image = MoilUtils.drawPoint(image, self.point, radius)
-                result = MoilUtils.draw_line(self.result_image.copy())
+                result = MoilUtils.drawLine(self.result_image.copy())
                 plusIcon = True
             else:
                 image = self.image
                 result = self.result_image
                 plusIcon = False
-            MoilUtils.show_image_to_label(self.label_result,
-                                          result,
-                                          self.width_result_image, self.angle, plusIcon)
-            MoilUtils.show_image_to_label(self.label_ori,
-                                          image,
-                                          self.width_ori_image)
+            MoilUtils.showImageToLabel(self.label_result,
+                                       result,
+                                       self.width_result_image, self.angle, plusIcon)
+            MoilUtils.showImageToLabel(self.label_ori,
+                                       image,
+                                       self.width_ori_image)
 
     def show_percentage(self):
         count = self.coombo_zoom.count()

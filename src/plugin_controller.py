@@ -152,7 +152,7 @@ class PluginController(object):
             if name_exist.exists():
                 QtWidgets.QMessageBox.information(None, "Information", "Plugins already exist!!")
             else:
-                MoilUtils.copy_directory(original, target)
+                MoilUtils.copyDirectory(original, target)
                 self.plugins.reload_plugins()
                 new_list = self.plugins.name_application
                 self.main_controller.comboBox.clear()

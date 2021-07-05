@@ -81,8 +81,8 @@ class ControllerMain(Ui_MainWindow):
         self.Label_image_L.update()
         label_w = self.Label_image_L.width()
         label_h = self.Label_image_L.height()
-        w = self.moildev.get_imageWidth()
-        h = self.moildev.get_imageHeight()
+        w = self.moildev.getImageWidth()
+        h = self.moildev.getImageHeight()
         self.ratio_x = w / label_w
         self.ratio_y = h / label_h
         self.ratio_image_3.setText(str(self.ratio_x))
@@ -90,27 +90,27 @@ class ControllerMain(Ui_MainWindow):
     def open_image(self):
         QtWidgets.QMessageBox.information(self.parent, "Information", "Select Source Image\nL -> R")
         # self.ui.status_label.setText("select the image !!")
-        img_file_path_l = MoilUtils.select_file(self.parent, "Select Image", "", "Image Files (*.jpeg *.jpg "
-                                                                                 "*.png *.gif *.bmg)")
+        img_file_path_l = MoilUtils.selectFile(self.parent, "Select Image", "../SourceImage", "Image Files (*.jpeg *.jpg "
+                                                                                "*.png *.gif *.bmg)")
 
         # self.ui.status_label.setText("Find the corner on the object !!")
         if img_file_path_l:
             self.label_status.setText("Corner Detection Process !!")
-            img_file_path_r = MoilUtils.select_file(self.parent, "Select Image", "",
-                                                    "Image Files (*.jpeg *.jpg *.png *.gif *.bmg)")
+            img_file_path_r = MoilUtils.selectFile(self.parent, "Select Image", "../SourceImage",
+                                                   "Image Files (*.jpeg *.jpg *.png *.gif *.bmg)")
 
             if img_file_path_r:
-                img_l = MoilUtils.read_image(img_file_path_l)
-                img_r = MoilUtils.read_image(img_file_path_r)
+                img_l = MoilUtils.readImage(img_file_path_l)
+                img_r = MoilUtils.readImage(img_file_path_r)
                 img = MetaImage(img_file_path_r)
                 self.type_camera = img.read_comment()
-                self.moildev = MoilUtils.connect_to_moildev(self.type_camera)
+                self.moildev = MoilUtils.connectToMoildev(self.type_camera)
                 if self.moildev is not None:
                     self.img_l, self.img_r = self.ratio3D_Measurement(img_l, img_r, self.width_image)
                     self.img_result_l = self.img_l.copy()
                     self.img_result_r = self.img_r.copy()
-                    self.corner_list_1 = MoilUtils.corner_detect(self.img_l, sigma=3, threshold=0.01)
-                    self.corner_list_2 = MoilUtils.corner_detect(self.img_r, sigma=3, threshold=0.01)
+                    self.corner_list_1 = MoilUtils.cornerDetection(self.img_l, sigma=3, threshold=0.01)
+                    self.corner_list_2 = MoilUtils.cornerDetection(self.img_r, sigma=3, threshold=0.01)
                     self.show_to_ui_window()
                     self.ratioLabel()
                     self.enable_widget()
@@ -129,8 +129,8 @@ class ControllerMain(Ui_MainWindow):
 
     def show_corner_detection(self):
         if self.checkBox_5.isChecked():
-            self.img_result_l = MoilUtils.draw_corners(self.img_l.copy(), self.corner_list_1)
-            self.img_result_r = MoilUtils.draw_corners(self.img_r.copy(), self.corner_list_2)
+            self.img_result_l = MoilUtils.drawCorners(self.img_l.copy(), self.corner_list_1)
+            self.img_result_r = MoilUtils.drawCorners(self.img_r.copy(), self.corner_list_2)
         else:
             self.img_result_l = self.img_l.copy()
             self.img_result_r = self.img_r.copy()
@@ -187,8 +187,8 @@ class ControllerMain(Ui_MainWindow):
                     self.point_1_image_1.setText(str(point))
                     label_clicked_x = round(coor_x)
                     label_clicked_y = round(coor_y)
-                    delta_x = self.moildev.get_Icx() - label_clicked_x
-                    delta_y = self.moildev.get_Icy() - label_clicked_y
+                    delta_x = self.moildev.getIcx() - label_clicked_x
+                    delta_y = self.moildev.getIcy() - label_clicked_y
                     alpha = MoilAlgorithm.get_alpha_griffey(delta_x, delta_y, self.ratio_x)
                     beta = MoilAlgorithm.get_beta(delta_x, delta_y)
                     print("alpha: {},Beta: {}".format(alpha, beta))
@@ -215,15 +215,15 @@ class ControllerMain(Ui_MainWindow):
                     self.point_2_image_1.setText(str(point))
                     label_clicked_x = round(coor_x)
                     label_clicked_y = round(coor_y)
-                    delta_x = self.moildev.get_Icx() - label_clicked_x
-                    delta_y = self.moildev.get_Icy() - label_clicked_y
+                    delta_x = self.moildev.getIcx() - label_clicked_x
+                    delta_y = self.moildev.getIcy() - label_clicked_y
                     alpha = MoilAlgorithm.get_alpha_griffey(delta_x, delta_y, self.ratio_x)
                     beta = MoilAlgorithm.get_beta(delta_x, delta_y)
                     print("alpha: {},Beta: {}".format(alpha, beta))
                     self.coordinate_sys.point2_alpha_l = alpha
                     self.coordinate_sys.point2_beta_l = beta
                     self.img_result_l = MoilUtils.drawPoint(self.img_result_l, self.point_l_2, 3)
-                    self.img_result_l = MoilUtils.draw_line(self.img_result_l, self.point_l_1, self.point_l_2)
+                    self.img_result_l = MoilUtils.drawLine(self.img_result_l, self.point_l_1, self.point_l_2)
                     self.show_to_ui_window()
 
                     self.clicked_time_l = 0
@@ -254,8 +254,8 @@ class ControllerMain(Ui_MainWindow):
                     self.point_1_image_2.setText(str(point))
                     label_clicked_x = round(coor_x)
                     label_clicked_y = round(coor_y)
-                    delta_x = self.moildev.get_Icx() - label_clicked_x
-                    delta_y = self.moildev.get_Icy() - label_clicked_y
+                    delta_x = self.moildev.getIcx() - label_clicked_x
+                    delta_y = self.moildev.getIcy() - label_clicked_y
 
                     alpha = MoilAlgorithm.get_alpha_griffey(delta_x, delta_y, self.ratio_x)
                     beta = MoilAlgorithm.get_beta(delta_x, delta_y)
@@ -281,15 +281,15 @@ class ControllerMain(Ui_MainWindow):
                     self.point_2_image_2.setText(str(point))
                     label_clicked_x = round(coor_x)
                     label_clicked_y = round(coor_y)
-                    delta_x = self.moildev.get_Icx() - label_clicked_x
-                    delta_y = self.moildev.get_Icy() - label_clicked_y
+                    delta_x = self.moildev.getIcx() - label_clicked_x
+                    delta_y = self.moildev.getIcy() - label_clicked_y
                     alpha = MoilAlgorithm.get_alpha_griffey(delta_x, delta_y, self.ratio_x)
                     beta = MoilAlgorithm.get_beta(delta_x, delta_y)
                     print("alpha: {},Beta: {}".format(alpha, beta))
                     self.coordinate_sys.point2_alpha_r = alpha
                     self.coordinate_sys.point2_beta_r = beta
                     self.img_result_r = MoilUtils.drawPoint(self.img_result_r, self.point_r_2, 3)
-                    self.img_result_r = MoilUtils.draw_line(self.img_result_r, self.point_r_1, self.point_r_2)
+                    self.img_result_r = MoilUtils.drawLine(self.img_result_r, self.point_r_1, self.point_r_2)
                     self.show_to_ui_window()
 
                     self.clicked_time_r = 0
@@ -298,12 +298,12 @@ class ControllerMain(Ui_MainWindow):
                     print("No Left Image !!!")
 
     def show_to_ui_window(self):
-        MoilUtils.show_image_to_label(self.Label_image_L,
-                                      self.img_result_l,
-                                      self.width_image)
-        MoilUtils.show_image_to_label(self.Label_Image_R,
-                                      self.img_result_r,
-                                      self.width_image)
+        MoilUtils.showImageToLabel(self.Label_image_L,
+                                   self.img_result_l,
+                                   self.width_image)
+        MoilUtils.showImageToLabel(self.Label_Image_R,
+                                   self.img_result_r,
+                                   self.width_image)
 
     def close_event(self, e):
         self.camParams.close()
