@@ -240,8 +240,6 @@ class Controller(Ui_MainWindow):
 
         """
         if self.image is not None:
-            # if self.cam:
-            #     self.video_controller.pause_video()
             self.reset_mode_view()
             self.normal_view = True
             self.panorama_view = False
@@ -249,9 +247,10 @@ class Controller(Ui_MainWindow):
             self.angle = 0
             self.show_to_window()
             self.frame_navigator.hide()
-            # self.label_34.hide()
             self.frame_panorama.hide()
             self.show_percentage()
+            self.status_alpha.setText("Alpha: 0")
+            self.status_beta.setText("Beta: 0")
 
     def show_to_window(self):
         """

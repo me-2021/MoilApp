@@ -48,7 +48,7 @@ class MouseEvent(object):
                     pass
 
                 if self.parent.anypoint_view:
-                    self.parent.anypoint.alpha, self.parent.anypoint.beta = self.parent.anypoint.moildev.get_alpha_beta(
+                    self.parent.anypoint.alpha, self.parent.anypoint.beta = self.parent.anypoint.moildev.getAlphaBeta(
                         coordinate_X, coordinate_Y, self.parent.anypoint.anypoint_mode)
                     # print(self.anypoint.alpha, self.anypoint.beta)
                     self.parent.anypoint.process_to_anypoint()
@@ -197,24 +197,29 @@ class MouseEvent(object):
         """
         pos_x = round(e.x())
         pos_y = round(e.y())
-        ratio_x, ratio_y = self.init_ori_ratio(self.parent.image)
-        coordinate_X = round(pos_x * ratio_x)
-        coordinate_Y = round(pos_y * ratio_y)
-        self.parent.point = (coordinate_X, coordinate_Y)
+        if self.parent.image is not None:
+            ratio_x, ratio_y = self.init_ori_ratio(self.parent.image)
+            coordinate_X = round(pos_x * ratio_x)
+            coordinate_Y = round(pos_y * ratio_y)
+            if e.buttons() == QtCore.Qt.NoButton:
+                if self.parent.normal_view:
+                    pass
+                elif self.parent.anypoint_view:
+                    self.parent.anypoint.alpha, self.parent.anypoint.beta = self.parent.anypoint.moildev.getAlphaBeta(
+                        coordinate_X, coordinate_Y, self.parent.anypoint.anypoint_mode)
+                    self.parent.status_alpha.setText("Alpha: %.2f" % self.parent.anypoint.alpha)
+                    self.parent.status_beta.setText("Beta: %.2f" % self.parent.anypoint.beta)
 
-        if self.parent.normal_view:
-            pass
-
-        if self.parent.anypoint_view:
-
-            self.parent.anypoint.alpha, self.parent.anypoint.beta = self.parent.anypoint.moildev.get_alpha_beta(
-                coordinate_X, coordinate_Y, self.parent.anypoint.anypoint_mode)
-            self.parent.anypoint.process_to_anypoint()
-
-        elif self.parent.panorama_view:
-            print("coming soon")
-        else:
-            pass
+            elif e.buttons() == QtCore.Qt.LeftButton:
+                self.parent.point = (coordinate_X, coordinate_Y)
+                if self.parent.normal_view:
+                    pass
+                elif self.parent.anypoint_view:
+                    self.parent.anypoint.alpha, self.parent.anypoint.beta = self.parent.anypoint.moildev.getAlphaBeta(
+                        coordinate_X, coordinate_Y, self.parent.anypoint.anypoint_mode)
+                    self.parent.anypoint.process_to_anypoint()
+                elif self.parent.panorama_view:
+                    print("coming soon")
 
     def init_ori_ratio(self, image):
         """

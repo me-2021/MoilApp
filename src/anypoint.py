@@ -24,9 +24,20 @@ class Anypoint(object):
         self.parent.btn_Down_view.clicked.connect(self.__down)
         self.parent.radio_btn_mode_1.clicked.connect(self.__anypoint_mode_1)
         self.parent.radio_btn_mode_2.clicked.connect(self.__anypoint_mode_2)
-        # self.parent.lineedit_alpha_2.valueChanged.connect(self.process_to_anypoint)
-        # self.parent.lineedit_beta_2.valueChanged.connect(self.process_to_anypoint)
-        # self.parent.anypoint_zoom_2.valueChanged.connect(self.process_to_anypoint)
+        self.parent.lineedit_alpha_2.editingFinished.connect(self.set_param_any)
+        self.parent.lineedit_beta_2.editingFinished.connect(self.set_param_any)
+        self.parent.anypoint_zoom_2.editingFinished.connect(self.set_param_any)
+
+    def set_param_any(self):
+        self.alpha = float(self.parent.lineedit_alpha_2.text())
+        self.beta = float(self.parent.lineedit_beta_2.text())
+        self.zoom_any = float(self.parent.anypoint_zoom_2.text())
+        self.process_to_anypoint()
+
+    def writeAplhaBeta(self):
+        self.parent.lineedit_alpha_2.setValue(self.alpha)
+        self.parent.lineedit_beta_2.setValue(self.beta)
+        self.parent.anypoint_zoom_2.setValue(self.zoom_any)
 
     def process_to_anypoint(self):
         """
@@ -44,19 +55,16 @@ class Anypoint(object):
         Anypoint widget_controller algorithm.
 
         """
-        # if self.parent.cam:
-        #     self.parent.video_controller.pause_video()
         self.parent.normal_view = False
         self.parent.panorama_view = False
         self.parent.anypoint_view = True
         self.parent.angle = 0
-        # self.parent.label_34.show()
         self.parent.frame_navigator.show()
         self.parent.frame_panorama.hide()
         self.parent.mapX, self.parent.mapY, = self.moildev.getAnypointMaps(
             self.alpha, self.beta, self.zoom_any, self.anypoint_mode)
-
         self.parent.show_to_window()
+        self.writeAplhaBeta()
 
     def __anypoint_mode_1(self):
         """
@@ -90,6 +98,7 @@ class Anypoint(object):
         self.alpha = 0
         self.beta = 0
         self.zoom_any = 4
+        self.writeAplhaBeta()
         self.parent.point = (round(self.parent.w / 2), round(self.parent.h / 2))
 
     def __up(self):

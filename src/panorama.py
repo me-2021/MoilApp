@@ -22,8 +22,8 @@ class Panorama(object):
 
         """
         self.parent.btn_panorama.clicked.connect(self.process_to_panorama)
-        self.parent.max_pano.valueChanged.connect(self.change_panorama_fov)
-        self.parent.min_pano.valueChanged.connect(self.change_panorama_fov)
+        self.parent.max_pano.editingFinished.connect(self.change_panorama_fov)
+        self.parent.min_pano.editingFinished.connect(self.change_panorama_fov)
 
     def process_to_panorama(self):
         """
@@ -31,13 +31,13 @@ class Panorama(object):
 
         """
         if self.parent.image is not None:
-            # if self.parent.cam:
-            #     self.parent.video_controller.pause_video()
             self.parent.anypoint.resetAlphaBeta()
             if self.parent.type_camera:
                 self.moildev = MoilUtils.connectToMoildev(self.parent.type_camera)
                 self.__panorama()
                 self.parent.show_percentage()
+                self.parent.status_alpha.setText("Alpha: 0")
+                self.parent.status_beta.setText("Beta: 0")
 
     def __panorama(self):
         """
@@ -50,15 +50,11 @@ class Panorama(object):
         self.parent.angle = 0
         self.rho = self.moildev.getRhoFromAlpha(self.__pano_alpha_min)
         self.parent.frame_navigator.hide()
-        # self.parent.label_34.hide()
         self.parent.frame_panorama.show()
         mapX, mapY, = self.moildev.getPanoramaMaps(
             10, self.__pano_alpha_max)
         np.save("./maps_pano/mapX.npy", mapX)
         np.save("./maps_pano/mapY.npy", mapY)
-
-        # self.parent.mapX_pano, self.parent.mapY_pano = self.moildev.getPanoramaMaps(
-        #     self.__pano_alpha_min, self.__pano_alpha_max)
         self.parent.max_pano.setValue(self.__pano_alpha_max)
         self.parent.min_pano.setValue(self.__pano_alpha_min)
         self.parent.show_to_window()
