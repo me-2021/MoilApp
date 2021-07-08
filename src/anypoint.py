@@ -1,4 +1,5 @@
 from moilutils.moilutils import MoilUtils
+from PyQt5 import QtWidgets
 
 
 class Anypoint(object):
@@ -49,6 +50,10 @@ class Anypoint(object):
                 self.moildev = MoilUtils.connectToMoildev(self.parent.type_camera)
                 self.anypoint()
                 self.parent.show_percentage()
+            else:
+                QtWidgets.QMessageBox.information(self.parent.parent,
+                                                  "Warning", "This image not support for this application. \n "
+                                                             "Please contact developer!!")
 
     def anypoint(self):
         """

@@ -1,5 +1,6 @@
 import numpy as np
 from moilutils.moilutils import MoilUtils
+from PyQt5 import QtWidgets
 
 
 class Panorama(object):
@@ -38,6 +39,10 @@ class Panorama(object):
                 self.parent.show_percentage()
                 self.parent.status_alpha.setText("Alpha: 0")
                 self.parent.status_beta.setText("Beta: 0")
+            else:
+                QtWidgets.QMessageBox.information(self.parent.parent,
+                                                  "Warning", "This image not support for this application. \n "
+                                                             "Please contact developer!!")
 
     def __panorama(self):
         """
