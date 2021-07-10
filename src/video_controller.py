@@ -120,20 +120,20 @@ class VideoController(object):
             if answer == QtWidgets.QMessageBox.Yes:
                 self.timer.stop()
                 self.parent.btn_play_pouse.setIcon(
-                    QtGui.QIcon("icon/play.png"))
+                    QtGui.QIcon("icon/Play.png"))
                 QtWidgets.QMessageBox.information(
                     None,
                     "Information",
                     "Video saved !!\n\nLoc: " +
                     self.videoDir)
-                self.parent.btn_Record_video.setIcon(QtGui.QIcon("icon/video-record.png"))
+                self.parent.btn_Record_video.setIcon(QtGui.QIcon("icon/Record_start.png"))
                 self.parent.btn_Record_video.setChecked(False)
                 self.video_writer = None
                 self.play = False
         else:
             self.timer.stop()
             self.parent.btn_play_pouse.setIcon(
-                QtGui.QIcon("icon/play.png"))
+                QtGui.QIcon("icon/Play.png"))
             self.play = False
 
     def play_video(self):
@@ -143,7 +143,7 @@ class VideoController(object):
         """
         if self.parent.cap.isOpened():
             self.parent.btn_play_pouse.setIcon(
-                QtGui.QIcon("icon/pause.png"))
+                QtGui.QIcon("icon/Pause.png"))
             self.timer.start(1000/self.fps)
         self.play = True
 
@@ -179,7 +179,7 @@ class VideoController(object):
 
         """
         self.play = False
-        self.parent.btn_play_pouse.setIcon(QtGui.QIcon("icon/play.png"))
+        self.parent.btn_play_pouse.setIcon(QtGui.QIcon("icon/Play.png"))
         if self.parent.cap.isOpened():
             self.timer.stop()
             self.parent.cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
@@ -255,7 +255,7 @@ class VideoController(object):
                 filename = "Recorded"  # if self.parent.normal_view else "result"
 
                 if self.videoDir is None or self.videoDir == "":
-                    self.videoDir = MoilUtils.selectDir()
+                    self.videoDir = MoilUtils.selectDirectory()
                 # print(self.videoDir)
                 if self.videoDir:
                     name = self.videoDir + "/" + filename + "_" + str(ss) + ".avi"
@@ -272,7 +272,7 @@ class VideoController(object):
                             name, cv2.VideoWriter_fourcc(
                                 *'XVID'), self.fps, (frame_width, frame_height))
                         os.makedirs(os.path.dirname(name), exist_ok=True)
-                        self.parent.btn_Record_video.setIcon(QtGui.QIcon("icon/record_start.png"))
+                        self.parent.btn_Record_video.setIcon(QtGui.QIcon("icon/Record_start.png"))
                     else:
                         self.videoDir = None
                         self.parent.btn_Record_video.setChecked(False)
@@ -286,7 +286,7 @@ class VideoController(object):
                     "Information",
                     "Video saved !!\n\nLoc: " +
                     self.videoDir)
-                self.parent.btn_Record_video.setIcon(QtGui.QIcon("icon/video-record.png"))
+                self.parent.btn_Record_video.setIcon(QtGui.QIcon("icon/Save_video-record.png"))
                 self.video_writer = None
 
     def action_record_video(self):
@@ -322,7 +322,7 @@ class VideoController(object):
                             name, cv2.VideoWriter_fourcc(
                                 *'XVID'), self.fps, (frame_width, frame_height))
                         os.makedirs(os.path.dirname(name), exist_ok=True)
-                        self.parent.btn_Record_video.setIcon(QtGui.QIcon("icon/record_start.png"))
+                        self.parent.btn_Record_video.setIcon(QtGui.QIcon("icon/Record_start.png"))
                 else:
                     self.parent.actionRecord_video.setChecked(False)
 
@@ -330,14 +330,14 @@ class VideoController(object):
                 self.video_writer.release()
                 self.timer.stop()
                 self.parent.btn_play_pouse.setIcon(
-                    QtGui.QIcon("icon/play.png"))
+                    QtGui.QIcon("icon/Play.png"))
                 QtWidgets.QMessageBox.information(
                     self.parent,
                     "Information",
                     "Video saved !!\n\nLoc: " +
                     self.videoDir)
                 self.timer.start()
-                self.parent.btn_Record_video.setIcon(QtGui.QIcon("icon/video-record.png"))
+                self.parent.btn_Record_video.setIcon(QtGui.QIcon("icon/Save_video-record.png"))
 
     def selectDir(self):
         """
