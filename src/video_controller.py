@@ -286,7 +286,7 @@ class VideoController(object):
                     "Information",
                     "Video saved !!\n\nLoc: " +
                     self.videoDir)
-                self.parent.btn_Record_video.setIcon(QtGui.QIcon("icon/Save_video-record.png"))
+                self.parent.btn_Record_video.setIcon(QtGui.QIcon("icon/save_record_B.png"))
                 self.video_writer = None
 
     def action_record_video(self):
@@ -337,7 +337,7 @@ class VideoController(object):
                     "Video saved !!\n\nLoc: " +
                     self.videoDir)
                 self.timer.start()
-                self.parent.btn_Record_video.setIcon(QtGui.QIcon("icon/Save_video-record.png"))
+                self.parent.btn_Record_video.setIcon(QtGui.QIcon("icon/save_record_B.png"))
 
     def selectDir(self):
         """
