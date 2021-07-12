@@ -4,7 +4,6 @@
 #   Based on Moil-Lab (Ming Chi University of Technology)               #
 #########################################################################
 import cv2
-import datetime
 import numpy as np
 from help import Help
 from PyQt5 import QtWidgets, QtGui, QtCore
@@ -107,7 +106,7 @@ class Controller(Ui_MainWindow):
         self.btn_about_moilapp.clicked.connect(self.onclick_help)
         self.btn_about_us.clicked.connect(Help.about_us)
         self.btn_MoilApp_help.clicked.connect(self.onclick_help_moil)
-        self.actionAbout_Apps.triggered.connect(Help.help_moilApp)
+        self.actionAbout_Apps.triggered.connect(self.onclick_help_moil)
         self.actionCreatePlugins.triggered.connect(Help.help_create_plugin)
         self.actionAbout_Us.triggered.connect(Help.about_us)
         self.actionHelpPlugins.triggered.connect(Help.help_plugin)

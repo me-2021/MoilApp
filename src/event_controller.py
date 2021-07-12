@@ -37,26 +37,18 @@ class MouseEvent(object):
 
         """
         if self.parent.image is not None:
+            pos_x = round(e.x())
+            pos_y = round(e.y())
             if e.button() == QtCore.Qt.LeftButton:
-                pos_x = round(e.x())
-                pos_y = round(e.y())
                 ratio_x, ratio_y = self.init_ori_ratio(self.parent.image)
-                coordinate_X = round(pos_x * ratio_x)
-                coordinate_Y = round(pos_y * ratio_y)
-                self.parent.point = (coordinate_X, coordinate_Y)
-                if self.parent.normal_view:
-                    pass
-
+                X = round(pos_x * ratio_x)
+                Y = round(pos_y * ratio_y)
+                self.parent.point = (X, Y)
                 if self.parent.anypoint_view:
                     self.parent.anypoint.alpha, self.parent.anypoint.beta = self.parent.anypoint.moildev.getAlphaBeta(
-                        coordinate_X, coordinate_Y, self.parent.anypoint.anypoint_mode)
+                        X, Y, self.parent.anypoint.anypoint_mode)
                     # print(self.anypoint.alpha, self.anypoint.beta)
                     self.parent.anypoint.process_to_anypoint()
-
-                elif self.parent.panorama_view:
-                    print("coming soon")
-                else:
-                    pass
 
     def mouseDoubleclick_event(self, e):
         """
@@ -69,14 +61,10 @@ class MouseEvent(object):
 
         """
         if self.parent.image is not None:
-            if self.parent.normal_view:
-                pass
-            elif self.parent.anypoint_view:
+            if self.parent.anypoint_view:
                 self.parent.anypoint.resetAlphaBeta()
                 self.parent.anypoint.process_to_anypoint()
                 self.parent.show_percentage()
-            else:
-                pass
 
     def mouse_wheelEvent(self, e):
         """
@@ -195,16 +183,21 @@ class MouseEvent(object):
         Returns:
 
         """
+        global coordinate_X, coordinate_Y
         pos_x = round(e.x())
         pos_y = round(e.y())
         if self.parent.image is not None:
             ratio_x, ratio_y = self.init_ori_ratio(self.parent.image)
-            coordinate_X = round(pos_x * ratio_x)
-            coordinate_Y = round(pos_y * ratio_y)
+            X = round(pos_x * ratio_x)
+            Y = round(pos_y * ratio_y)
+            if X <= 0 or X >= self.parent.w and Y <= 0 or Y >= self.parent.h:
+                coordinate_X = int(self.parent.w / 2)
+                coordinate_Y = int(self.parent.h / 2)
+            else:
+                coordinate_X = X
+                coordinate_Y = Y
             if e.buttons() == QtCore.Qt.NoButton:
-                if self.parent.normal_view:
-                    pass
-                elif self.parent.anypoint_view:
+                if self.parent.anypoint_view:
                     self.parent.anypoint.alpha, self.parent.anypoint.beta = self.parent.anypoint.moildev.getAlphaBeta(
                         coordinate_X, coordinate_Y, self.parent.anypoint.anypoint_mode)
                     self.parent.status_alpha.setText("Alpha: %.2f" % self.parent.anypoint.alpha)
@@ -212,14 +205,12 @@ class MouseEvent(object):
 
             elif e.buttons() == QtCore.Qt.LeftButton:
                 self.parent.point = (coordinate_X, coordinate_Y)
-                if self.parent.normal_view:
-                    pass
-                elif self.parent.anypoint_view:
+                if self.parent.anypoint_view:
                     self.parent.anypoint.alpha, self.parent.anypoint.beta = self.parent.anypoint.moildev.getAlphaBeta(
                         coordinate_X, coordinate_Y, self.parent.anypoint.anypoint_mode)
+                    self.parent.status_alpha.setText("Alpha: %.2f" % self.parent.anypoint.alpha)
+                    self.parent.status_beta.setText("Beta: %.2f" % self.parent.anypoint.beta)
                     self.parent.anypoint.process_to_anypoint()
-                elif self.parent.panorama_view:
-                    print("coming soon")
 
     def init_ori_ratio(self, image):
         """

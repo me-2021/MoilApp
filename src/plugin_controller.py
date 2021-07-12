@@ -48,7 +48,7 @@ class PluginController(object):
         """
         self.main_controller.open_plugin = True
         if index == -1:
-            QtWidgets.QMessageBox.warning(None, "Warning", " No Instalation Plugin, please add frist !!")
+            QtWidgets.QMessageBox.warning(None, "Warning", " No Installation Plugin, please add first !!")
         else:
             self.plugins.application(self.plugin_win[index], index)
 

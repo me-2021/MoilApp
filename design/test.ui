@@ -16,6 +16,18 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QPushButton" name="pushButton">
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="toolTip">
+      <string>heyyyyy</string>
+     </property>
+     <property name="toolTipDuration">
+      <number>-5</number>
+     </property>
+     <property name="statusTip">
+      <string>hgyyi</string>
+     </property>
      <property name="text">
       <string>PushButton</string>
      </property>
@@ -35,6 +47,9 @@
      </item>
      <item>
       <widget class="QLabel" name="label_2">
+       <property name="toolTip">
+        <string/>
+       </property>
        <property name="frameShape">
         <enum>QFrame::Box</enum>
        </property>

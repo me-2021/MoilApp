@@ -34,6 +34,7 @@ class ControllerMain(Ui_MainWindow):
         self.actionOpen_image.triggered.connect(self.open_image)
         self.actionMaximize.triggered.connect(self.onclick_maximize)
         self.actionMinimize.triggered.connect(self.onclick_minimize)
+        self.actionExit.triggered.connect(self.parent.close)
         self.Label_image_L.mousePressEvent = self.mouse_label_image_left
         self.Label_Image_R.mousePressEvent = self.mouse_label_image_right
         self.checkBox_5.clicked.connect(self.show_corner_detection)
@@ -306,4 +307,4 @@ class ControllerMain(Ui_MainWindow):
                                    self.width_image)
 
     def close_event(self, e):
-        self.camParams.close()
+        self.parent.close()

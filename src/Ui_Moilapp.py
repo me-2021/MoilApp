@@ -180,8 +180,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.btn_about_moilapp.setSizePolicy(sizePolicy)
         self.btn_about_moilapp.setMinimumSize(QtCore.QSize(40, 40))
         self.btn_about_moilapp.setStyleSheet("QPushButton{ background-color :  rgb(211, 215, 207);}\n"
-                                         "QPushButton::pressed{ background-color : #71AED1; }\n"
-                                         "border-radius: 10px;")
+                                             "QPushButton::pressed{ background-color : #71AED1; }\n"
+                                             "border-radius: 10px;")
         self.btn_about_moilapp.setText("")
         icon4 = QtGui.QIcon()
         icon4.addPixmap(QtGui.QPixmap("icon/help_question.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -197,8 +197,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.btn_MoilApp_help.setSizePolicy(sizePolicy)
         self.btn_MoilApp_help.setMinimumSize(QtCore.QSize(30, 40))
         self.btn_MoilApp_help.setStyleSheet("QPushButton{ background-color :  rgb(211, 215, 207);}\n"
-                                         "QPushButton::pressed{ background-color : #71AED1; }\n"
-                                         "border-radius: 10px;")
+                                            "QPushButton::pressed{ background-color : #71AED1; }\n"
+                                            "border-radius: 10px;")
         self.btn_MoilApp_help.setText("")
         icon5 = QtGui.QIcon()
         icon5.addPixmap(QtGui.QPixmap("icon/Help_MoilApp.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -214,8 +214,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.btn_about_us.setSizePolicy(sizePolicy)
         self.btn_about_us.setMinimumSize(QtCore.QSize(30, 40))
         self.btn_about_us.setStyleSheet("QPushButton{ background-color :  rgb(211, 215, 207);}\n"
-                                         "QPushButton::pressed{ background-color : #71AED1; }\n"
-                                         "border-radius: 10px;")
+                                        "QPushButton::pressed{ background-color : #71AED1; }\n"
+                                        "border-radius: 10px;")
         self.btn_about_us.setText("")
         icon6 = QtGui.QIcon()
         icon6.addPixmap(QtGui.QPixmap("icon/Info_mark.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -1415,6 +1415,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         font.setFamily("DejaVu Serif")
         font.setPointSize(12)
         self.actionLoad_Image.setFont(font)
+        self.actionLoad_Image.setShortcut("Ctrl+I")
         self.actionLoad_Image.setObjectName("actionLoad_Image")
         self.actionLoad_Video = QtWidgets.QAction(MainWindow)
         self.actionLoad_Video.setIcon(icon8)
@@ -1422,6 +1423,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         font.setFamily("DejaVu Serif")
         font.setPointSize(12)
         self.actionLoad_Video.setFont(font)
+        self.actionLoad_Video.setShortcut("Ctrl+V")
         self.actionLoad_Video.setObjectName("actionLoad_Video")
         self.actionOpen_Cam = QtWidgets.QAction(MainWindow)
         icon_opencam = QtGui.QIcon()
@@ -1434,6 +1436,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         font.setFamily("DejaVu Serif")
         font.setPointSize(12)
         self.actionOpen_Cam.setFont(font)
+        self.actionOpen_Cam.setShortcut("Ctrl+C")
         self.actionOpen_Cam.setObjectName("actionOpen_Cam")
         self.actionRecord_video = QtWidgets.QAction(MainWindow)
         icon_record = QtGui.QIcon()
@@ -1447,12 +1450,14 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         font.setPointSize(12)
         self.actionRecord_video.setFont(font)
         self.actionRecord_video.setCheckable(True)
+        self.actionRecord_video.setShortcut("Ctrl+R")
         self.actionRecord_video.setObjectName("actionRecord_video")
         self.actionSave_Image = QtWidgets.QAction(MainWindow)
         font = QtGui.QFont()
         font.setFamily("DejaVu Serif")
         font.setPointSize(12)
         self.actionSave_Image.setFont(font)
+        self.actionSave_Image.setShortcut("Ctrl+S")
         self.actionSave_Image.setObjectName("actionSave_Image")
         icon_saveimage = QtGui.QIcon()
         icon_saveimage.addPixmap(
@@ -1471,6 +1476,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         font.setFamily("DejaVu Serif")
         font.setPointSize(12)
         self.actionExit.setFont(font)
+        self.actionExit.setShortcut("Ctrl+Q")
         self.actionExit.setObjectName("actionExit")
 
         self.actionMaximize = QtWidgets.QAction(MainWindow)
@@ -1478,6 +1484,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         font.setFamily("DejaVu Serif")
         font.setPointSize(12)
         self.actionMaximize.setFont(font)
+        self.actionMaximize.setShortcut("F11")
         self.actionMaximize.setObjectName("actionMaximize")
         icon_maximiza = QtGui.QIcon()
         icon_maximiza.addPixmap(
@@ -1490,6 +1497,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         font.setFamily("DejaVu Serif")
         font.setPointSize(12)
         self.actionMinimize.setFont(font)
+        self.actionMinimize.setShortcut("Esc")
         self.actionMinimize.setObjectName("actionMinimize")
         icon_minimize = QtGui.QIcon()
         icon_minimize.addPixmap(
@@ -1550,6 +1558,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         font.setFamily("DejaVu Serif")
         font.setPointSize(12)
         self.actionAbout_Apps.setFont(font)
+        self.actionAbout_Apps.setShortcut("Ctrl+Shift+/")
         self.actionAbout_Apps.setObjectName("actionAbout_Apps")
 
         # self.actiontest = QtWidgets.QAction(MainWindow)
@@ -1607,6 +1616,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         font.setFamily("DejaVu Serif")
         font.setPointSize(12)
         self.action_accessibility.setFont(font)
+        self.action_accessibility.setShortcut("Alt+Shift+A")
         self.action_accessibility.setObjectName("action_accessibility")
 
         self.actionCamera_Parameters = QtWidgets.QAction(MainWindow)
@@ -1620,6 +1630,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         font.setFamily("DejaVu Serif")
         font.setPointSize(12)
         self.actionCamera_Parameters.setFont(font)
+        self.actionCamera_Parameters.setShortcut("Ctrl+P")
         self.actionCamera_Parameters.setObjectName("actionCamera_Parameters")
         self.menuFile.addAction(self.actionLoad_Image)
         self.menuFile.addAction(self.actionLoad_Video)
@@ -1678,14 +1689,14 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         # source
         self.btn_Open_Image.setToolTip(_translate("MainWindow", "Load Image"))
         self.btn_Open_Image.setStatusTip(_translate("MainWindow", "Open image from local directory (Ctrl+i)"))
-        self.btn_Open_Image.setShortcut(_translate("MainWindow", "Ctrl+I"))
+        # self.btn_Open_Image.setShortcut(_translate("MainWindow", "Ctrl+I"))
         self.btn_Open_Video.setToolTip(_translate("MainWindow", "Load Video"))
         self.btn_Open_Video.setStatusTip(_translate("MainWindow", "Open Video file from local directory (Ctrl+v)"))
-        self.btn_Open_Video.setShortcut(_translate("MainWindow", "Ctrl+V"))
+        # self.btn_Open_Video.setShortcut(_translate("MainWindow", "Ctrl+V"))
         self.btn_Open_Cam.setToolTip(_translate("MainWindow", "Open Camera"))
         self.btn_Open_Cam.setStatusTip(_translate("MainWindow", "Open camera source, its can be streaming URL camera "
                                                                 "or usb camera (Ctrl+C)"))
-        self.btn_Open_Cam.setShortcut(_translate("MainWindow", "Ctrl+C"))
+        # self.btn_Open_Cam.setShortcut(_translate("MainWindow", "Ctrl+C"))
         # zoom
         self.btn_Zoom_in.setToolTip(_translate("MainWindow", "Zoom in"))
         self.btn_Zoom_in.setStatusTip(
@@ -1740,11 +1751,10 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.label_clear.setText(_translate("MainWindow", "Clear"))
         self.btn_clear.setToolTip(_translate("MainWindow", "Clear"))
         self.btn_clear.setStatusTip(_translate("MainWindow", "Remove all content on user interface"))
-        self.btn_about_us.setShortcut(_translate("MainWindow", "Ctrl+Shift+/"))
 
         self.btn_about_us.setToolTip(_translate("MainWindow", "About Us"))
-        self.btn_about_us.setStatusTip(_translate("MainWindow", "Show information about developer grub"))
-        self.btn_MoilApp_help.setToolTip(_translate("MainWindow", "MoilApp Helps"))
+        self.btn_about_us.setStatusTip(_translate("MainWindow", "Show information about developer"))
+        self.btn_MoilApp_help.setToolTip(_translate("MainWindow", "MoilApp Helps, Content still under developing"))
         self.btn_MoilApp_help.setStatusTip(_translate("MainWindow", "Information of All application"))
         self.btn_about_moilapp.setToolTip(_translate("MainWindow", "About MoilApp"))
         self.btn_about_moilapp.setStatusTip(_translate("MainWindow", "Show information about MoilApp"))
@@ -1770,8 +1780,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.actionLoad_Video.setText(_translate("MainWindow", "Load Video"))
         self.actionLoad_Video.setStatusTip(_translate("MainWindow", "Open Video file from local directory (Ctrl+v)"))
         self.actionOpen_Cam.setText(_translate("MainWindow", "Open Cam"))
-        self.actionOpen_Cam.setStatusTip(_translate("MainWindow", "Open camera source, its can be streaming URL camera "
-                                                                "or usb camera (Ctrl+C)"))
+        self.actionOpen_Cam.setStatusTip(_translate("MainWindow", "Open camera source, its can be streaming camera "
+                                                                  "or usb camera (Ctrl+c)"))
         self.actionRecord_video.setText(
             _translate("MainWindow", "Record video"))
         self.actionRecord_video.setStatusTip(_translate("MainWindow", "Record a video"))
@@ -1814,7 +1824,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.btn_left_view.setToolTip(_translate("MainWindow", "Left view"))
         self.btn_left_view.setStatusTip(_translate("MainWindow", "Showing anypoint on left direction"))
         self.btn_Down_view.setShortcut(_translate("MainWindow", "Down"))
-        self.btn_Down_view.setToolTip(_translate("MainWindow", "Below view"))
+        self.btn_Down_view.setToolTip(_translate("MainWindow", "Buttom view"))
         self.btn_Down_view.setStatusTip(_translate("MainWindow", "Showing anypoint on below direction"))
         self.btn_center_view.setToolTip(_translate("MainWindow", "Center view"))
         self.btn_center_view.setStatusTip(_translate("MainWindow", "Showing center view of anypoint"))
@@ -1836,13 +1846,13 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.anypoint_zoom_2.setStatusTip(_translate("MainWindow", "Zoom factor of anypoint"))
 
         # Plugins
-        self.btn_add_apps.setToolTip(_translate("MainWindow", "Add apps"))
+        self.btn_add_apps.setToolTip(_translate("MainWindow", "Add Application plugins"))
         self.btn_add_apps.setStatusTip(_translate("MainWindow", "Add new plugin applications"))
         self.comboBox.setToolTip(_translate("MainWindow", "Application list"))
         self.comboBox.setStatusTip(_translate("MainWindow", "Select application here to open or delete"))
-        self.btn_open_app.setToolTip(_translate("MainWindow", "Open apps"))
+        self.btn_open_app.setToolTip(_translate("MainWindow", "Open Application plugins"))
         self.btn_open_app.setStatusTip(_translate("MainWindow", "Open plugin application"))
-        self.btn_delete_app.setToolTip(_translate("MainWindow", "Delete apps"))
+        self.btn_delete_app.setToolTip(_translate("MainWindow", "Delete Application plugins"))
         self.btn_delete_app.setStatusTip(_translate("MainWindow", "Delete plugin application"))
         self.actionCamera_Parameters.setText(_translate("MainWindow", "Cam Parameters"))
         self.actionCamera_Parameters.setStatusTip(_translate("MainWindow", "Add, edit or delete parameter of camera"))

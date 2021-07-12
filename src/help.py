@@ -40,7 +40,7 @@ class Help(Ui_Help):
         msgbox.setWindowTitle("About Us")
         msgbox.setText(
             "MOIL \n\nOmnidirectional Imaging & Surveillance Lab\nMing Chi University of Technology\n")
-        msgbox.setIconPixmap(QtGui.QPixmap('icon/moildev2.png'))
+        msgbox.setIconPixmap(QtGui.QPixmap('icon/moilApp_48px.png'))
         msgbox.exec()
 
     @classmethod
@@ -70,7 +70,7 @@ class Help(Ui_Help):
         msgbox.setWindowTitle("Help Plugin")
         msgbox.setText(
             "Comming soon !!!!!!!!\n")
-        msgbox.setIconPixmap(QtGui.QPixmap('icon/moildev2.png'))
+        msgbox.setIconPixmap(QtGui.QPixmap('icon/moilApp_48px.png'))
         msgbox.exec()
 
     @classmethod
@@ -87,7 +87,7 @@ class Help(Ui_Help):
             "widget_controller is an image that has been undistorted in a certain"
             "area according to the input coordinates."
             "\n\nMore reference about Moildev, contact us\n\n")
-        msgbox.setIconPixmap(QtGui.QPixmap('icon/moildev2.png'))
+        msgbox.setIconPixmap(QtGui.QPixmap('icon/moilApp_48px.png'))
         msgbox.exec()
 
     def eventButton(self):
