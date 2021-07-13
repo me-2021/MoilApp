@@ -1,6 +1,7 @@
 from .controller import UiController
 from base_plugin import Plugin
-
+import sys
+from PyQt5 import QtWidgets
 
 class HelloWorld(Plugin):
     def __init__(self):

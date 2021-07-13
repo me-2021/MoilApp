@@ -69,7 +69,7 @@ class PluginCollection(object):
                     # only add classes that are a sub class of plugin, but not
                     # plugin it self
                     if issubclass(c, Plugin) & (c is not Plugin):
-                        # print(f'Found Plugin class: {c.__module__}')
+                        # print(f'Found Plugin class: {c.__name__}')
                         self.path_folder.append(c.__module__)
                         self.name_application.append(c.__name__)
                         self.plugins.append(c())

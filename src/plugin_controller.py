@@ -111,7 +111,7 @@ class PluginController(object):
         """
 
         if index == -1:
-            QtWidgets.QMessageBox.warning(None, "Warning", " No Instalation Plugin, please add frist !!")
+            QtWidgets.QMessageBox.warning(None, "Warning", " No Installation Plugin Application!!")
         else:
             name = self.plugins.name_application[index]
             path = self.plugins.path_folder[index]
@@ -129,9 +129,9 @@ class PluginController(object):
             if reply == QtWidgets.QMessageBox.Yes:
                 shutil.rmtree(path, ignore_errors=True)
                 self.plugins.reload_plugins()
-                new_list = self.plugins.name_application
+                newList = self.plugins.name_application
                 self.main_controller.comboBox.clear()
-                self.main_controller.comboBox.addItems(new_list)
+                self.main_controller.comboBox.addItems(newList)
                 self.init_plugin_win()
                 QtWidgets.QMessageBox.information(None, "Information", "Plugins was successfully deleted !!")
 
@@ -148,15 +148,31 @@ class PluginController(object):
             original = dir_plugin
             name_plug = os.path.basename(os.path.normpath(original))
             target = 'plugins/'
-            name_exist = Path(target+name_plug)
+            name_exist = Path(target + name_plug)
             if name_exist.exists():
-                QtWidgets.QMessageBox.information(None, "Information", "Plugins already exist!!")
+                QtWidgets.QMessageBox.warning(None, "Warning !!", "Plugins already exist!!")
             else:
+                listApp = self.plugins.name_application
                 MoilUtils.copyDirectory(original, target)
                 self.plugins.reload_plugins()
-                new_list = self.plugins.name_application
+                newList = self.plugins.name_application
+                name = [item for item in newList if item not in listApp]
+                index = newList.index(self.listToString(name))
                 self.main_controller.comboBox.clear()
-                self.main_controller.comboBox.addItems(new_list)
+                self.main_controller.comboBox.addItems(newList)
+                self.main_controller.comboBox.setCurrentIndex(index)
                 self.init_plugin_win()
-                QtWidgets.QMessageBox.information(None, "Information", "Plugins was successfully added !!")
+                QtWidgets.QMessageBox.information(None, "Information", "Plugins was successfully added!!")
 
+    @classmethod
+    def listToString(cls, listIn):
+        """
+        Initialize an empty string
+        Args:
+            listIn (): List input
+
+        Returns:
+
+        """
+        str1 = " "
+        return str1.join(listIn)
