@@ -98,8 +98,8 @@ class UiController(Ui_MainWindow):
 
         self.btn_rotate_left.clicked.connect(self.manipulate.rotate_left)
         self.btn_rotate_right.clicked.connect(self.manipulate.rotate_right)
-        self.btn_zoom_out.clicked.connect(self.manipulate.zoom_in)
-        self.btn_zoom_in.clicked.connect(self.manipulate.zoom_out)
+        self.btn_zoom_out.clicked.connect(self.manipulate.zoom_out)
+        self.btn_zoom_in.clicked.connect(self.manipulate.zoom_in)
         self.btn_save_image.clicked.connect(self.save_image)
         self.actionExit.triggered.connect(self.parent.close)
         self.button_menu.clicked.connect(self.control_extra_button)

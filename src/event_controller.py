@@ -1,7 +1,5 @@
 from PyQt5 import QtCore, QtWidgets
-# from anypoint import Anypoint
 from moilutils.moilutils import MoilUtils
-import cv2
 
 
 class MouseEvent(object):
@@ -12,7 +10,6 @@ class MouseEvent(object):
             main_controller (): The main class of this application
         """
         self.parent = main_controller
-        # self.anypoint = Anypoint(self.parent)
         self.__connect_event()
 
     def __connect_event(self):
@@ -148,6 +145,7 @@ class MouseEvent(object):
                 self.parent.comboBox_zoom.setCurrentIndex(8)
                 self.parent.comboBox_zoom.setItemText(8, "Zoom Area")
                 self.parent.zoom_area = True
+                self.parent.buttonBack.show()
 
             if e.button() == QtCore.Qt.RightButton:
                 self.menuMouseEvent(e)

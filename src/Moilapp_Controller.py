@@ -4,6 +4,7 @@
 #   Based on Moil-Lab (Ming Chi University of Technology)               #
 #########################################################################
 import cv2
+import webbrowser
 import numpy as np
 from help import Help
 from PyQt5 import QtWidgets, QtGui, QtCore
@@ -75,7 +76,7 @@ class Controller(Ui_MainWindow):
         self.video_controller.set_button_disable()
         self.frame_panorama.hide()
         self.frame_navigator.hide()
-        # self.label_34.hide()
+        self.buttonBack.hide()
         self.connect_event()
 
     def connect_event(self):
@@ -84,17 +85,40 @@ class Controller(Ui_MainWindow):
         and etc to the function processing.
 
         """
-        # action from menubar
         self.parent.closeEvent = self.closeEvent
         self.parent.resizeEvent = self.resizeEvent
-        self.actionExit.triggered.connect(self.onclick_exit)
+        # action from menubar menu file
         self.actionLoad_Image.triggered.connect(self.open_image)
         self.actionLoad_Video.triggered.connect(self.onclick_load_video)
         self.actionOpen_Cam.triggered.connect(self.onclick_open_camera)
         self.actionCamera_Parameters.triggered.connect(self.cam_params_window)
+        self.actionRecord_video.triggered.connect(self.video_controller.action_record_video)
         self.actionSave_Image.triggered.connect(self.save_image)
+        self.actionExit.triggered.connect(self.onclick_exit)
+
+        # action from menubar menu view
+        self.actionRotateLeft.triggered.connect(self.manipulate.rotate_left)
+        self.actionRotateRight.triggered.connect(self.manipulate.rotate_right)
+        self.actionZoomIn.triggered.connect(self.manipulate.zoom_in)
+        self.actionZoomOut.triggered.connect(self.manipulate.zoom_out)
+
+        # action from menubar menu Window
+        self.actionMaximize.triggered.connect(self.maximize_view)
+        self.actionMinimize.triggered.connect(self.minimize_view)
+
+        # action from menubar menu apps
+        self.actionAdd_Apps.triggered.connect(self.control_plugin.add_application)
+        self.actionDelete_Apps.triggered.connect(self.control_plugin.action_delete_apps)
+        self.actionOpen_Apps.triggered.connect(self.control_plugin.action_open_apps)
+        self.actionCreatePlugins.triggered.connect(self.winHelp.help_create_plugin)
+        self.actionHelpPlugins.triggered.connect(self.winHelp.help_plugin)
+
+        #action from menubar menu help
+        self.actionAbout_Apps.triggered.connect(self.onclick_help_moil)
+        self.actionAbout_Us.triggered.connect(self.winHelp.about_us)
         self.action_accessibility.triggered.connect(self.onclick_accessibility)
-        self.comboBox_zoom.activated.connect(self.combo_percentage_zoom)
+        self.actionReleaseNote.triggered.connect(self.onclickReleaseNote)
+        self.actionCheckUpdate.triggered.connect(self.checkUpdate)
 
         # connect button to function
         self.btn_Open_Image.clicked.connect(self.open_image)
@@ -102,31 +126,35 @@ class Controller(Ui_MainWindow):
         self.btn_Open_Cam.clicked.connect(self.onclick_open_camera)
         self.btn_Save_Image.clicked.connect(self.save_image)
         self.btn_normal.clicked.connect(self.onclick_view_normal)
-        self.listWidget.currentItemChanged.connect(self.saved_image_activated)
-        self.btn_about_moilapp.clicked.connect(self.onclick_help)
-        self.btn_about_us.clicked.connect(Help.about_us)
-        self.btn_MoilApp_help.clicked.connect(self.onclick_help_moil)
-        self.actionAbout_Apps.triggered.connect(self.onclick_help_moil)
-        self.actionCreatePlugins.triggered.connect(Help.help_create_plugin)
-        self.actionAbout_Us.triggered.connect(Help.about_us)
-        self.actionHelpPlugins.triggered.connect(Help.help_plugin)
-        self.actionMaximize.triggered.connect(self.maximize_view)
-        self.actionMinimize.triggered.connect(self.minimize_view)
-        self.button_menu.clicked.connect(self.control_frame_view_button)
 
+        self.btnHelpMoil.clicked.connect(self.onclick_help_moil)
+        self.btnAboutUs.clicked.connect(self.winHelp.about_us)
+
+        # btn Plugin controller
+        self.btn_add_apps.clicked.connect(self.control_plugin.add_application)
+        self.btn_open_app.clicked.connect(self.control_plugin.btn_open_apps)
+        self.btn_delete_app.clicked.connect(self.control_plugin.btn_delete_apps)
+
+        # media player controller
         self.btn_play_pouse.clicked.connect(self.video_controller.onclick_play_pause_button)
         self.btn_stop_video.clicked.connect(self.video_controller.stop_video)
         self.btn_prev_video.clicked.connect(self.video_controller.prev_video)
         self.btn_skip_video.clicked.connect(self.video_controller.skip_video)
-        self.actionRecord_video.triggered.connect(self.video_controller.action_record_video)
         self.btn_Record_video.clicked.connect(self.video_controller.recordVideo)
         self.slider_Video.valueChanged.connect(self.video_controller.changeValueSlider)
 
+        # control view
         self.btn_Rotate_Left.clicked.connect(self.manipulate.rotate_left)
         self.btn_Rotate_Right.clicked.connect(self.manipulate.rotate_right)
         self.btn_Zoom_in.clicked.connect(self.manipulate.zoom_in)
         self.btn_Zoom_out.clicked.connect(self.manipulate.zoom_out)
+
+        # others
         self.btn_clear.clicked.connect(self.onclick_clear)
+        self.listWidget.currentItemChanged.connect(self.saved_image_activated)
+        self.comboBox_zoom.activated.connect(self.combo_percentage_zoom)
+        self.button_menu.clicked.connect(self.control_frame_view_button)
+        self.buttonBack.clicked.connect(self.show_to_window)
 
     def onclick_clear(self):
         if self.cam:
@@ -136,6 +164,7 @@ class Controller(Ui_MainWindow):
         self.label_Result_Image.clear()
         self.label_Result_Image.setMaximumSize(QtCore.QSize(1080, 810))
         self.label_Result_Image.setMinimumSize(QtCore.QSize(1080, 810))
+        self.label_Original_Image.setMinimumSize(QtCore.QSize(266, 200))
         self.label_Original_Image.clear()
         self.reset_mode_view()
         self.comboBox_zoom.removeItem(8)
@@ -143,6 +172,7 @@ class Controller(Ui_MainWindow):
         self.label_Application.setText("MoilApp")
         self.parent.setWindowTitle("MoilApp")
         self.image = None
+        self.buttonBack.hide()
 
     def open_image(self):
         """
@@ -257,6 +287,7 @@ class Controller(Ui_MainWindow):
 
         """
         self.zoom_area = False
+        self.buttonBack.hide()
         image = self.image.copy()
         h, w = image.shape[:2]
         radius = 6 if self.h < 800 else 10
@@ -486,6 +517,7 @@ class Controller(Ui_MainWindow):
         self.frame_16.hide()
         self.frame_17.hide()
         self.frame_18.hide()
+        self.labelOrginalTitle.hide()
         self.label_time_recent.hide()
         self.slider_Video.hide()
         self.label_time_end.hide()
@@ -498,6 +530,7 @@ class Controller(Ui_MainWindow):
         Control the widget on user interface to make possible in minimum size.
 
         """
+        self.labelOrginalTitle.show()
         self.label_saved_image.show()
         self.listWidget.show()
         self.frame_original_image.show()
@@ -520,6 +553,29 @@ class Controller(Ui_MainWindow):
         self.frame_clear.show()
         self.statusbar.show()
 
+    def onclickReleaseNote(self):
+        """
+        Showing the message box to show help information obout this application.
+
+        """
+        msgbox = QtWidgets.QMessageBox()
+        msgbox.setWindowTitle("Release Note")
+        msgbox.setText(
+            "New features MoilApp Version 3.2*\n\n"
+            "There are many updates in this version, "
+            "which can improve the results of processing fisheye camera images, including: \n\n"
+            "1. Shortcuts for every process and button work well, show on accessibility in menu help\n"
+            "2. Added redo function during zoom area\n"
+            "3. Added Menubar View for manipulate view image\n"
+            "4. Fix bug in zoom area\n"
+            "5. Record video using action or button\n"
+            "\nMore Documentation about MoilApp, visit: \nhttps://oil-mcut.educationhost.cloud/moilapp/\n")
+        msgbox.exec()
+
+    @classmethod
+    def checkUpdate(cls):
+        webbrowser.open('https://www.oil-mcut.educationhost.cloud/moilapp/')
+
     def onclick_accessibility(self):
         """
         Open prompt for accessibility MoilApp
@@ -532,25 +588,31 @@ class Controller(Ui_MainWindow):
                                           "Crtl + I\t: Open Image\n"
                                           "Ctrl + V\t: Open Video\n"
                                           "Ctrl + C\t: Open cam\n"
-                                          "= \t: Zoom In\n"
+                                          "Ctrl + P\t: Open Camera parameters form\n"
+                                          "Ctrl + R\t: Record Video\n"
+                                          "Ctrl + S\t: Save image\n"
+                                          "Ctrl + Q\t: Exit apps\n"
+                                          "+ \t: Zoom In\n"
                                           "- \t: Zoom Out\n"
-                                          "Ctrl + Left\t: Prev video\n"
+                                          "F11 \t: Maximized window\n"
+                                          "Esc \t: Minimized window\n"
+                                          "Ctrl + Left\t: Backward video in 5 seconds\n"
                                           "Space\t: play/pause video\n"
                                           "0 \t: Stop video\n"
-                                          "Ctrl+Right\t: skip video\n"
+                                          "Ctrl + Right\t: Forward video in 5 seconds\n"
                                           "Up\t: Up View\n"
                                           "Right\t: Right view\n"
                                           "Left\t: Left view\n"
                                           "Down\t: Down View\n"
-                                          "Ctrl+Shift+/\t:show help\n\n")
+                                          "Ctrl + Shift + /\t:show help\n"
+                                          "Alt + Shift + A\t:Show Accessibility\n\n")
 
-    @classmethod
-    def onclick_help(cls):
+    def onclick_help(self):
         """
         Showing the message box to show help information obout this application.
 
         """
-        Help.help_moilApp()
+        self.winHelp.help_moilApp()
 
     def onclick_help_moil(self):
         self.dialogHelp.show()

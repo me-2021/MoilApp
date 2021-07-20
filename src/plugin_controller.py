@@ -15,15 +15,6 @@ class PluginController(object):
         self.plugins = PluginCollection("plugins")
         self.init_plugin_win()
         self.main_controller.comboBox.addItems(self.plugins.name_application)
-        self.connect_button()
-
-    def connect_button(self):
-        self.main_controller.btn_open_app.clicked.connect(self.btn_open_apps)
-        self.main_controller.btn_add_apps.clicked.connect(self.add_application)
-        self.main_controller.btn_delete_app.clicked.connect(self.btn_delete_apps)
-        self.main_controller.actionAdd_Apps.triggered.connect(self.add_application)
-        self.main_controller.actionDelete_Apps.triggered.connect(self.action_delete_apps)
-        self.main_controller.actionOpen_Apps.triggered.connect(self.action_open_apps)
 
     def init_plugin_win(self):
         self.plugin_win = []

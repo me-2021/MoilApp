@@ -23,3 +23,17 @@ update 22/06/2021
    1. add plugin template
    2. modify record video that can combine original and result frame on same file
 
+
+update 20/07/2021
+There are many updates in this version, which can improve the results of processing fisheye camera images, including: 
+
+   1. Shortcuts for every process and button work well, show on accessibility in menu help
+   2. Added redo function during zoom area
+   3. Added Menubar View for manipulate view image
+   4. Fix bug in zoom area
+   5. Record video using action or button
+
+   More Documentation about MoilApp, visit: 
+   https://oil-mcut.educationhost.cloud/moilapp/
+
+

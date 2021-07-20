@@ -7,10 +7,12 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from souceIcon import ResourceIcon
 
 
 class Ui_MainWindow(QtWidgets.QMainWindow):
     def setupUi(self, MainWindow):
+        rs = ResourceIcon()
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1920, 917)
         MainWindow.showMaximized()
@@ -57,7 +59,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.btn_Home.setText("")
         icon = QtGui.QIcon()
         icon.addPixmap(
-            QtGui.QPixmap("icon/moilApp_128px.png"),
+            QtGui.QPixmap.fromImage(rs.iconMoildev()),
             QtGui.QIcon.Normal,
             QtGui.QIcon.Off)
         self.btn_Home.setIcon(icon)
@@ -98,7 +100,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                                       "border-radius: 10px;")
         self.btn_normal.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("icon/default.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap.fromImage(rs.iconDefault()), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_normal.setIcon(icon1)
         self.btn_normal.setIconSize(QtCore.QSize(40, 40))
         self.btn_normal.setCheckable(True)
@@ -118,7 +120,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                                         "border-radius: 10px;")
         self.btn_anypoint.setText("")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("icon/anypoint_color.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap.fromImage(rs.iconAnypoint()), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_anypoint.setIcon(icon2)
         self.btn_anypoint.setIconSize(QtCore.QSize(40, 40))
         self.btn_anypoint.setCheckable(False)
@@ -137,7 +139,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                                         "border-radius: 10px;")
         self.btn_panorama.setText("")
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap("icon/panorama_color.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap.fromImage(rs.iconPanorama()), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_panorama.setIcon(icon3)
         self.btn_panorama.setIconSize(QtCore.QSize(40, 40))
         self.btn_panorama.setCheckable(False)
@@ -168,66 +170,51 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.frame_help.sizePolicy().hasHeightForWidth())
         self.frame_help.setSizePolicy(sizePolicy)
-        self.frame_help.setMinimumSize(QtCore.QSize(60, 190))
+        self.frame_help.setMinimumSize(QtCore.QSize(60, 140))
         self.frame_help.setStyleSheet("background-color: #71D1BA;   \n"
                                       "border-radius: 10px;")
         self.frame_help.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_help.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_help.setObjectName("frame_help")
-        self.btn_about_moilapp = QtWidgets.QPushButton(self.frame_help)
-        self.btn_about_moilapp.setGeometry(QtCore.QRect(5, 140, 50, 40))
+
+        self.btnHelpMoil = QtWidgets.QPushButton(self.frame_help)
+        self.btnHelpMoil.setGeometry(QtCore.QRect(5, 40, 50, 40))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_about_moilapp.sizePolicy().hasHeightForWidth())
-        self.btn_about_moilapp.setSizePolicy(sizePolicy)
-        self.btn_about_moilapp.setMinimumSize(QtCore.QSize(40, 40))
-        self.btn_about_moilapp.setStyleSheet("QPushButton{ background-color :  rgb(211, 215, 207);}\n"
-                                             "QPushButton::pressed{ background-color : #71AED1; }\n"
-                                             "border-radius: 10px;")
-        self.btn_about_moilapp.setText("")
-        icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap("icon/help_question.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.btn_about_moilapp.setIcon(icon4)
-        self.btn_about_moilapp.setIconSize(QtCore.QSize(40, 40))
-        self.btn_about_moilapp.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.btn_about_moilapp.setObjectName("btn_about_moilapp")
-        self.btn_MoilApp_help = QtWidgets.QPushButton(self.frame_help)
-        self.btn_MoilApp_help.setGeometry(QtCore.QRect(5, 40, 50, 40))
+        sizePolicy.setHeightForWidth(self.btnHelpMoil.sizePolicy().hasHeightForWidth())
+        self.btnHelpMoil.setSizePolicy(sizePolicy)
+        self.btnHelpMoil.setMinimumSize(QtCore.QSize(30, 40))
+        self.btnHelpMoil.setStyleSheet("QPushButton{ background-color :  rgb(211, 215, 207);}\n"
+                                       "QPushButton::pressed{ background-color : #71AED1; }\n"
+                                       "border-radius: 10px;")
+        self.btnHelpMoil.setText("")
+        iconHelpMoil = QtGui.QIcon()
+        iconHelpMoil.addPixmap(QtGui.QPixmap.fromImage(rs.iconHelp()), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.btnHelpMoil.setIcon(iconHelpMoil)
+        self.btnHelpMoil.setIconSize(QtCore.QSize(40, 40))
+        self.btnHelpMoil.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.btnHelpMoil.setObjectName("btnHelpMoil")
+
+        self.btnAboutUs = QtWidgets.QPushButton(self.frame_help)
+        self.btnAboutUs.setGeometry(QtCore.QRect(5, 90, 50, 40))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_MoilApp_help.sizePolicy().hasHeightForWidth())
-        self.btn_MoilApp_help.setSizePolicy(sizePolicy)
-        self.btn_MoilApp_help.setMinimumSize(QtCore.QSize(30, 40))
-        self.btn_MoilApp_help.setStyleSheet("QPushButton{ background-color :  rgb(211, 215, 207);}\n"
-                                            "QPushButton::pressed{ background-color : #71AED1; }\n"
-                                            "border-radius: 10px;")
-        self.btn_MoilApp_help.setText("")
-        icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap("icon/Help_MoilApp.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.btn_MoilApp_help.setIcon(icon5)
-        self.btn_MoilApp_help.setIconSize(QtCore.QSize(35, 35))
-        self.btn_MoilApp_help.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.btn_MoilApp_help.setObjectName("btn_MoilApp_help")
-        self.btn_about_us = QtWidgets.QPushButton(self.frame_help)
-        self.btn_about_us.setGeometry(QtCore.QRect(5, 90, 50, 40))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_about_us.sizePolicy().hasHeightForWidth())
-        self.btn_about_us.setSizePolicy(sizePolicy)
-        self.btn_about_us.setMinimumSize(QtCore.QSize(30, 40))
-        self.btn_about_us.setStyleSheet("QPushButton{ background-color :  rgb(211, 215, 207);}\n"
-                                        "QPushButton::pressed{ background-color : #71AED1; }\n"
-                                        "border-radius: 10px;")
-        self.btn_about_us.setText("")
-        icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap("icon/Info_mark.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.btn_about_us.setIcon(icon6)
-        self.btn_about_us.setIconSize(QtCore.QSize(30, 40))
-        self.btn_about_us.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.btn_about_us.setObjectName("btn_about_us")
+        sizePolicy.setHeightForWidth(self.btnAboutUs.sizePolicy().hasHeightForWidth())
+        self.btnAboutUs.setSizePolicy(sizePolicy)
+        self.btnAboutUs.setMinimumSize(QtCore.QSize(40, 40))
+        self.btnAboutUs.setStyleSheet("QPushButton{ background-color :  rgb(211, 215, 207);}\n"
+                                      "QPushButton::pressed{ background-color : #71AED1; }\n"
+                                      "border-radius: 10px;")
+        self.btnAboutUs.setText("")
+        iconInfo = QtGui.QIcon()
+        iconInfo.addPixmap(QtGui.QPixmap.fromImage(rs.iconInfo()), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.btnAboutUs.setIcon(iconInfo)
+        self.btnAboutUs.setIconSize(QtCore.QSize(40, 40))
+        self.btnAboutUs.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.btnAboutUs.setObjectName("btnAboutUs")
+
         self.label_2 = QtWidgets.QLabel(self.frame_help)
         self.label_2.setGeometry(QtCore.QRect(5, 10, 50, 25))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -292,7 +279,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                                      "border-radius: 10px;")
         self.btn_clear.setText("")
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap("icon/clear.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon4.addPixmap(QtGui.QPixmap.fromImage(rs.iconClear()), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_clear.setIcon(icon4)
         self.btn_clear.setIconSize(QtCore.QSize(40, 40))
         self.btn_clear.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
@@ -343,12 +330,12 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             "QPushButton::pressed{ background-color : #71AED1; }\n"
             "border-radius: 10px;")
         self.btn_Open_Image.setText("")
-        icon7 = QtGui.QIcon()
-        icon7.addPixmap(
-            QtGui.QPixmap("icon/Load_image.png"),
+        iconLoadImage = QtGui.QIcon()
+        iconLoadImage.addPixmap(
+            QtGui.QPixmap.fromImage(rs.iconOpenImage()),
             QtGui.QIcon.Normal,
             QtGui.QIcon.Off)
-        self.btn_Open_Image.setIcon(icon7)
+        self.btn_Open_Image.setIcon(iconLoadImage)
         self.btn_Open_Image.setIconSize(QtCore.QSize(40, 40))
         self.btn_Open_Image.setCheckable(False)
         self.btn_Open_Image.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
@@ -369,12 +356,12 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             "QPushButton::pressed{ background-color : #71AED1; }\n"
             "border-radius: 10px;")
         self.btn_Open_Video.setText("")
-        icon8 = QtGui.QIcon()
-        icon8.addPixmap(
-            QtGui.QPixmap("icon/Load_video.png"),
+        iconLoadVideo = QtGui.QIcon()
+        iconLoadVideo.addPixmap(
+            QtGui.QPixmap.fromImage(rs.iconOpenVideo()),
             QtGui.QIcon.Normal,
             QtGui.QIcon.Off)
-        self.btn_Open_Video.setIcon(icon8)
+        self.btn_Open_Video.setIcon(iconLoadVideo)
         self.btn_Open_Video.setIconSize(QtCore.QSize(40, 40))
         self.btn_Open_Video.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btn_Open_Video.setObjectName("btn_Open_Video")
@@ -385,12 +372,12 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             "QPushButton::pressed{ background-color : #71AED1; }\n"
             "border-radius: 10px;")
         self.btn_Open_Cam.setText("")
-        icon9 = QtGui.QIcon()
-        icon9.addPixmap(
-            QtGui.QPixmap("icon/Load_camera.png"),
+        iconOpenCam = QtGui.QIcon()
+        iconOpenCam.addPixmap(
+            QtGui.QPixmap.fromImage(rs.iconOpenCam()),
             QtGui.QIcon.Normal,
             QtGui.QIcon.Off)
-        self.btn_Open_Cam.setIcon(icon9)
+        self.btn_Open_Cam.setIcon(iconOpenCam)
         self.btn_Open_Cam.setIconSize(QtCore.QSize(40, 40))
         self.btn_Open_Cam.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btn_Open_Cam.setObjectName("btn_Open_Cam")
@@ -426,12 +413,12 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             "QPushButton::pressed{ background-color : #71AED1; }\n"
             "border-radius: 10px;")
         self.btn_Rotate_Left.setText("")
-        icon10 = QtGui.QIcon()
-        icon10.addPixmap(
-            QtGui.QPixmap("icon/Rotate_left.png"),
+        iconRotateLeft = QtGui.QIcon()
+        iconRotateLeft.addPixmap(
+            QtGui.QPixmap.fromImage(rs.iconRotateLeft()),
             QtGui.QIcon.Normal,
             QtGui.QIcon.Off)
-        self.btn_Rotate_Left.setIcon(icon10)
+        self.btn_Rotate_Left.setIcon(iconRotateLeft)
         self.btn_Rotate_Left.setIconSize(QtCore.QSize(35, 35))
         self.btn_Rotate_Left.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btn_Rotate_Left.setObjectName("btn_Rotate_Left")
@@ -451,12 +438,12 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             "QPushButton::pressed{ background-color : #71AED1; }\n"
             "border-radius: 10px;")
         self.btn_Rotate_Right.setText("")
-        icon11 = QtGui.QIcon()
-        icon11.addPixmap(
-            QtGui.QPixmap("icon/Rotate_right.png"),
+        iconRotateRight = QtGui.QIcon()
+        iconRotateRight.addPixmap(
+            QtGui.QPixmap.fromImage(rs.iconRotateRight()),
             QtGui.QIcon.Normal,
             QtGui.QIcon.Off)
-        self.btn_Rotate_Right.setIcon(icon11)
+        self.btn_Rotate_Right.setIcon(iconRotateRight)
         self.btn_Rotate_Right.setIconSize(QtCore.QSize(35, 35))
         self.btn_Rotate_Right.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btn_Rotate_Right.setObjectName("btn_Rotate_Right")
@@ -486,9 +473,9 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                                        "QPushButton::pressed{ background-color : #71AED1; }\n"
                                        "border-radius: 10px;")
         self.btn_Zoom_in.setText("")
-        icon9 = QtGui.QIcon()
-        icon9.addPixmap(QtGui.QPixmap("icon/Zoom_in.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.btn_Zoom_in.setIcon(icon9)
+        iconZoomin = QtGui.QIcon()
+        iconZoomin.addPixmap(QtGui.QPixmap.fromImage(rs.iconZoomIn()), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.btn_Zoom_in.setIcon(iconZoomin)
         self.btn_Zoom_in.setIconSize(QtCore.QSize(40, 40))
         self.btn_Zoom_in.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btn_Zoom_in.setObjectName("btn_Zoom_in")
@@ -504,9 +491,9 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                                         "QPushButton::pressed{ background-color : #71AED1; }\n"
                                         "border-radius: 10px;")
         self.btn_Zoom_out.setText("")
-        icon10 = QtGui.QIcon()
-        icon10.addPixmap(QtGui.QPixmap("icon/Zoom_out.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.btn_Zoom_out.setIcon(icon10)
+        iconZoomOut = QtGui.QIcon()
+        iconZoomOut.addPixmap(QtGui.QPixmap.fromImage(rs.iconZoomOut()), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.btn_Zoom_out.setIcon(iconZoomOut)
         self.btn_Zoom_out.setIconSize(QtCore.QSize(40, 40))
         self.btn_Zoom_out.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btn_Zoom_out.setObjectName("btn_Zoom_out")
@@ -564,12 +551,12 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             "QPushButton::pressed{ background-color : #71AED1; }\n"
             "border-radius: 10px;")
         self.btn_Save_Image.setText("")
-        icon14 = QtGui.QIcon()
-        icon14.addPixmap(
-            QtGui.QPixmap("icon/Save_image.png"),
+        iconCamera = QtGui.QIcon()
+        iconCamera.addPixmap(
+            QtGui.QPixmap.fromImage(rs.iconSaveImage()),
             QtGui.QIcon.Normal,
             QtGui.QIcon.Off)
-        self.btn_Save_Image.setIcon(icon14)
+        self.btn_Save_Image.setIcon(iconCamera)
         self.btn_Save_Image.setIconSize(QtCore.QSize(40, 40))
         self.btn_Save_Image.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btn_Save_Image.setObjectName("btn_Save_Image")
@@ -589,48 +576,17 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             "QPushButton::pressed{ background-color : #71AED1; }\n"
             "border-radius: 10px;")
         self.btn_Record_video.setText("")
-        icon15 = QtGui.QIcon()
-        icon15.addPixmap(
-            QtGui.QPixmap("icon/save_record_B.png"),
+        iconRecord = QtGui.QIcon()
+        iconRecord.addPixmap(
+            QtGui.QPixmap.fromImage(rs.iconRecord()),
             QtGui.QIcon.Normal,
             QtGui.QIcon.Off)
-        self.btn_Record_video.setIcon(icon15)
+        self.btn_Record_video.setIcon(iconRecord)
         self.btn_Record_video.setIconSize(QtCore.QSize(50, 40))
         self.btn_Record_video.setCheckable(True)
         self.btn_Record_video.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btn_Record_video.setObjectName("btn_Record_video")
         self.horizontalLayout_3.addWidget(self.frame_save)
-
-        # self.frame_ctrl_axis = QtWidgets.QFrame(self.centralwidget)
-        # sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        # sizePolicy.setHorizontalStretch(0)
-        # sizePolicy.setVerticalStretch(0)
-        # sizePolicy.setHeightForWidth(self.frame_ctrl_axis.sizePolicy().hasHeightForWidth())
-        # self.frame_ctrl_axis.setSizePolicy(sizePolicy)
-        # self.frame_ctrl_axis.setMinimumSize(QtCore.QSize(495, 50))
-        # self.frame_ctrl_axis.setStyleSheet("background-color: #71D1BA;   \n"
-        #                                    "border-radius: 10px;")
-        # self.frame_ctrl_axis.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        # self.frame_ctrl_axis.setFrameShadow(QtWidgets.QFrame.Raised)
-        # self.frame_ctrl_axis.setObjectName("frame_ctrl_axis")
-        # self.btn_ctrl_axis = QtWidgets.QPushButton(self.frame_ctrl_axis)
-        # self.btn_ctrl_axis.setGeometry(QtCore.QRect(10, 5, 45, 40))
-        # sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        # sizePolicy.setHorizontalStretch(0)
-        # sizePolicy.setVerticalStretch(0)
-        # sizePolicy.setHeightForWidth(self.btn_ctrl_axis.sizePolicy().hasHeightForWidth())
-        # self.btn_ctrl_axis.setSizePolicy(sizePolicy)
-        # self.btn_ctrl_axis.setMinimumSize(QtCore.QSize(45, 30))
-        # self.btn_ctrl_axis.setStyleSheet("QPushButton{ background-color :  rgb(211, 215, 207);}\n"
-        #                                  "QPushButton::pressed{ background-color : #71AED1; }\n"
-        #                                  "border-radius: 10px;")
-        # self.btn_ctrl_axis.setText("")
-        # icon16 = QtGui.QIcon()
-        # icon16.addPixmap(QtGui.QPixmap("icon/axis.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        # self.btn_ctrl_axis.setIcon(icon16)
-        # self.btn_ctrl_axis.setIconSize(QtCore.QSize(40, 35))
-        # self.btn_ctrl_axis.setObjectName("btn_ctrl_axis")
-        # self.horizontalLayout_3.addWidget(self.frame_ctrl_axis)
 
         self.frame_apps = QtWidgets.QFrame(self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -655,7 +611,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                                         "border-radius: 10px;")
         self.btn_add_apps.setText("")
         icon13 = QtGui.QIcon()
-        icon13.addPixmap(QtGui.QPixmap("icon/add_apps.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon13.addPixmap(QtGui.QPixmap.fromImage(rs.iconAddPlugin()), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_add_apps.setIcon(icon13)
         self.btn_add_apps.setIconSize(QtCore.QSize(40, 40))
         self.btn_add_apps.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
@@ -667,7 +623,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                                         "border-radius: 10px;")
         self.btn_open_app.setText("")
         icon14 = QtGui.QIcon()
-        icon14.addPixmap(QtGui.QPixmap("icon/open_apps.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon14.addPixmap(QtGui.QPixmap.fromImage(rs.iconOpenPlugin()), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_open_app.setIcon(icon14)
         self.btn_open_app.setIconSize(QtCore.QSize(50, 50))
         self.btn_open_app.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
@@ -679,7 +635,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                                           "border-radius: 10px;")
         self.btn_delete_app.setText("")
         icon15 = QtGui.QIcon()
-        icon15.addPixmap(QtGui.QPixmap("icon/delete_apps.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon15.addPixmap(QtGui.QPixmap.fromImage(rs.iconDeletePlugin()), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_delete_app.setIcon(icon15)
         self.btn_delete_app.setIconSize(QtCore.QSize(36, 36))
         self.btn_delete_app.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
@@ -793,7 +749,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.setMouseTracking(True)
 
         self.button_menu = QtWidgets.QPushButton(self.scrollArea)
-        self.button_menu.setGeometry(QtCore.QRect(10, 10, 40, 30))
+        self.button_menu.setGeometry(QtCore.QRect(15, 15, 40, 30))
         self.button_menu.setStyleSheet(
             "QPushButton{\n"
             "  border-color: #71D1BA;\n"
@@ -806,7 +762,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.button_menu.setText("")
         icon = QtGui.QIcon()
         icon.addPixmap(
-            QtGui.QPixmap("icon/menu.png"),
+            QtGui.QPixmap.fromImage(rs.iconMenu()),
             QtGui.QIcon.Normal,
             QtGui.QIcon.Off)
         self.button_menu.setIcon(icon)
@@ -815,12 +771,27 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.button_menu.setIconSize(QtCore.QSize(40, 30))
         self.button_menu.setObjectName("button_menu")
 
-        # self.label_34 = QtWidgets.QLabel(self.scrollArea)
-        # self.label_34.setGeometry(QtCore.QRect(180, 60, 80, 80))
-        # self.label_34.setText("")
-        # self.label_34.setPixmap(QtGui.QPixmap("icon/north.png"))
-        # self.label_34.setScaledContents(True)
-        # self.label_34.setObjectName("label")
+        self.buttonBack = QtWidgets.QPushButton(self.scrollArea)
+        self.buttonBack.setGeometry(QtCore.QRect(65, 15, 40, 30))
+        self.buttonBack.setStyleSheet(
+            "QPushButton{\n"
+            "  border-color: #71D1BA;\n"
+            "  border-width: 2px;        \n"
+            "  border-style: solid;\n"
+            "  border-radius: 5px;\n"
+            "}\n"
+            "QPushButton::pressed{ background-color : #71AED1; }\n"
+            "")
+        self.buttonBack.setText("")
+        iconBack = QtGui.QIcon()
+        iconBack.addPixmap(
+            QtGui.QPixmap.fromImage(rs.iconBack()),
+            QtGui.QIcon.Normal,
+            QtGui.QIcon.Off)
+        self.buttonBack.setIcon(iconBack)
+        self.buttonBack.setIconSize(QtCore.QSize(40, 30))
+        self.buttonBack.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.buttonBack.setObjectName("buttonRecenter")
 
         self.frame_navigator = QtWidgets.QFrame(self.scrollArea)
         self.frame_navigator.setGeometry(QtCore.QRect(10, 40, 160, 290))
@@ -860,7 +831,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                                        "border-radius: 10px;")
         self.btn_Up_View.setText("")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("icon/up_anypoint.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap.fromImage(rs.iconUp()), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_Up_View.setIcon(icon)
         self.btn_Up_View.setIconSize(QtCore.QSize(40, 40))
         self.btn_Up_View.setObjectName("btn_Up_View")
@@ -884,7 +855,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                                           "border-radius: 10px;")
         self.btn_Right_view.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("icon/right_anypoint.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap.fromImage(rs.iconRight()), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_Right_view.setIcon(icon1)
         self.btn_Right_view.setIconSize(QtCore.QSize(40, 40))
         self.btn_Right_view.setObjectName("btn_Right_view")
@@ -908,7 +879,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                                          "border-radius: 10px;")
         self.btn_left_view.setText("")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("icon/left_anypoint.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap.fromImage(rs.iconLeft()), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_left_view.setIcon(icon2)
         self.btn_left_view.setIconSize(QtCore.QSize(40, 40))
         self.btn_left_view.setObjectName("btn_left_view")
@@ -932,7 +903,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                                          "border-radius: 10px;")
         self.btn_Down_view.setText("")
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap("icon/below_anypoint.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap.fromImage(rs.iconDown()), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_Down_view.setIcon(icon3)
         self.btn_Down_view.setIconSize(QtCore.QSize(40, 40))
         self.btn_Down_view.setObjectName("btn_Down_view")
@@ -962,7 +933,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                                            "border-radius: 10px;")
         self.btn_center_view.setText("")
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap("icon/center_anypoint.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon4.addPixmap(QtGui.QPixmap.fromImage(rs.iconCenter()), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_center_view.setIcon(icon4)
         self.btn_center_view.setIconSize(QtCore.QSize(30, 40))
         self.btn_center_view.setObjectName("btn_center_view")
@@ -1130,7 +1101,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.btn_prev_video.setText("")
         icon17 = QtGui.QIcon()
         icon17.addPixmap(
-            QtGui.QPixmap("icon/Rewind.png"),
+            QtGui.QPixmap.fromImage(rs.iconBackward()),
             QtGui.QIcon.Normal,
             QtGui.QIcon.Off)
         self.btn_prev_video.setIcon(icon17)
@@ -1162,7 +1133,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.btn_play_pouse.setText("")
         icon18 = QtGui.QIcon()
         icon18.addPixmap(
-            QtGui.QPixmap("icon/Play.png"),
+            QtGui.QPixmap.fromImage(rs.iconPlay()),
             QtGui.QIcon.Normal,
             QtGui.QIcon.Off)
         self.btn_play_pouse.setIcon(icon18)
@@ -1194,7 +1165,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.btn_stop_video.setText("")
         icon19 = QtGui.QIcon()
         icon19.addPixmap(
-            QtGui.QPixmap("icon/Stop.png"),
+            QtGui.QPixmap.fromImage(rs.iconStop()),
             QtGui.QIcon.Normal,
             QtGui.QIcon.Off)
         self.btn_stop_video.setIcon(icon19)
@@ -1226,7 +1197,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.btn_skip_video.setText("")
         icon20 = QtGui.QIcon()
         icon20.addPixmap(
-            QtGui.QPixmap("icon/Forward.png"),
+            QtGui.QPixmap.fromImage(rs.iconForward()),
             QtGui.QIcon.Normal,
             QtGui.QIcon.Off)
         self.btn_skip_video.setIcon(icon20)
@@ -1327,6 +1298,20 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.listWidget.setObjectName("listWidget")
         self.verticalLayout.addWidget(self.listWidget)
 
+        self.labelOrginalTitle = QtWidgets.QLabel(self.centralwidget)
+        self.labelOrginalTitle.setMinimumHeight(30)
+        self.labelOrginalTitle.setText("Original Image")
+        font = QtGui.QFont()
+        font.setFamily("DejaVu Serif")
+        font.setPointSize(14)
+        font.setWeight(50)
+        self.labelOrginalTitle.setFont(font)
+        self.labelOrginalTitle.setStyleSheet("border-radius: 5px;\n"
+                                             "background-color: #71AED1;   ")
+        self.labelOrginalTitle.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelOrginalTitle.setObjectName("labelOrginalTitle")
+        self.verticalLayout.addWidget(self.labelOrginalTitle)
+
         self.frame_original_image = QtWidgets.QFrame(self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(
             QtWidgets.QSizePolicy.Preferred,
@@ -1380,6 +1365,12 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         font.setUnderline(False)
         self.menuFile.setFont(font)
         self.menuFile.setObjectName("menuFile")
+
+        self.menuView = QtWidgets.QMenu(self.menubar)
+        font = QtGui.QFont()
+        self.menuView.setFont(font)
+        self.menuView.setObjectName("menuView")
+
         self.menuHelp = QtWidgets.QMenu(self.menubar)
         font = QtGui.QFont()
         font.setItalic(False)
@@ -1407,7 +1398,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         # creating a label widget
         self.mouseIcon = QtWidgets.QLabel()
         self.mouseIcon.setMaximumSize(QtCore.QSize(20, 20))
-        self.mouseIcon.setPixmap(QtGui.QPixmap("icon/mouse_cursor.png"))
+        self.mouseIcon.setPixmap(QtGui.QPixmap.fromImage(rs.iconMouse()))
         self.mouseIcon.setScaledContents(True)
         self.status_alpha = QtWidgets.QLabel("Alpha: 0")
         self.status_alpha.setMinimumSize(QtCore.QSize(100, 20))
@@ -1428,7 +1419,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         MainWindow.setStatusBar(self.statusbar)
 
         self.actionLoad_Image = QtWidgets.QAction(MainWindow)
-        self.actionLoad_Image.setIcon(icon7)
+        self.actionLoad_Image.setIcon(iconLoadImage)
         font = QtGui.QFont()
         font.setFamily("DejaVu Serif")
         font.setPointSize(12)
@@ -1436,7 +1427,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.actionLoad_Image.setShortcut("Ctrl+I")
         self.actionLoad_Image.setObjectName("actionLoad_Image")
         self.actionLoad_Video = QtWidgets.QAction(MainWindow)
-        self.actionLoad_Video.setIcon(icon8)
+        self.actionLoad_Video.setIcon(iconLoadVideo)
         font = QtGui.QFont()
         font.setFamily("DejaVu Serif")
         font.setPointSize(12)
@@ -1444,12 +1435,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.actionLoad_Video.setShortcut("Ctrl+V")
         self.actionLoad_Video.setObjectName("actionLoad_Video")
         self.actionOpen_Cam = QtWidgets.QAction(MainWindow)
-        icon_opencam = QtGui.QIcon()
-        icon_opencam.addPixmap(
-            QtGui.QPixmap("icon/Load_camera.png"),
-            QtGui.QIcon.Normal,
-            QtGui.QIcon.Off)
-        self.actionOpen_Cam.setIcon(icon_opencam)
+        self.actionOpen_Cam.setIcon(iconOpenCam)
         font = QtGui.QFont()
         font.setFamily("DejaVu Serif")
         font.setPointSize(12)
@@ -1457,12 +1443,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.actionOpen_Cam.setShortcut("Ctrl+C")
         self.actionOpen_Cam.setObjectName("actionOpen_Cam")
         self.actionRecord_video = QtWidgets.QAction(MainWindow)
-        icon_record = QtGui.QIcon()
-        icon_record.addPixmap(
-            QtGui.QPixmap("icon/save_record_B.png"),
-            QtGui.QIcon.Normal,
-            QtGui.QIcon.Off)
-        self.actionRecord_video.setIcon(icon_record)
+        self.actionRecord_video.setIcon(iconRecord)
         font = QtGui.QFont()
         font.setFamily("DejaVu Serif")
         font.setPointSize(12)
@@ -1477,16 +1458,11 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.actionSave_Image.setFont(font)
         self.actionSave_Image.setShortcut("Ctrl+S")
         self.actionSave_Image.setObjectName("actionSave_Image")
-        icon_saveimage = QtGui.QIcon()
-        icon_saveimage.addPixmap(
-            QtGui.QPixmap("icon/Save_image.png"),
-            QtGui.QIcon.Normal,
-            QtGui.QIcon.Off)
-        self.actionSave_Image.setIcon(icon_saveimage)
+        self.actionSave_Image.setIcon(iconCamera)
         self.actionExit = QtWidgets.QAction(MainWindow)
         icon_exit = QtGui.QIcon()
         icon_exit.addPixmap(
-            QtGui.QPixmap("icon/Shutdown.png"),
+            QtGui.QPixmap.fromImage(rs.iconQuit()),
             QtGui.QIcon.Normal,
             QtGui.QIcon.Off)
         self.actionExit.setIcon(icon_exit)
@@ -1497,6 +1473,42 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.actionExit.setShortcut("Ctrl+Q")
         self.actionExit.setObjectName("actionExit")
 
+        self.actionZoomIn = QtWidgets.QAction(MainWindow)
+        font = QtGui.QFont()
+        font.setFamily("DejaVu Serif")
+        font.setPointSize(12)
+        self.actionZoomIn.setFont(font)
+        # self.actionZoomIn.setShortcut("F11")
+        self.actionZoomIn.setObjectName("actionZoomIn")
+        self.actionZoomIn.setIcon(iconZoomin)
+
+        self.actionZoomOut = QtWidgets.QAction(MainWindow)
+        font = QtGui.QFont()
+        font.setFamily("DejaVu Serif")
+        font.setPointSize(12)
+        self.actionZoomOut.setFont(font)
+        # self.actionZoomOut.setShortcut("F11")
+        self.actionZoomOut.setObjectName("actionZoomOut")
+        self.actionZoomOut.setIcon(iconZoomOut)
+
+        self.actionRotateLeft = QtWidgets.QAction(MainWindow)
+        font = QtGui.QFont()
+        font.setFamily("DejaVu Serif")
+        font.setPointSize(12)
+        self.actionRotateLeft.setFont(font)
+        # self.actionRotateLeft.setShortcut("F11")
+        self.actionRotateLeft.setObjectName("actionRotateLeft")
+        self.actionRotateLeft.setIcon(iconRotateLeft)
+
+        self.actionRotateRight = QtWidgets.QAction(MainWindow)
+        font = QtGui.QFont()
+        font.setFamily("DejaVu Serif")
+        font.setPointSize(12)
+        self.actionRotateRight.setFont(font)
+        # self.actionRotateRight.setShortcut("F11")
+        self.actionRotateRight.setObjectName("actionRotateRight")
+        self.actionRotateRight.setIcon(iconRotateRight)
+
         self.actionMaximize = QtWidgets.QAction(MainWindow)
         font = QtGui.QFont()
         font.setFamily("DejaVu Serif")
@@ -1506,10 +1518,11 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.actionMaximize.setObjectName("actionMaximize")
         icon_maximiza = QtGui.QIcon()
         icon_maximiza.addPixmap(
-            QtGui.QPixmap("icon/maximize.png"),
+            QtGui.QPixmap.fromImage(rs.iconMinimized()),
             QtGui.QIcon.Normal,
             QtGui.QIcon.Off)
         self.actionMaximize.setIcon(icon_maximiza)
+
         self.actionMinimize = QtWidgets.QAction(MainWindow)
         font = QtGui.QFont()
         font.setFamily("DejaVu Serif")
@@ -1519,14 +1532,15 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.actionMinimize.setObjectName("actionMinimize")
         icon_minimize = QtGui.QIcon()
         icon_minimize.addPixmap(
-            QtGui.QPixmap("icon/minimize.png"),
+            QtGui.QPixmap.fromImage(rs.iconMaximized()),
             QtGui.QIcon.Normal,
             QtGui.QIcon.Off)
         self.actionMinimize.setIcon(icon_minimize)
+
         self.actionAdd_Apps = QtWidgets.QAction(MainWindow)
         icon_add_apps = QtGui.QIcon()
         icon_add_apps.addPixmap(
-            QtGui.QPixmap("icon/add_apps.png"),
+            QtGui.QPixmap.fromImage(rs.iconAddPlugin()),
             QtGui.QIcon.Normal,
             QtGui.QIcon.Off)
         self.actionAdd_Apps.setIcon(icon_add_apps)
@@ -1540,7 +1554,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.actionDelete_Apps = QtWidgets.QAction(MainWindow)
         icon_deleteapps = QtGui.QIcon()
         icon_deleteapps.addPixmap(
-            QtGui.QPixmap("icon/delete_apps.png"),
+            QtGui.QPixmap.fromImage(rs.iconDeletePlugin()),
             QtGui.QIcon.Normal,
             QtGui.QIcon.Off)
         self.actionDelete_Apps.setIcon(icon_deleteapps)
@@ -1554,7 +1568,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.actionOpen_Apps = QtWidgets.QAction(MainWindow)
         icon_open_apps = QtGui.QIcon()
         icon_open_apps.addPixmap(
-            QtGui.QPixmap("icon/open_apps.png"),
+            QtGui.QPixmap.fromImage(rs.iconOpenPlugin()),
             QtGui.QIcon.Normal,
             QtGui.QIcon.Off)
         self.actionOpen_Apps.setIcon(icon_open_apps)
@@ -1568,7 +1582,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.actionAbout_Apps = QtWidgets.QAction(MainWindow)
         icon_about_apps = QtGui.QIcon()
         icon_about_apps.addPixmap(
-            QtGui.QPixmap("icon/Help_MoilApp.png"),
+            QtGui.QPixmap.fromImage(rs.iconHelp()),
             QtGui.QIcon.Normal,
             QtGui.QIcon.Off)
         self.actionAbout_Apps.setIcon(icon_about_apps)
@@ -1579,15 +1593,10 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.actionAbout_Apps.setShortcut("Ctrl+Shift+/")
         self.actionAbout_Apps.setObjectName("actionAbout_Apps")
 
-        # self.actiontest = QtWidgets.QAction(MainWindow)
-        # self.actiontest.setObjectName("actiontest")
-        # self.actiontest1 = QtWidgets.QAction(MainWindow)
-        # self.actiontest1.setObjectName("actiontest1")
-
         self.actionAbout_Us = QtWidgets.QAction(MainWindow)
         icon_about_us = QtGui.QIcon()
         icon_about_us.addPixmap(
-            QtGui.QPixmap("icon/Info_mark.png"),
+            QtGui.QPixmap.fromImage(rs.iconInfo()),
             QtGui.QIcon.Normal,
             QtGui.QIcon.Off)
         self.actionAbout_Us.setIcon(icon_about_us)
@@ -1598,12 +1607,12 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.actionAbout_Us.setObjectName("actionAbout_Us")
 
         self.actionCreatePlugins = QtWidgets.QAction(MainWindow)
-        icon_create_apps = QtGui.QIcon()
-        icon_create_apps.addPixmap(
-            QtGui.QPixmap("icon/add_file.png"),
+        icon = QtGui.QIcon()
+        icon.addPixmap(
+            QtGui.QPixmap.fromImage(rs.iconCreatePlugin()),
             QtGui.QIcon.Normal,
             QtGui.QIcon.Off)
-        self.actionCreatePlugins.setIcon(icon_create_apps)
+        self.actionCreatePlugins.setIcon(icon)
         font = QtGui.QFont()
         font.setFamily("DejaVu Serif")
         font.setPointSize(12)
@@ -1613,7 +1622,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.actionHelpPlugins = QtWidgets.QAction(MainWindow)
         icon_help_plugin = QtGui.QIcon()
         icon_help_plugin.addPixmap(
-            QtGui.QPixmap("icon/Info_box.png"),
+            QtGui.QPixmap.fromImage(rs.iconHelpPlugin()),
             QtGui.QIcon.Normal,
             QtGui.QIcon.Off)
         self.actionHelpPlugins.setIcon(icon_help_plugin)
@@ -1626,7 +1635,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.action_accessibility = QtWidgets.QAction(MainWindow)
         icon_accesibility = QtGui.QIcon()
         icon_accesibility.addPixmap(
-            QtGui.QPixmap("icon/shorcut.png"),
+            QtGui.QPixmap.fromImage(rs.iconAccessibility()),
             QtGui.QIcon.Normal,
             QtGui.QIcon.Off)
         self.action_accessibility.setIcon(icon_accesibility)
@@ -1637,10 +1646,36 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.action_accessibility.setShortcut("Alt+Shift+A")
         self.action_accessibility.setObjectName("action_accessibility")
 
+        self.actionReleaseNote = QtWidgets.QAction(MainWindow)
+        icon = QtGui.QIcon()
+        icon.addPixmap(
+            QtGui.QPixmap.fromImage(rs.iconReleaseNote()),
+            QtGui.QIcon.Normal,
+            QtGui.QIcon.Off)
+        self.actionReleaseNote.setIcon(icon)
+        font = QtGui.QFont()
+        font.setFamily("DejaVu Serif")
+        font.setPointSize(12)
+        self.actionReleaseNote.setFont(font)
+        self.actionReleaseNote.setObjectName("actionReleaseNote")
+
+        self.actionCheckUpdate = QtWidgets.QAction(MainWindow)
+        icon = QtGui.QIcon()
+        icon.addPixmap(
+            QtGui.QPixmap.fromImage(rs.iconUpdate()),
+            QtGui.QIcon.Normal,
+            QtGui.QIcon.Off)
+        self.actionCheckUpdate.setIcon(icon)
+        font = QtGui.QFont()
+        font.setFamily("DejaVu Serif")
+        font.setPointSize(12)
+        self.actionCheckUpdate.setFont(font)
+        self.actionCheckUpdate.setObjectName("actionCheckUpdate")
+
         self.actionCamera_Parameters = QtWidgets.QAction(MainWindow)
         icon_parameter = QtGui.QIcon()
         icon_parameter.addPixmap(
-            QtGui.QPixmap("icon/setup_parameter.png"),
+            QtGui.QPixmap.fromImage(rs.iconCameraParams()),
             QtGui.QIcon.Normal,
             QtGui.QIcon.Off)
         self.actionCamera_Parameters.setIcon(icon_parameter)
@@ -1650,6 +1685,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.actionCamera_Parameters.setFont(font)
         self.actionCamera_Parameters.setShortcut("Ctrl+P")
         self.actionCamera_Parameters.setObjectName("actionCamera_Parameters")
+
         self.menuFile.addAction(self.actionLoad_Image)
         self.menuFile.addAction(self.actionLoad_Video)
         self.menuFile.addAction(self.actionOpen_Cam)
@@ -1657,14 +1693,16 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.menuFile.addAction(self.actionRecord_video)
         self.menuFile.addAction(self.actionSave_Image)
         self.menuFile.addAction(self.actionExit)
+
+        self.menuView.addAction(self.actionRotateLeft)
+        self.menuView.addAction(self.actionRotateRight)
+        self.menuView.addAction(self.actionZoomIn)
+        self.menuView.addAction(self.actionZoomOut)
+
         self.menuWindow.addAction(self.actionMaximize)
         self.menuWindow.addAction(self.actionMinimize)
 
         self.menuApps.addAction(self.actionAdd_Apps)
-
-        # self.actionOpen_Apps.addAction(self.actiontest)
-        # self.actionOpen_Apps.addAction(self.actiontest1)
-
         self.menuApps.addAction(self.actionOpen_Apps)
         self.menuApps.addAction(self.actionDelete_Apps)
         self.menuApps.addAction(self.actionCreatePlugins)
@@ -1673,7 +1711,11 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.menuHelp.addAction(self.actionAbout_Apps)
         self.menuHelp.addAction(self.actionAbout_Us)
         self.menuHelp.addAction(self.action_accessibility)
+        self.menuHelp.addAction(self.actionReleaseNote)
+        self.menuHelp.addAction(self.actionCheckUpdate)
+
         self.menubar.addAction(self.menuFile.menuAction())
+        self.menubar.addAction(self.menuView.menuAction())
         self.menubar.addAction(self.menuWindow.menuAction())
         self.menubar.addAction(self.menuApps.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
@@ -1767,12 +1809,12 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.btn_clear.setToolTip(_translate("MainWindow", "Clear"))
         self.btn_clear.setStatusTip(_translate("MainWindow", "Remove all content on user interface"))
 
-        self.btn_about_us.setToolTip(_translate("MainWindow", "About Us"))
-        self.btn_about_us.setStatusTip(_translate("MainWindow", "Show information about developer"))
-        self.btn_MoilApp_help.setToolTip(_translate("MainWindow", "MoilApp Helps, Content still under developing"))
-        self.btn_MoilApp_help.setStatusTip(_translate("MainWindow", "Information of All application"))
-        self.btn_about_moilapp.setToolTip(_translate("MainWindow", "About MoilApp"))
-        self.btn_about_moilapp.setStatusTip(_translate("MainWindow", "Show information about MoilApp"))
+        self.btnAboutUs.setToolTip(_translate("MainWindow", "About Us"))
+        self.btnAboutUs.setStatusTip(_translate("MainWindow", "Show information about developer"))
+        self.btnHelpMoil.setToolTip(_translate("MainWindow", "MoilApp Helps, Content still under developing"))
+        self.btnHelpMoil.setStatusTip(_translate("MainWindow", "Information of All application"))
+        # self.btnHelpMoil.setToolTip(_translate("MainWindow", "About MoilApp"))
+        # self.btn_about_moilapp.setStatusTip(_translate("MainWindow", "Show information about MoilApp"))
 
         # save
         self.btn_Save_Image.setToolTip(_translate("MainWindow", "Save Image"))
@@ -1782,6 +1824,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.label_saved_image.setText(_translate("MainWindow", "Image Saved"))
         self.label_saved_image.setStatusTip(_translate("MainWindow", "Every image save will show in below this frame"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
+        self.menuView.setTitle(_translate("MainWindow", "View"))
         self.menuWindow.setTitle(_translate("MainWindow", "Window"))
         self.menuApps.setTitle(_translate("MainWindow", "Apps"))
         # self.actionOpen_Apps
@@ -1803,6 +1846,12 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.actionSave_Image.setText(_translate("MainWindow", "Save Image"))
         self.actionSave_Image.setStatusTip(_translate("MainWindow", "Save your image"))
         self.actionExit.setText(_translate("MainWindow", "Exit"))
+
+        self.actionZoomIn.setText(_translate("MainWindow", "Zoom In"))
+        self.actionZoomOut.setText(_translate("MainWindow", "Zoom Out"))
+        self.actionRotateLeft.setText(_translate("MainWindow", "Rotate Left"))
+        self.actionRotateRight.setText(_translate("MainWindow", "Rotate Right"))
+
         self.actionExit.setStatusTip(_translate("MainWindow", "Close MoilApp"))
         self.actionMaximize.setText(_translate("MainWindow", "Maximize"))
         self.actionMaximize.setStatusTip(_translate("MainWindow", "Show full frame of result image and hide other "
@@ -1828,6 +1877,10 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.actionAbout_Us.setStatusTip(_translate("MainWindow", "Show information about developer grub"))
         self.action_accessibility.setText(_translate("MainWindow", "Accessibility"))
         self.action_accessibility.setStatusTip(_translate("MainWindow", "Shortcuts key for easy access"))
+        self.actionReleaseNote.setText(_translate("MainWindow", "Release Note"))
+        self.actionReleaseNote.setStatusTip(_translate("MainWindow", "Shortcuts key for easy access"))
+        self.actionCheckUpdate.setText(_translate("MainWindow", "Check For Update"))
+        self.actionCheckUpdate.setStatusTip(_translate("MainWindow", "Shortcuts key for easy access"))
 
         self.btn_Up_View.setShortcut(_translate("MainWindow", "Up"))
         self.btn_Up_View.setToolTip(_translate("MainWindow", "Up view"))
