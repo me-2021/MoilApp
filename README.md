@@ -162,7 +162,7 @@
    [![Watch the video](https://user-images.githubusercontent.com/47322969/122130755-af6ddc80-ce6a-11eb-94d7-51b5d3346078.jpg)](https://youtu.be/irpWmNmgAz4)
 
       
-      
+   
 6. Install this Apps in your computer
 
       We provide the installation file, you can easily install this Apps use following command: 
@@ -171,7 +171,7 @@
       $ . install.sh
       ```
 
-      ![](/home/anto/Documents/MoilApp/assets/install.png)
+      ![](./assets/install.png)
 
       Then running the apps, you can search on the all application or use command line bellow this. 
 
