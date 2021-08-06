@@ -39,12 +39,11 @@
      $ . build.sh
      ```
      ![](./assets/build_1.png)
-
      
-
+     
      If everything went well and you get a message like the one shown in the image below, it indicates that the installation of the requirements was successful.
-   
-     ![](./assets/build_2.png)
+     
+       									![](./assets/build_2.png)
    
      
 

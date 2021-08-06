@@ -92,8 +92,8 @@ class UiController(Ui_MainWindow):
         self.btn_stop_video.clicked.connect(self.video_controller.stop_video)
         self.btn_prev_video.clicked.connect(self.video_controller.prev_video)
         self.btn_skip_video.clicked.connect(self.video_controller.skip_video)
-        self.actionRecord_video.triggered.connect(self.video_controller.action_record_video)
-        self.btn_Record_video.clicked.connect(self.video_controller.recordVideo)
+        # self.actionRecord_video.triggered.connect(self.video_controller.action_record_video)
+        # self.btn_Record_video.clicked.connect(self.video_controller.recordVideo)
         self.slider_Video.valueChanged.connect(self.video_controller.changeValueSlider)
 
         self.btn_rotate_left.clicked.connect(self.manipulate.rotate_left)

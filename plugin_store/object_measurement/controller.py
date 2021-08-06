@@ -4,7 +4,7 @@ from moilutils.CoordinateSystem import CoordinateSystem
 from camera_parameter import CameraParameters
 from moilutils.moilutils import MoilUtils
 from moilutils.MoilAlgorithm import MoilAlgorithm
-from Exif.exif_lib import MetaImage
+from exif_lib import MetaImage
 import cv2
 
 

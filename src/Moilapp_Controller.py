@@ -3,10 +3,13 @@
 #   Written by Haryanto (haryanto@o3635.mcut.edu.tw)                    #
 #   Based on Moil-Lab (Ming Chi University of Technology)               #
 #########################################################################
+import os
 import cv2
+import datetime
 import webbrowser
 import numpy as np
 from help import Help
+import souceIcon
 from PyQt5 import QtWidgets, QtGui, QtCore
 from moilutils.moilutils import MoilUtils
 from plugin_controller import PluginController
@@ -14,6 +17,7 @@ from camera_source import CameraSource
 from Ui_Moilapp import Ui_MainWindow
 from panorama import Panorama
 from anypoint import Anypoint
+from reCenter import RecenterImage
 from control_view import ManipulateView
 from event_controller import MouseEvent
 from camera_parameter import CameraParameters
@@ -33,10 +37,16 @@ class Controller(Ui_MainWindow):
         self.comboBox_cam_type = None
         self.parent = parent
         self.setupUi(self.parent)
+        self.rs = souceIcon.ResourceIcon()
         self.open_plugin = False
         self.image = None
         self.cap = None
         self.cam = False
+        self.record = False
+        self.video_writer = None
+        self.videoDir = None
+        self.moildev = None
+        self.recImage = None
         self.normal_view = True
         self.panorama_view = False
         self.anypoint_view = False
@@ -69,6 +79,7 @@ class Controller(Ui_MainWindow):
         self.video_controller = VideoController(self)
         self.panorama = Panorama(self)
         self.anypoint = Anypoint(self)
+        self.recenter = RecenterImage(self)
         self.control_mouse = MouseEvent(self)
         self.manipulate = ManipulateView(self)
         self.control_plugin = PluginController(self)
@@ -77,6 +88,9 @@ class Controller(Ui_MainWindow):
         self.frame_panorama.hide()
         self.frame_navigator.hide()
         self.buttonBack.hide()
+        self.buttonRecenter.hide()
+        self.labelrecenterTitle.hide()
+        self.frameRecenter.hide()
         self.connect_event()
 
     def connect_event(self):
@@ -87,12 +101,13 @@ class Controller(Ui_MainWindow):
         """
         self.parent.closeEvent = self.closeEvent
         self.parent.resizeEvent = self.resizeEvent
+
         # action from menubar menu file
         self.actionLoad_Image.triggered.connect(self.open_image)
         self.actionLoad_Video.triggered.connect(self.onclick_load_video)
         self.actionOpen_Cam.triggered.connect(self.onclick_open_camera)
         self.actionCamera_Parameters.triggered.connect(self.cam_params_window)
-        self.actionRecord_video.triggered.connect(self.video_controller.action_record_video)
+        self.actionRecord_video.triggered.connect(self.actionRecordVideo)
         self.actionSave_Image.triggered.connect(self.save_image)
         self.actionExit.triggered.connect(self.onclick_exit)
 
@@ -113,22 +128,44 @@ class Controller(Ui_MainWindow):
         self.actionCreatePlugins.triggered.connect(self.winHelp.help_create_plugin)
         self.actionHelpPlugins.triggered.connect(self.winHelp.help_plugin)
 
-        #action from menubar menu help
+        # action from menubar menu help
         self.actionAbout_Apps.triggered.connect(self.onclick_help_moil)
         self.actionAbout_Us.triggered.connect(self.winHelp.about_us)
         self.action_accessibility.triggered.connect(self.onclick_accessibility)
         self.actionReleaseNote.triggered.connect(self.onclickReleaseNote)
         self.actionCheckUpdate.triggered.connect(self.checkUpdate)
 
+        # ++++++ Normal view ++++++
+        self.btn_normal.clicked.connect(self.onclick_view_normal)
+
+        # +++++ anypoint View +++++
+        self.btn_anypoint.clicked.connect(self.anypoint.process_to_anypoint)
+        self.btn_Up_View.clicked.connect(self.anypoint.up)
+        self.btn_Right_view.clicked.connect(self.anypoint.right)
+        self.btn_left_view.clicked.connect(self.anypoint.left)
+        self.btn_center_view.clicked.connect(self.anypoint.center)
+        self.btn_Down_view.clicked.connect(self.anypoint.down)
+        self.radio_btn_mode_1.clicked.connect(self.anypoint.anypoint_mode_1)
+        self.radio_btn_mode_2.clicked.connect(self.anypoint.anypoint_mode_2)
+        self.lineedit_alpha_2.editingFinished.connect(self.anypoint.set_param_any)
+        self.lineedit_beta_2.editingFinished.connect(self.anypoint.set_param_any)
+        self.anypoint_zoom_2.editingFinished.connect(self.anypoint.set_param_any)
+
+        # +++++ panorama View +++++
+        self.btn_panorama.clicked.connect(self.panorama.process_to_panorama)
+        self.max_pano.valueChanged.connect(self.panorama.change_panorama_fov)
+        self.min_pano.valueChanged.connect(self.panorama.change_panorama_fov)
+
+        # +++ recenter view ++++
+        self.buttonRecenter.clicked.connect(self.onclickRecenter)
+        self.setIcx.valueChanged.connect(self.recenter.positionCoorX)
+        self.setIcy.valueChanged.connect(self.recenter.positionCoorY)
+
         # connect button to function
         self.btn_Open_Image.clicked.connect(self.open_image)
         self.btn_Open_Video.clicked.connect(self.onclick_load_video)
         self.btn_Open_Cam.clicked.connect(self.onclick_open_camera)
         self.btn_Save_Image.clicked.connect(self.save_image)
-        self.btn_normal.clicked.connect(self.onclick_view_normal)
-
-        self.btnHelpMoil.clicked.connect(self.onclick_help_moil)
-        self.btnAboutUs.clicked.connect(self.winHelp.about_us)
 
         # btn Plugin controller
         self.btn_add_apps.clicked.connect(self.control_plugin.add_application)
@@ -136,11 +173,11 @@ class Controller(Ui_MainWindow):
         self.btn_delete_app.clicked.connect(self.control_plugin.btn_delete_apps)
 
         # media player controller
+        self.btn_Record_video.clicked.connect(self.buttonRecordVideo)
         self.btn_play_pouse.clicked.connect(self.video_controller.onclick_play_pause_button)
         self.btn_stop_video.clicked.connect(self.video_controller.stop_video)
         self.btn_prev_video.clicked.connect(self.video_controller.prev_video)
         self.btn_skip_video.clicked.connect(self.video_controller.skip_video)
-        self.btn_Record_video.clicked.connect(self.video_controller.recordVideo)
         self.slider_Video.valueChanged.connect(self.video_controller.changeValueSlider)
 
         # control view
@@ -149,7 +186,20 @@ class Controller(Ui_MainWindow):
         self.btn_Zoom_in.clicked.connect(self.manipulate.zoom_in)
         self.btn_Zoom_out.clicked.connect(self.manipulate.zoom_out)
 
+        # mouse event controller
+        self.label_Original_Image.mouseDoubleClickEvent = self.control_mouse.mouseDoubleclick_event
+        self.label_Result_Image.mouseDoubleClickEvent = self.control_mouse.mouseDoubleclick_event
+        self.label_Original_Image.mousePressEvent = self.control_mouse.mouse_event
+        self.label_Result_Image.mousePressEvent = self.control_mouse.mouse_result_press
+        self.label_Original_Image.wheelEvent = self.control_mouse.mouse_wheelEvent_ori_label
+        self.label_Result_Image.wheelEvent = self.control_mouse.mouse_wheelEvent
+        self.label_Result_Image.mouseReleaseEvent = self.control_mouse.mouse_release_event
+        self.label_Original_Image.mouseMoveEvent = self.control_mouse.mouseMovedOriImage
+        self.label_Result_Image.mouseMoveEvent = self.control_mouse.mouseMoveEvent
+
         # others
+        self.btnAboutUs.clicked.connect(self.winHelp.about_us)
+        self.btnHelpMoil.clicked.connect(self.onclick_help_moil)
         self.btn_clear.clicked.connect(self.onclick_clear)
         self.listWidget.currentItemChanged.connect(self.saved_image_activated)
         self.comboBox_zoom.activated.connect(self.combo_percentage_zoom)
@@ -171,8 +221,10 @@ class Controller(Ui_MainWindow):
         self.comboBox_zoom.setCurrentIndex(0)
         self.label_Application.setText("MoilApp")
         self.parent.setWindowTitle("MoilApp")
-        self.image = None
         self.buttonBack.hide()
+        self.frameRecenter.hide()
+        self.image = None
+        self.recImage = None
 
     def open_image(self):
         """
@@ -180,23 +232,21 @@ class Controller(Ui_MainWindow):
         metadata image.
 
         """
-        filename = MoilUtils.selectFile(self.parent, "Image Files", "../SourceImage", "(*.jpeg *.jpg *.png *.gif "
-                                                                                      "*.bmg)")
+        filename = MoilUtils.selectFile(self.parent, "Image Files",
+                                        "../SourceImage", "(*.jpeg *.jpg *.png *.gif *.bmg)")
         if filename:
             self.reset_mode_view()
             if self.cam:
                 self.video_controller.stop_video()
                 self.cap.release()
-            self.parent.setWindowTitle("MoilApp - " + filename)
+                self.video_controller.set_button_disable()
             self.type_camera = MoilUtils.readCameraType(filename)
-            # print(self.type_camera)
+            self.updateLabel(filename)
             self.image = MoilUtils.readImage(filename)
             self.h, self.w = self.image.shape[:2]
-            self.video_controller.set_button_disable()
+            self.moildev = MoilUtils.connectToMoildev(self.type_camera)
             self.show_to_window()
-            self.show_percentage()
             self.cam = False
-            self.label_Application.setText("Camera: " + self.type_camera)
 
     def onclick_load_video(self):
         """
@@ -212,8 +262,7 @@ class Controller(Ui_MainWindow):
             self.reset_mode_view()
             self.type_camera = MoilUtils.selectCameraType()
             if self.type_camera is not None:
-                self.parent.setWindowTitle("MoilApp - " + video_source)
-                self.label_Application.setText("Camera: " + self.type_camera)
+                self.updateLabel(video_source)
                 self.running_video(video_source)
 
     def onclick_open_camera(self):
@@ -232,8 +281,7 @@ class Controller(Ui_MainWindow):
         camera_source = self.winOpenCam.camera_source_used()
         self.type_camera = MoilUtils.selectCameraType()
         if self.type_camera is not None:
-            self.parent.setWindowTitle("MoilApp - " + self.type_camera)
-            self.label_Application.setText("Camera: " + self.type_camera)
+            self.updateLabel()
             self.running_video(camera_source)
 
     def running_video(self, video_source):
@@ -249,11 +297,11 @@ class Controller(Ui_MainWindow):
         success, self.image = self.cap.read()
         if success:
             self.h, self.w = self.image.shape[:2]
+            self.moildev = MoilUtils.connectToMoildev(self.type_camera)
             self.cam = True
             self.video_controller.next_frame_slot()
-            self.show_percentage()
         else:
-            QtWidgets.QMessageBox.information(self.parent, "Information", "No source camera founded")
+            QtWidgets.QMessageBox.information(self.parent, "Information", "No source camera founded !!!")
 
     def cam_params_window(self):
         """
@@ -288,46 +336,95 @@ class Controller(Ui_MainWindow):
         """
         self.zoom_area = False
         self.buttonBack.hide()
-        image = self.image.copy()
-        h, w = image.shape[:2]
         radius = 6 if self.h < 800 else 10
         if self.normal_view:
-            self.point = (round(w / 2), round(h / 2))
-            image = MoilUtils.drawPoint(image, self.point, radius)
+            self.frameRecenter.hide()
+            self.labelrecenterTitle.hide()
+            self.buttonRecenter.show()
+            if self.buttonRecenter.isChecked():
+                self.labelMin.hide()
+                self.labelMax.hide()
+                self.min_pano.hide()
+                self.max_pano.hide()
+                self.labelIcx.show()
+                self.labelIcy.show()
+                self.setIcx.show()
+                self.setIcy.show()
+                self.recImage = self.recenter.returnImage()
+                resImage = self.recImage
+                self.frame_panorama.setGeometry(QtCore.QRect(5, 50, 180, 80))
+            else:
+                resImage = self.image
+                self.point = (round(self.moildev.getIcx()), round(self.moildev.getIcy()))
+                self.frame_panorama.hide()
+            image = MoilUtils.drawPoint(self.image.copy(), self.point, radius)
             MoilUtils.showImageToLabel(self.label_Original_Image,
                                        image,
                                        self.width_original_image)
             MoilUtils.showImageToLabel(self.label_Result_Image,
-                                       self.image,
+                                       resImage,
                                        self.width_result_image, self.angle, plusIcon=True)
 
         elif self.panorama_view:
-            # image = MoilUtils.draw_polygon(
-            #     self.image.copy(),
-            #     self.mapX_pano,
-            #     self.mapY_pano)
+            self.buttonRecenter.show()
             mapX = np.load(
-                './maps_pano/mapX.npy')
+                    './maps_pano/mapX.npy')
             mapY = np.load(
-                './maps_pano/mapY.npy')
+                    './maps_pano/mapY.npy')
             # rho = self.panorama.rho
+            if self.buttonRecenter.isChecked():
+                self.frameRecenter.show()
+                self.labelrecenterTitle.show()
+                self.labelIcx.show()
+                self.labelIcy.show()
+                self.setIcx.show()
+                self.setIcy.show()
+                self.labelMin.show()
+                self.labelMax.show()
+                self.min_pano.show()
+                self.max_pano.show()
+                self.frame_panorama.setGeometry(QtCore.QRect(5, 50, 180, 145))
+                self.recImage = self.recenter.returnImage()
+                resImage = self.recImage
+                res = MoilUtils.drawPolygon(resImage.copy(), mapX, mapY)
+                MoilUtils.showImageToLabel(self.labelRecenter,
+                                           res,
+                                           self.width_original_image, plusIcon=True)
+                image = MoilUtils.drawPoint(self.image.copy(), self.point, radius)
+                MoilUtils.showImageToLabel(self.label_Original_Image,
+                                           image,
+                                           self.width_original_image)
+            else:
+                self.frameRecenter.hide()
+                self.labelrecenterTitle.hide()
+                self.labelIcx.hide()
+                self.labelIcy.hide()
+                self.setIcx.hide()
+                self.setIcy.hide()
+                self.labelMin.show()
+                self.labelMax.show()
+                self.min_pano.show()
+                self.max_pano.show()
+                self.frame_panorama.setGeometry(QtCore.QRect(5, 50, 180, 80))
+                resImage = self.image.copy()
+                self.point = (round(self.moildev.getIcx()), round(self.moildev.getIcy()))
 
-            self.result_image = cv2.remap(
-                self.image.copy(),
-                mapX,
-                mapY,
-                cv2.INTER_CUBIC)
-            # self.result_image = self.result_image[round(rho):self.h, 0:self.w]
-            # print(self.result_image)
-            image = MoilUtils.drawPoint(image, self.point, radius)
-            MoilUtils.showImageToLabel(self.label_Original_Image,
-                                       image,
-                                       self.width_original_image)
+                # self.result_image = self.result_image[round(rho):self.h, 0:self.w]
+                # print(self.result_image)
+                image = MoilUtils.drawPolygon(self.image.copy(), mapX, mapY)
+                image = MoilUtils.drawPoint(image, self.point, radius)
+                MoilUtils.showImageToLabel(self.label_Original_Image,
+                                           image,
+                                           self.width_original_image)
+            self.result_image = cv2.remap(resImage, mapX, mapY, cv2.INTER_CUBIC)
             MoilUtils.showImageToLabel(self.label_Result_Image,
                                        self.result_image,
                                        self.width_result_image, self.angle)
 
         else:
+            self.buttonRecenter.hide()
+            self.frameRecenter.hide()
+            self.labelrecenterTitle.hide()
             image = MoilUtils.drawPolygon(self.image.copy(), self.mapX, self.mapY)
             image = MoilUtils.drawPoint(image, self.point, radius)
             self.result_image = cv2.remap(
@@ -342,6 +439,7 @@ class Controller(Ui_MainWindow):
             MoilUtils.showImageToLabel(self.label_Original_Image,
                                        image,
                                        self.width_original_image)
+        self.show_percentage()
 
     def save_image(self):
         """
@@ -523,6 +621,8 @@ class Controller(Ui_MainWindow):
         self.label_time_end.hide()
         self.frame_apps.hide()
         self.frame_clear.hide()
+        self.labelrecenterTitle.hide()
+        self.frameRecenter.hide()
         self.statusbar.hide()
 
     def minimize_view(self):
@@ -552,6 +652,168 @@ class Controller(Ui_MainWindow):
         self.frame_apps.show()
         self.frame_clear.show()
         self.statusbar.show()
+        self.labelOrginalTitle.show()
+        if self.buttonRecenter.isChecked():
+            if self.panorama_view:
+                self.labelrecenterTitle.show()
+                self.frameRecenter.show()
+
+    def actionRecordVideo(self):
+        """
+        Create video writer to save video.
+
+        """
+        if self.image is None:
+            self.actionRecord_video.setChecked(False)
+        else:
+            if self.cam:
+                if self.actionRecord_video.isChecked():
+                    if self.video_controller.play:
+                        self.video_controller.pause_video()
+                    if self.videoDir is None or self.videoDir == "":
+                        self.videoDir = MoilUtils.selectDirectory()
+                    if self.videoDir:
+                        ss = datetime.datetime.now().strftime("%m%d%H_%M%S")
+                        frame_width = int(self.cap.get(3))
+                        frame_height = int(self.cap.get(4))
+                        filename = "Recorded"  # if self.parent.normal_view else "result"
+
+                        name = self.videoDir + "/" + filename + "_" + str(ss) + ".avi"
+                        answer = QtWidgets.QMessageBox.information(
+                            self.parent,
+                            "Information",
+                            " Start Record Video !!",
+                            QtWidgets.QMessageBox.Yes,
+                            QtWidgets.QMessageBox.No)
+
+                        if answer == QtWidgets.QMessageBox.Yes:
+                            self.video_controller.play_video()
+                            self.video_writer = cv2.VideoWriter(
+                                name, cv2.VideoWriter_fourcc(
+                                    *'XVID'), self.video_controller.fps, (frame_width, frame_height))
+                            os.makedirs(os.path.dirname(name), exist_ok=True)
+                            self.btn_Record_video.setChecked(True)
+                            self.btn_Record_video.setIcon(
+                                QtGui.QIcon(QtGui.QPixmap.fromImage(self.rs.iconRecording())))
+                            self.actionRecord_video.setIcon(
+                                QtGui.QIcon(QtGui.QPixmap.fromImage(self.rs.iconRecording())))
+                            self.record = True
+                        if answer == QtWidgets.QMessageBox.No:
+                            self.actionRecord_video.setChecked(False)
+                            self.record = False
+                    else:
+                        self.videoDir = None
+                        self.actionRecord_video.setChecked(False)
+
+                else:
+                    if self.videoDir:
+                        self.video_controller.timer.stop()
+                        self.btn_play_pouse.setIcon(
+                            QtGui.QIcon(QtGui.QPixmap.fromImage(self.rs.iconPlay())))
+                        QtWidgets.QMessageBox.information(
+                            self.parent,
+                            "Information",
+                            "Video saved !!\n\nLoc: " +
+                            self.videoDir)
+                        self.video_writer = None
+                        self.video_controller.play = False
+                        self.record = False
+                        self.actionRecord_video.setChecked(False)
+                        self.btn_Record_video.setChecked(False)
+                        self.btn_Record_video.setIcon(
+                            QtGui.QIcon(QtGui.QPixmap.fromImage(self.rs.iconRecord())))
+                        self.actionRecord_video.setIcon(
+                            QtGui.QIcon(QtGui.QPixmap.fromImage(self.rs.iconRecord())))
+
+    def buttonRecordVideo(self):
+        """
+        Create video writer to save video.
+
+        """
+        if self.image is None:
+            self.btn_Record_video.setChecked(False)
+        else:
+            if self.cam:
+                if self.btn_Record_video.isChecked():
+                    if self.video_controller.play:
+                        self.video_controller.pause_video()
+                    if self.videoDir is None or self.videoDir == "":
+                        self.videoDir = MoilUtils.selectDirectory()
+                    if self.videoDir:
+                        ss = datetime.datetime.now().strftime("%m%d%H_%M%S")
+                        frame_width = int(self.cap.get(3))
+                        frame_height = int(self.cap.get(4))
+                        filename = "Recorded"  # if self.parent.normal_view else "result"
+
+                        name = self.videoDir + "/" + filename + "_" + str(ss) + ".avi"
+                        answer = QtWidgets.QMessageBox.information(
+                            self.parent,
+                            "Information",
+                            " Start Record Video !!",
+                            QtWidgets.QMessageBox.Yes,
+                            QtWidgets.QMessageBox.No)
+
+                        if answer == QtWidgets.QMessageBox.Yes:
+                            self.video_controller.play_video()
+                            self.video_writer = cv2.VideoWriter(
+                                name, cv2.VideoWriter_fourcc(
+                                    *'XVID'), self.video_controller.fps, (frame_width, frame_height))
+                            os.makedirs(os.path.dirname(name), exist_ok=True)
+                            self.actionRecord_video.setChecked(True)
+                            self.btn_Record_video.setIcon(
+                                QtGui.QIcon(QtGui.QPixmap.fromImage(self.rs.iconRecording())))
+                            self.actionRecord_video.setIcon(
+                                QtGui.QIcon(QtGui.QPixmap.fromImage(self.rs.iconRecording())))
+                            self.record = True
+                        if answer == QtWidgets.QMessageBox.No:
+                            self.btn_Record_video.setChecked(False)
+                            self.record = False
+                    else:
+                        self.videoDir = None
+                        self.btn_Record_video.setChecked(False)
+
+                else:
+                    if self.videoDir:
+                        self.video_controller.timer.stop()
+                        self.btn_play_pouse.setIcon(
+                            QtGui.QIcon(QtGui.QPixmap.fromImage(self.rs.iconPlay())))
+                        QtWidgets.QMessageBox.information(
+                            self.parent,
+                            "Information",
+                            "Video saved !!\n\nLoc: " +
+                            self.videoDir)
+                        self.video_writer = None
+                        self.video_controller.play = False
+                        self.record = False
+                        self.actionRecord_video.setChecked(False)
+                        self.btn_Record_video.setChecked(False)
+                        self.btn_Record_video.setIcon(
+                            QtGui.QIcon(QtGui.QPixmap.fromImage(self.rs.iconRecord())))
+                        self.actionRecord_video.setIcon(
+                            QtGui.QIcon(QtGui.QPixmap.fromImage(self.rs.iconRecord())))
+
+    def onclickRecenter(self):
+        if self.buttonRecenter.isChecked():
+            self.buttonRecenter.setStyleSheet(
+                "QPushButton{\n"
+                "  border-color: #71D1BA;\n"
+                "  border-width: 2px;        \n"
+                "  border-style: solid;\n"
+                "  border-radius: 5px;\n"
+                "  background-color : #81AED1; }\n")
+            self.recenter.onclickRecenter()
+            self.frame_panorama.show()
+            # self.checkAuto.show()
+        else:
+            self.buttonRecenter.setStyleSheet(
+                "QPushButton{\n"
+                "  border-color: #71D1BA;\n"
+                "  border-width: 2px;        \n"
+                "  border-style: solid;\n"
+                "  border-radius: 5px;\n"
+                "  background-color : rgb(238, 238, 236); }\n")
+            self.show_to_window()
+            self.recImage = None
 
     def onclickReleaseNote(self):
         """
@@ -616,6 +878,13 @@ class Controller(Ui_MainWindow):
 
     def onclick_help_moil(self):
         self.dialogHelp.show()
+
+    def updateLabel(self, filename=None):
+        if filename is None:
+            self.parent.setWindowTitle("MoilApp - " + self.type_camera)
+        else:
+            self.parent.setWindowTitle("MoilApp - " + filename)
+            self.label_Application.setText("Camera: " + self.type_camera)
 
     def onclick_exit(self):
         """

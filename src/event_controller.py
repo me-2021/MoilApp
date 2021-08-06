@@ -146,6 +146,7 @@ class MouseEvent(object):
                 self.parent.comboBox_zoom.setItemText(8, "Zoom Area")
                 self.parent.zoom_area = True
                 self.parent.buttonBack.show()
+                self.parent.buttonRecenter.hide()
 
             if e.button() == QtCore.Qt.RightButton:
                 self.menuMouseEvent(e)

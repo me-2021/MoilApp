@@ -6,8 +6,8 @@ import numpy as np
 import datetime
 import math
 import json
-from Exif.exif_lib import MetaImage
-from Moildev.Moildev import Moildev
+from exif_lib import MetaImage
+from Moildev import Moildev
 
 
 class MoilUtils(object):

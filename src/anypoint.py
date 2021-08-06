@@ -17,17 +17,17 @@ class Anypoint(object):
         self.anypoint_mode = 1
         self.moildev = None
         self.parent.radio_btn_mode_1.setChecked(True)
-        self.parent.btn_anypoint.clicked.connect(self.process_to_anypoint)
-        self.parent.btn_Up_View.clicked.connect(self.__up)
-        self.parent.btn_Right_view.clicked.connect(self.__right)
-        self.parent.btn_left_view.clicked.connect(self.__left)
-        self.parent.btn_center_view.clicked.connect(self.__center)
-        self.parent.btn_Down_view.clicked.connect(self.__down)
-        self.parent.radio_btn_mode_1.clicked.connect(self.__anypoint_mode_1)
-        self.parent.radio_btn_mode_2.clicked.connect(self.__anypoint_mode_2)
-        self.parent.lineedit_alpha_2.editingFinished.connect(self.set_param_any)
-        self.parent.lineedit_beta_2.editingFinished.connect(self.set_param_any)
-        self.parent.anypoint_zoom_2.editingFinished.connect(self.set_param_any)
+        # self.parent.btn_anypoint.clicked.connect(self.process_to_anypoint)
+        # self.parent.btn_Up_View.clicked.connect(self.__up)
+        # self.parent.btn_Right_view.clicked.connect(self.__right)
+        # self.parent.btn_left_view.clicked.connect(self.__left)
+        # self.parent.btn_center_view.clicked.connect(self.__center)
+        # self.parent.btn_Down_view.clicked.connect(self.__down)
+        # self.parent.radio_btn_mode_1.clicked.connect(self.__anypoint_mode_1)
+        # self.parent.radio_btn_mode_2.clicked.connect(self.__anypoint_mode_2)
+        # self.parent.lineedit_alpha_2.editingFinished.connect(self.set_param_any)
+        # self.parent.lineedit_beta_2.editingFinished.connect(self.set_param_any)
+        # self.parent.anypoint_zoom_2.editingFinished.connect(self.set_param_any)
 
     def set_param_any(self):
         self.alpha = float(self.parent.lineedit_alpha_2.text())
@@ -71,7 +71,7 @@ class Anypoint(object):
         self.parent.show_to_window()
         self.writeAplhaBeta()
 
-    def __anypoint_mode_1(self):
+    def anypoint_mode_1(self):
         """
         Execute the anypoint process mode 1.
 
@@ -82,7 +82,7 @@ class Anypoint(object):
         self.resetAlphaBeta()
         self.process_to_anypoint()
 
-    def __anypoint_mode_2(self):
+    def anypoint_mode_2(self):
         """
         Execute the anypoint process mode 2.
 
@@ -104,9 +104,10 @@ class Anypoint(object):
         self.beta = 0
         self.zoom_any = 4
         self.writeAplhaBeta()
-        self.parent.point = (round(self.parent.w / 2), round(self.parent.h / 2))
+        if self.parent.moildev is not None:
+            self.parent.point = (round(self.parent.moildev.getIcx()), round(self.parent.moildev.getIcy()))
 
-    def __up(self):
+    def up(self):
         """
         The method showing anypoint widget_controller in specific area.
         """
@@ -119,7 +120,7 @@ class Anypoint(object):
             self.beta = 0
         self.anypoint()
 
-    def __left(self):
+    def left(self):
         """
         The method showing anypoint widget_controller in specific area.
         """
@@ -132,11 +133,11 @@ class Anypoint(object):
             self.beta = -75
         self.anypoint()
 
-    def __center(self):
+    def center(self):
         """
         The method showing anypoint widget_controller in specific area.
         """
-        self.parent.point = (round(self.parent.w / 2), round(self.parent.h / 2))
+        self.parent.point = (round(self.parent.getIcx()), round(self.parent.getIcy()))
         if self.parent.radio_btn_mode_1.isChecked():
             self.alpha = 0
             self.beta = 0
@@ -145,7 +146,7 @@ class Anypoint(object):
             self.beta = 0
         self.anypoint()
 
-    def __right(self):
+    def right(self):
         """
         The method showing anypoint widget_controller in specific area.
         """
@@ -158,7 +159,7 @@ class Anypoint(object):
             self.beta = 65
         self.anypoint()
 
-    def __down(self):
+    def down(self):
         """
         The method showing anypoint widget_controller in specific area.
         """

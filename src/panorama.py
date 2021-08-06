@@ -15,16 +15,6 @@ class Panorama(object):
         self.moildev = None
         self.__pano_alpha_min = 10
         self.__pano_alpha_max = 110
-        self.__connect_event()
-
-    def __connect_event(self):
-        """
-        Connect the event to the function.
-
-        """
-        self.parent.btn_panorama.clicked.connect(self.process_to_panorama)
-        self.parent.max_pano.editingFinished.connect(self.change_panorama_fov)
-        self.parent.min_pano.editingFinished.connect(self.change_panorama_fov)
 
     def process_to_panorama(self):
         """
@@ -57,7 +47,7 @@ class Panorama(object):
         self.parent.frame_navigator.hide()
         self.parent.frame_panorama.show()
         mapX, mapY, = self.moildev.getPanoramaMaps(
-            10, self.__pano_alpha_max)
+            self.__pano_alpha_min, self.__pano_alpha_max)
         np.save("./maps_pano/mapX.npy", mapX)
         np.save("./maps_pano/mapY.npy", mapY)
         self.parent.max_pano.setValue(self.__pano_alpha_max)

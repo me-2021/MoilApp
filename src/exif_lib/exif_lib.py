@@ -1,4 +1,4 @@
-from Exif.exif import Image
+from . import exif
 
 
 class MetaImage(object):
@@ -15,7 +15,7 @@ class MetaImage(object):
             filename (): The name of image data.
             encoding (): Convert string to data that can stored on metadata image
         """
-        self.img = Image(filename.encode(encoding))
+        self.img = exif.Image(filename.encode(encoding))
 
     def close(self):
         """

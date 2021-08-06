@@ -25,9 +25,6 @@ class VideoController(object):
         self.seconds = None
         self.sec = None
         self.play = False
-        self.record = False
-        self.videoDir = None
-        self.video_writer = None
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.next_frame_slot)
         self.rs = ResourceIcon()
@@ -77,9 +74,9 @@ class VideoController(object):
             self.parent.show_to_window()
             if self.parent.btn_Record_video.isChecked():
                 image = self.parent.image if self.parent.normal_view else self.parent.result_image
-                self.video_writer.write(image)
-        else:
-            self.stop_video()
+                self.parent.video_writer.write(image)
+        # else:
+        #     self.stop_video()
 
     def reset_time(self):
         """
@@ -111,9 +108,9 @@ class VideoController(object):
         Pause the frame in video or camera mode.
 
         """
-        if self.video_writer is not None:
+        if self.parent.video_writer is not None:
             answer = QtWidgets.QMessageBox.information(
-                None,
+                self.parent,
                 "Information",
                 "System in record mode, pause will stop recorded. \n\nContinue process ??",
                 QtWidgets.QMessageBox.Yes,
@@ -124,13 +121,13 @@ class VideoController(object):
                 self.parent.btn_play_pouse.setIcon(
                     QtGui.QIcon(QtGui.QPixmap.fromImage(self.rs.iconPlay())))
                 QtWidgets.QMessageBox.information(
-                    None,
+                    self.parent,
                     "Information",
                     "Video saved !!\n\nLoc: " +
-                    self.videoDir)
+                    self.parent.videoDir)
                 self.parent.btn_Record_video.setIcon(QtGui.QIcon(QtGui.QPixmap.fromImage(self.rs.iconRecording())))
                 self.parent.btn_Record_video.setChecked(False)
-                self.video_writer = None
+                self.parent.video_writer = None
                 self.play = False
         else:
             self.timer.stop()
@@ -242,85 +239,85 @@ class VideoController(object):
             self.pause_video()
             self.play = False
             
-    def recordVideo(self):
-        """
-        Create video writer to save video.
+    # def recordVideo(self):
+    #     """
+    #     Create video writer to save video.
+    #
+    #     """
+    #     if self.parent.cam:
+    #         if self.parent.btn_Record_video.isChecked():
+    #             if self.play:
+    #                 self.pause_video()
+    #             self.parent.actionRecord_video.setChecked(True)
+    #             ss = datetime.datetime.now().strftime("%m%d%H_%M%S")
+    #             frame_width = int(self.parent.cap.get(3))
+    #             frame_height = int(self.parent.cap.get(4))
+    #             filename = "Recorded"  # if self.parent.normal_view else "result"
+    #
+    #             if self.videoDir is None or self.videoDir == "":
+    #                 self.videoDir = MoilUtils.selectDirectory()
+    #             # print(self.videoDir)
+    #             if self.videoDir:
+    #                 name = self.videoDir + "/" + filename + "_" + str(ss) + ".avi"
+    #                 answer = QtWidgets.QMessageBox.information(
+    #                     self.parent.parent,
+    #                     "Information",
+    #                     " Start Record Video !!",
+    #                     QtWidgets.QMessageBox.Yes,
+    #                     QtWidgets.QMessageBox.No)
+    #
+    #                 if answer == QtWidgets.QMessageBox.Yes:
+    #                     self.play_video()
+    #                     self.video_writer = cv2.VideoWriter(
+    #                         name, cv2.VideoWriter_fourcc(
+    #                             *'XVID'), self.fps, (frame_width, frame_height))
+    #                     os.makedirs(os.path.dirname(name), exist_ok=True)
+    #                     self.parent.btn_Record_video.setIcon(
+    #                         QtGui.QIcon(QtGui.QPixmap.fromImage(self.rs.iconRecording())))
+    #                 else:
+    #                     self.videoDir = None
+    #                     self.parent.btn_Record_video.setChecked(False)
+    #             else:
+    #                 self.parent.btn_Record_video.setChecked(False)
+    #
+    #         else:
+    #             if self.parent.actionRecord_video.isChecked():
+    #                 self.parent.actionRecord_video.setChecked(False)
+    #             self.stopRecord()
 
-        """
-        if self.parent.cam:
-            if self.parent.btn_Record_video.isChecked():
-                if self.play:
-                    self.pause_video()
-                self.parent.actionRecord_video.setChecked(True)
-                ss = datetime.datetime.now().strftime("%m%d%H_%M%S")
-                frame_width = int(self.parent.cap.get(3))
-                frame_height = int(self.parent.cap.get(4))
-                filename = "Recorded"  # if self.parent.normal_view else "result"
+    # def action_record_video(self):
+    #     """
+    #     Create video writer to save video.
+    #
+    #     """
+    #     if self.parent.actionRecord_video.isChecked():
+    #         self.parent.btn_Record_video.setChecked(True)
+    #         self.recordVideo()
+    #     else:
+    #         self.stopRecord()
 
-                if self.videoDir is None or self.videoDir == "":
-                    self.videoDir = MoilUtils.selectDirectory()
-                # print(self.videoDir)
-                if self.videoDir:
-                    name = self.videoDir + "/" + filename + "_" + str(ss) + ".avi"
-                    answer = QtWidgets.QMessageBox.information(
-                        self.parent.parent,
-                        "Information",
-                        " Start Record Video !!",
-                        QtWidgets.QMessageBox.Yes,
-                        QtWidgets.QMessageBox.No)
+    # def stopRecord(self):
+    #     self.timer.stop()
+    #     self.parent.btn_play_pouse.setIcon(
+    #         QtGui.QIcon(QtGui.QPixmap.fromImage(self.rs.iconPlay())))
+    #     QtWidgets.QMessageBox.information(
+    #         self.parent.parent,
+    #         "Information",
+    #         "Video saved !!\n\nLoc: " +
+    #         self.videoDir)
+    #     self.parent.btn_Record_video.setIcon(
+    #         QtGui.QIcon(QtGui.QPixmap.fromImage(self.rs.iconRecord())))
+    #     self.video_writer = None
+    #     self.play = False
 
-                    if answer == QtWidgets.QMessageBox.Yes:
-                        self.play_video()
-                        self.video_writer = cv2.VideoWriter(
-                            name, cv2.VideoWriter_fourcc(
-                                *'XVID'), self.fps, (frame_width, frame_height))
-                        os.makedirs(os.path.dirname(name), exist_ok=True)
-                        self.parent.btn_Record_video.setIcon(
-                            QtGui.QIcon(QtGui.QPixmap.fromImage(self.rs.iconRecording())))
-                    else:
-                        self.videoDir = None
-                        self.parent.btn_Record_video.setChecked(False)
-                else:
-                    self.parent.btn_Record_video.setChecked(False)
-
-            else:
-                if self.parent.actionRecord_video.isChecked():
-                    self.parent.actionRecord_video.setChecked(False)
-                self.stopRecord()
-
-    def action_record_video(self):
-        """
-        Create video writer to save video.
-
-        """
-        if self.parent.actionRecord_video.isChecked():
-            self.parent.btn_Record_video.setChecked(True)
-            self.recordVideo()
-        else:
-            self.stopRecord()
-
-    def stopRecord(self):
-        self.timer.stop()
-        self.parent.btn_play_pouse.setIcon(
-            QtGui.QIcon(QtGui.QPixmap.fromImage(self.rs.iconPlay())))
-        QtWidgets.QMessageBox.information(
-            self.parent.parent,
-            "Information",
-            "Video saved !!\n\nLoc: " +
-            self.videoDir)
-        self.parent.btn_Record_video.setIcon(
-            QtGui.QIcon(QtGui.QPixmap.fromImage(self.rs.iconRecord())))
-        self.video_writer = None
-        self.play = False
-
-    def selectDir(self):
-        """
-        Select destination directory to save the video file.
-
-        """
-        self.videoDir = QtWidgets.QFileDialog.getExistingDirectory(self.parent, 'Select Save Folder')
-        if self.videoDir:
-            self.recordVideo()
-        else:
-            self.parent.btn_Record_video.setChecked(False)
-            self.timer.start()
+    # def selectDir(self):
+    #     """
+    #     Select destination directory to save the video file.
+    #
+    #     """
+    #     self.videoDir = QtWidgets.QFileDialog.getExistingDirectory(self.parent, 'Select Save Folder')
+    #     if self.videoDir:
+    #         self.recordVideo()
+    #     else:
+    #         self.parent.btn_Record_video.setChecked(False)
+    #         self.timer.start()
