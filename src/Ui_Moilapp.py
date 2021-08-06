@@ -1404,57 +1404,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.listWidget.setObjectName("listWidget")
         self.verticalLayout.addWidget(self.listWidget)
 
-        # self.labelOrginalTitle = QtWidgets.QLabel(self.centralwidget)
-        # self.labelOrginalTitle.setMinimumHeight(30)
-        # self.labelOrginalTitle.setText("Original Image")
-        # font = QtGui.QFont()
-        # font.setFamily("DejaVu Serif")
-        # font.setPointSize(14)
-        # font.setWeight(50)
-        # self.labelOrginalTitle.setFont(font)
-        # self.labelOrginalTitle.setStyleSheet("border-radius: 5px;\n"
-        #                                      "background-color: #71AED1;   ")
-        # self.labelOrginalTitle.setAlignment(QtCore.Qt.AlignCenter)
-        # self.labelOrginalTitle.setObjectName("labelOrginalTitle")
-        # self.verticalLayout.addWidget(self.labelOrginalTitle)
-
-        # self.frame_original_image = QtWidgets.QFrame(self.centralwidget)
-        # sizePolicy = QtWidgets.QSizePolicy(
-        #     QtWidgets.QSizePolicy.Preferred,
-        #     QtWidgets.QSizePolicy.Fixed)
-        # sizePolicy.setHorizontalStretch(0)
-        # sizePolicy.setVerticalStretch(0)
-        # sizePolicy.setHeightForWidth(
-        #     self.frame_original_image.sizePolicy().hasHeightForWidth())
-        # self.frame_original_image.setSizePolicy(sizePolicy)
-        # self.frame_original_image.setMinimumSize(QtCore.QSize(0, 220))
-        # self.frame_original_image.setStyleSheet(
-        #     "background-color: rgb(0, 0, 0);\n"
-        #     "border-radius: 10px;")
-        # self.frame_original_image.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        # self.frame_original_image.setFrameShadow(QtWidgets.QFrame.Raised)
-        # self.frame_original_image.setObjectName("frame_original_image")
-        # self.horizontalLayout_11 = QtWidgets.QHBoxLayout(
-        #     self.frame_original_image)
-        # self.horizontalLayout_11.setObjectName("horizontalLayout_11")
-        # self.label_Original_Image = QtWidgets.QLabel(self.frame_original_image)
-        # sizePolicy = QtWidgets.QSizePolicy(
-        #     QtWidgets.QSizePolicy.Fixed,
-        #     QtWidgets.QSizePolicy.Fixed)
-        # sizePolicy.setHorizontalStretch(0)
-        # sizePolicy.setVerticalStretch(0)
-        # sizePolicy.setHeightForWidth(
-        #     self.label_Original_Image.sizePolicy().hasHeightForWidth())
-        # self.label_Original_Image.setSizePolicy(sizePolicy)
-        # self.label_Original_Image.setMinimumSize(QtCore.QSize(266, 200))
-        # self.label_Original_Image.setStyleSheet("border-radius: 10px;")
-        # self.label_Original_Image.setText("")
-        # self.label_Original_Image.setScaledContents(False)
-        # self.label_Original_Image.setMouseTracking(True)
-        # self.label_Original_Image.setObjectName("label_Original_Image")
-        # self.horizontalLayout_11.addWidget(self.label_Original_Image)
-        # self.verticalLayout.addWidget(self.frame_original_image)
-
         self.labelrecenterTitle = QtWidgets.QLabel(self.centralwidget)
         self.labelrecenterTitle.setMinimumHeight(30)
         self.labelrecenterTitle.setText("Recenter Image Result")
