@@ -245,6 +245,14 @@ class Controller(Ui_MainWindow):
             self.image = MoilUtils.readImage(filename)
             self.h, self.w = self.image.shape[:2]
             self.moildev = MoilUtils.connectToMoildev(self.type_camera)
+            self.buttonRecenter.setChecked(False)
+            self.buttonRecenter.setStyleSheet(
+                "QPushButton{\n"
+                "  border-color: #71D1BA;\n"
+                "  border-width: 2px;        \n"
+                "  border-style: solid;\n"
+                "  border-radius: 5px;\n"
+                "  background-color : rgb(238, 238, 236); }\n")
             self.show_to_window()
             self.cam = False
 
@@ -299,6 +307,14 @@ class Controller(Ui_MainWindow):
             self.h, self.w = self.image.shape[:2]
             self.moildev = MoilUtils.connectToMoildev(self.type_camera)
             self.cam = True
+            self.buttonRecenter.setChecked(False)
+            self.buttonRecenter.setStyleSheet(
+                "QPushButton{\n"
+                "  border-color: #71D1BA;\n"
+                "  border-width: 2px;        \n"
+                "  border-style: solid;\n"
+                "  border-radius: 5px;\n"
+                "  background-color : rgb(238, 238, 236); }\n")
             self.video_controller.next_frame_slot()
         else:
             QtWidgets.QMessageBox.information(self.parent, "Information", "No source camera founded !!!")
@@ -317,6 +333,14 @@ class Controller(Ui_MainWindow):
 
         """
         if self.image is not None:
+            self.buttonRecenter.setChecked(False)
+            self.buttonRecenter.setStyleSheet(
+                "QPushButton{\n"
+                "  border-color: #71D1BA;\n"
+                "  border-width: 2px;        \n"
+                "  border-style: solid;\n"
+                "  border-radius: 5px;\n"
+                "  background-color : rgb(238, 238, 236); }\n")
             self.reset_mode_view()
             self.normal_view = True
             self.panorama_view = False

@@ -14,7 +14,7 @@ class Panorama(object):
         self.rho = None
         self.moildev = None
         self.__pano_alpha_min = 10
-        self.__pano_alpha_max = 110
+        self.__pano_alpha_max = None
 
     def process_to_panorama(self):
         """
@@ -23,8 +23,17 @@ class Panorama(object):
         """
         if self.parent.image is not None:
             self.parent.anypoint.resetAlphaBeta()
+            self.parent.buttonRecenter.setChecked(False)
+            self.parent.buttonRecenter.setStyleSheet(
+                "QPushButton{\n"
+                "  border-color: #71D1BA;\n"
+                "  border-width: 2px;        \n"
+                "  border-style: solid;\n"
+                "  border-radius: 5px;\n"
+                "  background-color : rgb(238, 238, 236); }\n")
             if self.parent.type_camera:
                 self.moildev = MoilUtils.connectToMoildev(self.parent.type_camera)
+                self.__pano_alpha_max = 90 if self.moildev.getCameraName() == "Intel-T265" else 110
                 self.__panorama()
                 self.parent.show_percentage()
                 self.parent.status_alpha.setText("Alpha: 0")

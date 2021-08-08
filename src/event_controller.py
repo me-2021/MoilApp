@@ -20,6 +20,7 @@ class MouseEvent(object):
         self.parent.label_Original_Image.wheelEvent = self.mouse_wheelEvent_ori_label
         self.parent.label_Result_Image.wheelEvent = self.mouse_wheelEvent
         self.parent.label_Result_Image.mouseReleaseEvent = self.mouse_release_event
+        self.parent.label_Original_Image.mouseReleaseEvent = self.mouse_release_ori
         self.parent.label_Original_Image.mouseMoveEvent = self.mouseMovedOriImage
         self.parent.label_Result_Image.mouseMoveEvent = self.mouseMoveEvent
 
@@ -34,18 +35,29 @@ class MouseEvent(object):
 
         """
         if self.parent.image is not None:
-            pos_x = round(e.x())
-            pos_y = round(e.y())
             if e.button() == QtCore.Qt.LeftButton:
+                pos_x = round(e.x())
+                pos_y = round(e.y())
                 ratio_x, ratio_y = self.init_ori_ratio(self.parent.image)
                 X = round(pos_x * ratio_x)
                 Y = round(pos_y * ratio_y)
-                self.parent.point = (X, Y)
+                if X <= 0 or X >= self.parent.w and Y <= 0 or Y >= self.parent.h:
+                    coordinate_X = int(self.parent.w / 2)
+                    coordinate_Y = int(self.parent.h / 2)
+                else:
+                    coordinate_X = X
+                    coordinate_Y = Y
+                self.parent.point = (coordinate_X, coordinate_Y)
+                self.parent.setIcx.setValue(coordinate_X)
+                self.parent.setIcy.setValue(coordinate_Y)
                 if self.parent.anypoint_view:
-                    self.parent.anypoint.alpha, self.parent.anypoint.beta = self.parent.anypoint.moildev.getAlphaBeta(
-                        X, Y, self.parent.anypoint.anypoint_mode)
-                    # print(self.anypoint.alpha, self.anypoint.beta)
-                    self.parent.anypoint.process_to_anypoint()
+                    self.parent.anypoint.alpha, self.parent.anypoint.beta = self.parent.moildev.getAlphaBeta(
+                        coordinate_X, coordinate_Y, self.parent.anypoint.anypoint_mode)
+                    self.parent.anypoint.anypoint()
+                elif self.parent.buttonRecenter.isChecked():
+                    self.parent.recenter.alpha, self.parent.recenter.beta = self.parent.moildev.getAlphaBeta(
+                        coordinate_X, coordinate_Y)
+                    self.parent.show_to_window()
 
     def mouseDoubleclick_event(self, e):
         """
@@ -151,6 +163,12 @@ class MouseEvent(object):
             if e.button() == QtCore.Qt.RightButton:
                 self.menuMouseEvent(e)
 
+    def mouse_release_ori(self, e):
+        if self.parent.image is not None:
+            if e.button() == QtCore.Qt.LeftButton:
+                if self.parent.anypoint_view:
+                    self.parent.frame_navigator.show()
+
     def menuMouseEvent(self, e):
         """
         showing the menu image when release right click.
@@ -182,7 +200,15 @@ class MouseEvent(object):
         Returns:
 
         """
-        global coordinate_X, coordinate_Y
+        """
+        Mouse move event to look in surrounding widget_controller in result label image.
+
+        Args:
+            e ():
+
+        Returns:
+
+        """
         pos_x = round(e.x())
         pos_y = round(e.y())
         if self.parent.image is not None:
@@ -196,20 +222,21 @@ class MouseEvent(object):
                 coordinate_X = X
                 coordinate_Y = Y
             if e.buttons() == QtCore.Qt.NoButton:
-                if self.parent.anypoint_view:
-                    self.parent.anypoint.alpha, self.parent.anypoint.beta = self.parent.anypoint.moildev.getAlphaBeta(
+                if self.parent.anypoint_view or self.parent.buttonRecenter.isChecked():
+                    self.parent.anypoint.alpha, self.parent.anypoint.beta = self.parent.moildev.getAlphaBeta(
                         coordinate_X, coordinate_Y, self.parent.anypoint.anypoint_mode)
-                    self.parent.status_alpha.setText("Alpha: %.2f" % self.parent.anypoint.alpha)
-                    self.parent.status_beta.setText("Beta: %.2f" % self.parent.anypoint.beta)
+                    self.parent.status_alpha.setText("Alpha: %.1f" % self.parent.anypoint.alpha)
+                    self.parent.status_beta.setText("Beta: %.1f" % self.parent.anypoint.beta)
 
             elif e.buttons() == QtCore.Qt.LeftButton:
-                self.parent.point = (coordinate_X, coordinate_Y)
                 if self.parent.anypoint_view:
-                    self.parent.anypoint.alpha, self.parent.anypoint.beta = self.parent.anypoint.moildev.getAlphaBeta(
+                    self.parent.point = (coordinate_X, coordinate_Y)
+                    self.parent.anypoint.alpha, self.parent.anypoint.beta = self.parent.moildev.getAlphaBeta(
                         coordinate_X, coordinate_Y, self.parent.anypoint.anypoint_mode)
-                    self.parent.status_alpha.setText("Alpha: %.2f" % self.parent.anypoint.alpha)
-                    self.parent.status_beta.setText("Beta: %.2f" % self.parent.anypoint.beta)
-                    self.parent.anypoint.process_to_anypoint()
+                    self.parent.status_alpha.setText("Alpha: %.1f" % self.parent.anypoint.alpha)
+                    self.parent.status_beta.setText("Beta: %.1f" % self.parent.anypoint.beta)
+                    self.parent.frame_navigator.hide()
+                    self.parent.anypoint.anyPo()
 
     def init_ori_ratio(self, image):
         """

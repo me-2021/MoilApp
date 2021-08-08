@@ -17,17 +17,6 @@ class Anypoint(object):
         self.anypoint_mode = 1
         self.moildev = None
         self.parent.radio_btn_mode_1.setChecked(True)
-        # self.parent.btn_anypoint.clicked.connect(self.process_to_anypoint)
-        # self.parent.btn_Up_View.clicked.connect(self.__up)
-        # self.parent.btn_Right_view.clicked.connect(self.__right)
-        # self.parent.btn_left_view.clicked.connect(self.__left)
-        # self.parent.btn_center_view.clicked.connect(self.__center)
-        # self.parent.btn_Down_view.clicked.connect(self.__down)
-        # self.parent.radio_btn_mode_1.clicked.connect(self.__anypoint_mode_1)
-        # self.parent.radio_btn_mode_2.clicked.connect(self.__anypoint_mode_2)
-        # self.parent.lineedit_alpha_2.editingFinished.connect(self.set_param_any)
-        # self.parent.lineedit_beta_2.editingFinished.connect(self.set_param_any)
-        # self.parent.anypoint_zoom_2.editingFinished.connect(self.set_param_any)
 
     def set_param_any(self):
         self.alpha = float(self.parent.lineedit_alpha_2.text())
@@ -35,7 +24,7 @@ class Anypoint(object):
         self.zoom_any = float(self.parent.anypoint_zoom_2.text())
         self.process_to_anypoint()
 
-    def writeAplhaBeta(self):
+    def writeAlphaBeta(self):
         self.parent.lineedit_alpha_2.setValue(self.alpha)
         self.parent.lineedit_beta_2.setValue(self.beta)
         self.parent.anypoint_zoom_2.setValue(self.zoom_any)
@@ -46,8 +35,18 @@ class Anypoint(object):
 
         """
         if self.parent.image is not None:
+            self.parent.buttonRecenter.setChecked(False)
+            self.parent.buttonRecenter.setStyleSheet(
+                "QPushButton{\n"
+                "  border-color: #71D1BA;\n"
+                "  border-width: 2px;        \n"
+                "  border-style: solid;\n"
+                "  border-radius: 5px;\n"
+                "  background-color : rgb(238, 238, 236); }\n")
             if self.parent.type_camera:
                 self.moildev = MoilUtils.connectToMoildev(self.parent.type_camera)
+                self.parent.point =(round(self.moildev.getIcx()), round(self.moildev.getIcy()))
+                self.resetAlphaBeta()
                 self.anypoint()
                 self.parent.show_percentage()
             else:
@@ -69,7 +68,13 @@ class Anypoint(object):
         self.parent.mapX, self.parent.mapY, = self.moildev.getAnypointMaps(
             self.alpha, self.beta, self.zoom_any, self.anypoint_mode)
         self.parent.show_to_window()
-        self.writeAplhaBeta()
+        self.writeAlphaBeta()
+
+    def anyPo(self):
+        self.parent.mapX, self.parent.mapY, = self.parent.moildev.getAnypointMaps(
+            round(self.alpha, 2), round(self.beta, 2), self.zoom_any, self.anypoint_mode)
+        self.parent.show_to_window()
+        self.writeAlphaBeta()
 
     def anypoint_mode_1(self):
         """
@@ -103,7 +108,7 @@ class Anypoint(object):
         self.alpha = 0
         self.beta = 0
         self.zoom_any = 4
-        self.writeAplhaBeta()
+        self.writeAlphaBeta()
         if self.parent.moildev is not None:
             self.parent.point = (round(self.parent.moildev.getIcx()), round(self.parent.moildev.getIcy()))
 
@@ -137,7 +142,7 @@ class Anypoint(object):
         """
         The method showing anypoint widget_controller in specific area.
         """
-        self.parent.point = (round(self.parent.getIcx()), round(self.parent.getIcy()))
+        self.parent.point = (round(self.parent.moildev.getIcx()), round(self.parent.moildev.getIcy()))
         if self.parent.radio_btn_mode_1.isChecked():
             self.alpha = 0
             self.beta = 0
