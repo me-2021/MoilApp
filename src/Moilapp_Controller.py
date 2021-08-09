@@ -240,21 +240,28 @@ class Controller(Ui_MainWindow):
                 self.video_controller.stop_video()
                 self.cap.release()
                 self.video_controller.set_button_disable()
-            self.type_camera = MoilUtils.readCameraType(filename)
-            self.updateLabel(filename)
-            self.image = MoilUtils.readImage(filename)
-            self.h, self.w = self.image.shape[:2]
-            self.moildev = MoilUtils.connectToMoildev(self.type_camera)
-            self.buttonRecenter.setChecked(False)
-            self.buttonRecenter.setStyleSheet(
-                "QPushButton{\n"
-                "  border-color: #71D1BA;\n"
-                "  border-width: 2px;        \n"
-                "  border-style: solid;\n"
-                "  border-radius: 5px;\n"
-                "  background-color : rgb(238, 238, 236); }\n")
-            self.show_to_window()
-            self.cam = False
+            typeCam = MoilUtils.readCameraType(filename)
+            if typeCam == "":
+                self.type_camera = MoilUtils.selectCameraType()
+                MoilUtils.modifyMetaData(filename, self.type_camera)
+            else:
+                self.type_camera = typeCam
+
+            if self.type_camera is not None:
+                self.updateLabel(filename)
+                self.image = MoilUtils.readImage(filename)
+                self.h, self.w = self.image.shape[:2]
+                self.moildev = MoilUtils.connectToMoildev(self.type_camera)
+                self.buttonRecenter.setChecked(False)
+                self.buttonRecenter.setStyleSheet(
+                    "QPushButton{\n"
+                    "  border-color: #71D1BA;\n"
+                    "  border-width: 2px;        \n"
+                    "  border-style: solid;\n"
+                    "  border-radius: 5px;\n"
+                    "  background-color : rgb(238, 238, 236); }\n")
+                self.show_to_window()
+                self.cam = False
 
     def onclick_load_video(self):
         """

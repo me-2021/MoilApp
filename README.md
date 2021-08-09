@@ -1,6 +1,6 @@
 ## MoilApp Application
 
-*Date: 15/06/2021*
+*Date: 09/08/2021*
 
 *Created by: Haryanto*
 
@@ -17,6 +17,15 @@
    - your application becomes smaller and easier to understand
    
    This is the ***newest version of MoilApp*** where previously we had version 1, version 2 and version 3. 
+   
+   **(updated 09082021) Whats new:**
+   
+   - FoV on camera parameter
+   - Select camera type if not available on metadata image
+   - Integrate with Moildev version 2.6.0 that can process for recenter optical axis fisheye image
+   - Reset Center point Image
+   
+   
 
 
 2. **How to run these apps**

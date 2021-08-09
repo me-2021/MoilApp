@@ -1,27 +1,13 @@
-Release note MoilApp developing
+Release note for Mail App development
 Writer: Haryanto
 
 
-update 18/06/2021
+update 09/08/2021
 
-   1. show path image in title apps
-   2. showing camera type on user interface
-   3. create combobox to show the list of persentage zoom image
-   4. showing the value of recent persentage when zoom image 
-
-update 21/06/2021
-   
-   1. set the limit zoom in and zoom out
-   2. debug video speed when replay
-   3. zooming on spesific area by drag mouse event for all view (normal, anypoint and panorama)
-   4. record video both original imaga and result processing
-   5. draw center point and coordinate position in anypoint mode
-   6. add arrow direction in anypoint mode
-   7. reconstruct code
-
-update 22/06/2021
-   1. add plugin template
-   2. modify record video that can combine original and result frame on same file
+   1. FoV on camera parameter
+   2. Select camera type if not available on metadata image
+   3. Integrate with Moildev version 2.6.0 that can process for recenter optical axis fisheye image
+   4. Reset Center point Image
 
 
 update 20/07/2021
@@ -35,5 +21,33 @@ There are many updates in this version, which can improve the results of process
 
    More Documentation about MoilApp, visit: 
    https://oil-mcut.educationhost.cloud/moilapp/
+
+
+update 22/06/2021
+   1. add plugin template
+   2. modify record video that can combine original and result frame on same file
+
+
+update 21/06/2021
+   
+   1. set the limit zoom in and zoom out
+   2. debug video speed when replay
+   3. zooming on spesific area by drag mouse event for all view (normal, anypoint and panorama)
+   4. record video both original imaga and result processing
+   5. draw center point and coordinate position in anypoint mode
+   6. add arrow direction in anypoint mode
+   7. reconstruct code
+
+
+update 18/06/2021
+
+   1. show path image in title apps
+   2. showing camera type on user interface
+   3. create combobox to show the list of persentage zoom image
+   4. showing the value of recent persentage when zoom image 
+
+
+
+
 
 

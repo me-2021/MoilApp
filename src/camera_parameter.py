@@ -54,6 +54,7 @@ class CameraParameters(Ui_Dialog):
         camera = self.List_Parameter.currentText()
         if camera in self.data.keys():
             self.camera_name.setText(self.data[camera]["cameraName"])
+            self.camera_fov.setText(str(self.data[camera]["cameraFov"]))
             self.cam_sensor_width.setText(str(self.data[camera]['cameraSensorWidth']))
             self.cam_sensor_height.setText(str(self.data[camera]['cameraSensorHeight']))
             self.image_center_X.setText(str(self.data[camera]['iCx']))
@@ -160,6 +161,7 @@ class CameraParameters(Ui_Dialog):
         Clear all input parameter box (LineEdit)
         """
         self.camera_name.setText("")
+        self.camera_fov.setText("")
         self.cam_sensor_width.setText("")
         self.cam_sensor_height.setText("")
         self.image_center_X.setText("")
@@ -202,6 +204,7 @@ class CameraParameters(Ui_Dialog):
 
         self.a_dict = {self.camera_name.text(): {
             "cameraName": self.camera_name.text(),
+            "cameraFov": self.camera_fov.text(),
             "cameraSensorWidth": sensorWidth,
             "cameraSensorHeight": sensorHeight,
             "iCx": int(self.image_center_X.text()),

@@ -33,7 +33,8 @@ class Panorama(object):
                 "  background-color : rgb(238, 238, 236); }\n")
             if self.parent.type_camera:
                 self.moildev = MoilUtils.connectToMoildev(self.parent.type_camera)
-                self.__pano_alpha_max = 90 if self.moildev.getCameraName() == "Intel-T265" else 110
+                self.__pano_alpha_max = self.moildev.getCameraFov()/2
+                self.parent.max_pano.setMaximum(self.__pano_alpha_max)
                 self.__panorama()
                 self.parent.show_percentage()
                 self.parent.status_alpha.setText("Alpha: 0")
@@ -70,4 +71,4 @@ class Panorama(object):
         """
         self.__pano_alpha_min = self.parent.min_pano.value()
         self.__pano_alpha_max = self.parent.max_pano.value()
-        self.process_to_panorama()
+        self.__panorama()

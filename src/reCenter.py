@@ -15,7 +15,7 @@ class RecenterImage(object):
     def onclickRecenter(self):
         if self.parent.type_camera:
             self.parent.moildev = MoilUtils.connectToMoildev(self.parent.type_camera)
-            self.alphaMax = 90 if self.parent.moildev.getCameraName() == "Intel-T265" else 110
+            self.alphaMax = self.parent.moildev.getCameraFov()/2
             self.parent.setIcx.setValue(self.parent.moildev.getIcx())
             self.parent.setIcy.setValue(self.parent.moildev.getIcy())
             self.icx = self.parent.setIcx.value()
