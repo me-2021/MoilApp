@@ -1,8 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from moilutils import MoilUtils
-import datetime
 import cv2
-import os
 from souceIcon import ResourceIcon
 
 
@@ -61,6 +58,7 @@ class VideoController(object):
         if success:
             self.fps = self.parent.cap.get(cv2.CAP_PROP_FPS)
             self.pos_frame = self.parent.cap.get(cv2.CAP_PROP_POS_FRAMES)
+            print(self.pos_frame)
             self.frame_count = float(self.parent.cap.get(cv2.CAP_PROP_FRAME_COUNT))
             duration_sec = int(self.frame_count / self.fps)
             self.minutes = duration_sec // 60

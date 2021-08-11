@@ -52,6 +52,7 @@ class Controller(Ui_MainWindow):
         self.anypoint_view = False
         self.axis_controller = False
         self.dir_save = None
+        self.posVid = []
         self.mapX = None
         self.mapY = None
         self.mapX_pano = None
@@ -511,6 +512,7 @@ class Controller(Ui_MainWindow):
         new_widget.setIcon(icon)
         new_widget.setText(str(self.name_saved) + ".png")
         self.listWidget.addItem(new_widget)
+        self.posVid.append(self.video_controller.pos_frame)
 
     def saved_image_activated(self):
         """
@@ -518,13 +520,15 @@ class Controller(Ui_MainWindow):
 
         """
         filename = self.dir_save + "/" + self.listWidget.currentItem().text()
+        posFrame = self.posVid[self.listWidget.currentRow()]
         self.type_camera = MoilUtils.readCameraType(filename)
         if self.cam:
             self.video_controller.pause_video()
             self.reset_mode_view()
             self.image = MoilUtils.readImage(filename)
             self.h, self.w = self.image.shape[:2]
-            self.show_to_window()
+            self.cap.set(cv2.CAP_PROP_POS_FRAMES, posFrame)
+            self.video_controller.next_frame_slot()
             if self.listWidget.count() == 1:
                 self.listWidget.selectionModel().reset()
 
