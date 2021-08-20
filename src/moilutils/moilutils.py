@@ -6,16 +6,53 @@ import numpy as np
 import datetime
 import math
 import json
-from exif_lib import MetaImage
 from Moildev import Moildev
+from .exif_lib import MetaImage
+from .camera_source import CameraSource
+from .camera_parameter import CameraParameters
 
 
 class MoilUtils(object):
-    camera_params = "camera/camera_parameters.json"
+    camera_params = "moilutils/camera/camera_parameters.json"
     camera_type = None
 
     def __init__(self):
         super(MoilUtils, self).__init__()
+
+    @classmethod
+    def selectCameraSource(cls):
+        openCamSource = QtWidgets.QDialog()
+        winOpenCam = CameraSource(openCamSource)
+        openCamSource.exec_()
+        return winOpenCam.camera_source
+
+    @classmethod
+    def openCameraParameters(cls):
+        """
+        Open the window of camera parameter form, this window you can update, add, and
+        delete the camera parameter from database.
+
+        """
+        camParam = QtWidgets.QDialog()
+        winCamParams = CameraParameters(camParam)
+        camParam.exec_()
+
+    @classmethod
+    def createMapsMultipleView(cls, numberOfView, typeCamera, listAlpha, listBeta, listZoom, mode=2):
+        moildev = []
+        mapsX = []
+        mapsY = []
+        for i in range(numberOfView):
+            moildev.append(cls.connectToMoildev(typeCamera))
+
+        for i in range(numberOfView):
+            mapx, mapy = moildev[i].getAnypointMaps(listAlpha[i],
+                                                    listBeta[i],
+                                                    listZoom[i],
+                                                    mode)
+            mapsX.append(mapx)
+            mapsY.append(mapy)
+        return mapsX, mapsY
 
     @classmethod
     def selectCameraType(cls):
@@ -88,20 +125,33 @@ class MoilUtils(object):
         return file_path
 
     @classmethod
-    def copyDirectory(cls, srcpath, dstdir):
+    def selectDirectory(cls, parent=None):
+        """
+        Select directory to save image. This function create to make it not always ask the directory by open dialog,
+        after directory save not None, it will pass open dialog prompt.
+
+        Returns:
+            None.
+        """
+        directory = QtWidgets.QFileDialog.getExistingDirectory(
+            parent, 'Select Save Folder')
+        return directory
+
+    @classmethod
+    def copyDirectory(cls, original, destination):
         """
         Copy directory.
 
         Args:
-            srcpath (): source path or original path folder
-            dstdir (): destination directory.
+            original (): source path or original path folder
+            destination (): destination directory.
 
         Returns:
             file copied in destination directory.
         """
-        dirname = os.path.basename(srcpath)
-        dstpath = os.path.join(dstdir, dirname)
-        shutil.copytree(srcpath, dstpath)
+        directoryName = os.path.basename(original)
+        destinationPath = os.path.join(destination, directoryName)
+        shutil.copytree(original, destinationPath)
 
     @classmethod
     def drawPolygon(cls, image, mapX, mapY):
@@ -223,7 +273,7 @@ class MoilUtils(object):
         return camera_type
 
     @classmethod
-    def modifyMetaData(cls, image_file, typeCamera):
+    def writeCameraType(cls, image_file, typeCamera):
         """
         Read the camera used from metadata image.
 
@@ -239,19 +289,19 @@ class MoilUtils(object):
         img.close()
 
     @classmethod
-    def saveImage(cls, image, dir_save, type_camera):
+    def saveImage(cls, image, dst_directory, type_camera):
         """
         saved image
         Args:
             image ():
-            dir_save ():
+            dst_directory (): destination directory
             type_camera ():
 
         Returns:
 
         """
-        ss = datetime.datetime.now().strftime("%m%d%H_%M%S")
-        name = dir_save + "/" + str(ss) + ".png"
+        ss = datetime.datetime.now().strftime("%m_%d_%H_%M_%S")
+        name = dst_directory + "/" + str(ss) + ".png"
         cv2.imwrite(name, image)
         img = MetaImage(name)
         img.modify_comment(type_camera)
@@ -337,19 +387,6 @@ class MoilUtils(object):
             moildev = None
 
         return moildev
-
-    @classmethod
-    def selectDirectory(cls, parent=None):
-        """
-        Select directory to save image. This function create to make it not always ask the directory by open dialog,
-        after directory save not None, it will pass open dialog prompt.
-
-        Returns:
-            None.
-        """
-        dir_save = QtWidgets.QFileDialog.getExistingDirectory(
-            parent, 'Select Save Folder')
-        return dir_save
 
     @classmethod
     def showImageToLabel(cls, label, image, width, angle=0, plusIcon=False):
@@ -577,3 +614,20 @@ class MoilUtils(object):
         """
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         return gray
+
+    @classmethod
+    def calculateRatioImage(cls, label, image):
+        """
+        Calculate the initial ratio of the image.
+
+        Returns:
+            ratio_x : ratio width between image and ui window.
+            ratio_y : ratio height between image and ui window.
+            center : find the center image on window user interface.
+        """
+        h = label.height()
+        w = label.width()
+        height, width = image.shape[:2]
+        ratio_x = width / w
+        ratio_y = height / h
+        return ratio_x, ratio_y

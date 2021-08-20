@@ -13,7 +13,14 @@ python3 -m venv venv
 source ./venv/bin/activate
 pip install pip --upgrade
 echo -e "2. Install the requirements library"
-pip install -r requirement.txt
-c++ -O3 -Wall -shared -std=c++11 -fPIC $(python3 -m pybind11 --includes) src/moilutils/exif.cpp -o src/moilutils/exif$(python3-config --extension-suffix) `pkg-config --cflags --libs python3` -I/usr/local/include -L/usr/local/lib -lexiv2
+pip install Pillow==8.1.0 \
+	PyQt5==5.15.0 \
+	pybind11==2.6.2 \
+	opencv-python==4.2.0.32 \
+	moildev==2.6.0\
+	pyyaml \
+	imutils \
+	sympy
+c++ -O3 -Wall -shared -std=c++11 -fPIC $(python3 -m pybind11 --includes) exif.cpp -o exif$(python3-config --extension-suffix) `pkg-config --cflags --libs python3` -I/usr/local/include -L/usr/local/lib -lexiv2
 echo -e ""
 echo -e ">>Good Luck, Haryanto<<"

@@ -13,15 +13,13 @@ import souceIcon
 from PyQt5 import QtWidgets, QtGui, QtCore
 from moilutils.moilutils import MoilUtils
 from plugin_controller import PluginController
-from camera_source import CameraSource
 from Ui_Moilapp import Ui_MainWindow
 from panorama import Panorama
 from anypoint import Anypoint
 from reCenter import RecenterImage
 from control_view import ManipulateView
 from event_controller import MouseEvent
-from camera_parameter import CameraParameters
-from video_controller import VideoController
+from videoController import VideoController
 
 
 class Controller(Ui_MainWindow):
@@ -69,14 +67,9 @@ class Controller(Ui_MainWindow):
         self.width_result_image = 1080
         self.angle = 0
 
-        self.openCam = QtWidgets.QDialog()
-        self.winOpenCam = CameraSource(self, self.openCam)
-
         self.dialogHelp = QtWidgets.QDialog()
         self.winHelp = Help(self, self.dialogHelp)
 
-        self.camParams = QtWidgets.QDialog()
-        self.winCamParams = CameraParameters(self, self.camParams)
         self.video_controller = VideoController(self)
         self.panorama = Panorama(self)
         self.anypoint = Anypoint(self)
@@ -85,7 +78,7 @@ class Controller(Ui_MainWindow):
         self.manipulate = ManipulateView(self)
         self.control_plugin = PluginController(self)
 
-        self.video_controller.set_button_disable()
+        self.frameVideoController.hide()
         self.frame_panorama.hide()
         self.frame_navigator.hide()
         self.buttonBack.hide()
@@ -106,8 +99,8 @@ class Controller(Ui_MainWindow):
         # action from menubar menu file
         self.actionLoad_Image.triggered.connect(self.open_image)
         self.actionLoad_Video.triggered.connect(self.onclick_load_video)
-        self.actionOpen_Cam.triggered.connect(self.onclick_open_camera)
-        self.actionCamera_Parameters.triggered.connect(self.cam_params_window)
+        self.actionOpen_Cam.triggered.connect(self.open_camera)
+        self.actionCamera_Parameters.triggered.connect(MoilUtils.openCameraParameters)
         self.actionRecord_video.triggered.connect(self.actionRecordVideo)
         self.actionSave_Image.triggered.connect(self.save_image)
         self.actionExit.triggered.connect(self.onclick_exit)
@@ -165,7 +158,7 @@ class Controller(Ui_MainWindow):
         # connect button to function
         self.btn_Open_Image.clicked.connect(self.open_image)
         self.btn_Open_Video.clicked.connect(self.onclick_load_video)
-        self.btn_Open_Cam.clicked.connect(self.onclick_open_camera)
+        self.btn_Open_Cam.clicked.connect(self.open_camera)
         self.btn_Save_Image.clicked.connect(self.save_image)
 
         # btn Plugin controller
@@ -175,7 +168,7 @@ class Controller(Ui_MainWindow):
 
         # media player controller
         self.btn_Record_video.clicked.connect(self.buttonRecordVideo)
-        self.btn_play_pouse.clicked.connect(self.video_controller.onclick_play_pause_button)
+        self.btn_play_pouse.clicked.connect(self.video_controller.onclickPlayPauseButton)
         self.btn_stop_video.clicked.connect(self.video_controller.stop_video)
         self.btn_prev_video.clicked.connect(self.video_controller.prev_video)
         self.btn_skip_video.clicked.connect(self.video_controller.skip_video)
@@ -211,7 +204,7 @@ class Controller(Ui_MainWindow):
         if self.cam:
             self.video_controller.stop_video()
             self.cap.release()
-            self.video_controller.set_button_disable()
+            self.frameVideoController.hide()
         self.label_Result_Image.clear()
         self.label_Result_Image.setMaximumSize(QtCore.QSize(1080, 810))
         self.label_Result_Image.setMinimumSize(QtCore.QSize(1080, 810))
@@ -240,11 +233,11 @@ class Controller(Ui_MainWindow):
             if self.cam:
                 self.video_controller.stop_video()
                 self.cap.release()
-                self.video_controller.set_button_disable()
+                self.frameVideoController.hide()
             typeCam = MoilUtils.readCameraType(filename)
             if typeCam == "":
                 self.type_camera = MoilUtils.selectCameraType()
-                MoilUtils.modifyMetaData(filename, self.type_camera)
+                MoilUtils.writeCameraType(filename, self.type_camera)
             else:
                 self.type_camera = typeCam
 
@@ -281,24 +274,18 @@ class Controller(Ui_MainWindow):
                 self.updateLabel(video_source)
                 self.running_video(video_source)
 
-    def onclick_open_camera(self):
-        """
-        Show the window of selection camera source.
-
-        """
-        self.openCam.show()
-
     def open_camera(self):
         """
         open the camera from the available source in the system,
         this function provide 2 source namely USB cam and Streaming Cam from Raspberry pi.
         """
         self.reset_mode_view()
-        camera_source = self.winOpenCam.camera_source_used()
-        self.type_camera = MoilUtils.selectCameraType()
-        if self.type_camera is not None:
-            self.updateLabel()
-            self.running_video(camera_source)
+        camera_source = MoilUtils.selectCameraSource()
+        if camera_source:
+            self.type_camera = MoilUtils.selectCameraType()
+            if self.type_camera is not None:
+                self.updateLabel()
+                self.running_video(camera_source)
 
     def running_video(self, video_source):
         """
@@ -308,7 +295,7 @@ class Controller(Ui_MainWindow):
             video_source (): the source of media, can be camera and video file.
 
         """
-        self.video_controller.set_button_enable()
+        self.frameVideoController.show()
         self.cap = cv2.VideoCapture(video_source)
         success, self.image = self.cap.read()
         if success:
@@ -326,14 +313,6 @@ class Controller(Ui_MainWindow):
             self.video_controller.next_frame_slot()
         else:
             QtWidgets.QMessageBox.information(self.parent, "Information", "No source camera founded !!!")
-
-    def cam_params_window(self):
-        """
-        Open the window of camera parameter form, this window you can update, add, and
-        delete the camera parameter from database.
-
-        """
-        self.camParams.show()
 
     def onclick_view_normal(self):
         """
@@ -951,8 +930,6 @@ class Controller(Ui_MainWindow):
             if self.open_plugin:
                 for i in range(len(self.control_plugin.plugins.name_application)):
                     self.control_plugin.plugin_win[i].close()
-            self.openCam.close()
-            self.camParams.close()
             if self.cam:
                 self.cap.release()
             event.accept()

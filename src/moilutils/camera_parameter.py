@@ -1,21 +1,19 @@
 import json
 from PyQt5 import QtWidgets
-from camera.Ui_Camera_params import Ui_Dialog
+from .camera.Ui_Camera_params import Ui_Dialog
 
 
 class CameraParameters(Ui_Dialog):
-    camera_parameter = 'camera/camera_parameters.json'
+    camera_parameter = 'moilutils/camera/camera_parameters.json'
 
-    def __init__(self, Parent, RecentWindow):
+    def __init__(self, RecentWindow):
         """
         Create class controller open camera with inheritance from Ui Dialog Class.
 
         Args:
-            Parent (): the main class of this application
             RecentWindow (): The windows displayed now
         """
         super(CameraParameters, self).__init__()
-        self.parent = Parent
         self.recent = RecentWindow
         self.setupUi(self.recent)
         self.data = None

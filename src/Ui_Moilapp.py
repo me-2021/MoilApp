@@ -962,6 +962,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.horizontalLayoutWidget_4 = QtWidgets.QWidget(self.frame_navigator)
         self.horizontalLayoutWidget_4.setGeometry(QtCore.QRect(0, 160, 161, 27))
         self.horizontalLayoutWidget_4.setObjectName("horizontalLayoutWidget_4")
+
+
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_4)
         self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
@@ -989,7 +991,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.radio_btn_mode_2.setFont(font)
         self.radio_btn_mode_2.setObjectName("radio_btn_mode_2")
         self.horizontalLayout_4.addWidget(self.radio_btn_mode_2)
-
         self.alpha_2 = QtWidgets.QLabel(self.frame_navigator)
         self.alpha_2.setGeometry(QtCore.QRect(0, 189, 50, 27))
         font = QtGui.QFont()
@@ -1177,19 +1178,23 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         spacerItem4 = QtWidgets.QSpacerItem(
             20, 5, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.verticalLayout_2.addItem(spacerItem4)
-        self.horizontalLayout_4 = QtWidgets.QHBoxLayout()
+
+        self.frameVideoController = QtWidgets.QFrame(self.centralwidget)
+        self.frameVideoController.setObjectName("frameVideoController")
+        self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.frameVideoController)
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
-        spacerItem5 = QtWidgets.QSpacerItem(
-            50, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
+        self.frame_3 = QtWidgets.QFrame(self.frameVideoController)
+        self.frame_3.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame_3.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_3.setObjectName("frame_3")
+        self.horizontalLayout_4.addWidget(self.frame_3)
+        spacerItem5 = QtWidgets.QSpacerItem(50, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_4.addItem(spacerItem5)
-        self.frame_16 = QtWidgets.QFrame(self.centralwidget)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Fixed,
-            QtWidgets.QSizePolicy.Fixed)
+        self.frame_16 = QtWidgets.QFrame(self.frameVideoController)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.frame_16.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(self.frame_16.sizePolicy().hasHeightForWidth())
         self.frame_16.setSizePolicy(sizePolicy)
         self.frame_16.setMinimumSize(QtCore.QSize(50, 40))
         self.frame_16.setStyleSheet("background-color: #71D1BA;   \n"
@@ -1200,28 +1205,21 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.btn_prev_video = QtWidgets.QPushButton(self.frame_16)
         self.btn_prev_video.setGeometry(QtCore.QRect(5, 5, 40, 30))
         self.btn_prev_video.setMinimumSize(QtCore.QSize(0, 0))
-        self.btn_prev_video.setStyleSheet(
-            "QPushButton{ background-color :  #71D1BA;}\n"
-            "QPushButton::pressed{ background-color : #71AED1; }\n"
-            "border-radius: 10px;")
+        self.btn_prev_video.setStyleSheet("QPushButton{ background-color :  #71D1BA;}\n"
+                                          "QPushButton::pressed{ background-color : #71AED1; }\n"
+                                          "border-radius: 10px;")
         self.btn_prev_video.setText("")
-        icon17 = QtGui.QIcon()
-        icon17.addPixmap(
-            QtGui.QPixmap.fromImage(rs.iconBackward()),
-            QtGui.QIcon.Normal,
-            QtGui.QIcon.Off)
-        self.btn_prev_video.setIcon(icon17)
+        icon18 = QtGui.QIcon()
+        icon18.addPixmap(QtGui.QPixmap.fromImage(rs.iconBackward()), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.btn_prev_video.setIcon(icon18)
         self.btn_prev_video.setIconSize(QtCore.QSize(40, 40))
         self.btn_prev_video.setObjectName("btn_prev_video")
         self.horizontalLayout_4.addWidget(self.frame_16)
-        self.frame_17 = QtWidgets.QFrame(self.centralwidget)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Fixed,
-            QtWidgets.QSizePolicy.Fixed)
+        self.frame_17 = QtWidgets.QFrame(self.frameVideoController)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.frame_17.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(self.frame_17.sizePolicy().hasHeightForWidth())
         self.frame_17.setSizePolicy(sizePolicy)
         self.frame_17.setMinimumSize(QtCore.QSize(50, 40))
         self.frame_17.setStyleSheet("background-color: #71D1BA;   \n"
@@ -1232,28 +1230,21 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.btn_play_pouse = QtWidgets.QPushButton(self.frame_17)
         self.btn_play_pouse.setGeometry(QtCore.QRect(5, 5, 40, 30))
         self.btn_play_pouse.setMinimumSize(QtCore.QSize(0, 0))
-        self.btn_play_pouse.setStyleSheet(
-            "QPushButton{ background-color :  #71D1BA;}\n"
-            "QPushButton::pressed{ background-color : #71AED1; }\n"
-            "border-radius: 10px;")
+        self.btn_play_pouse.setStyleSheet("QPushButton{ background-color :  #71D1BA;}\n"
+                                          "QPushButton::pressed{ background-color : #71AED1; }\n"
+                                          "border-radius: 10px;")
         self.btn_play_pouse.setText("")
-        icon18 = QtGui.QIcon()
-        icon18.addPixmap(
-            QtGui.QPixmap.fromImage(rs.iconPlay()),
-            QtGui.QIcon.Normal,
-            QtGui.QIcon.Off)
-        self.btn_play_pouse.setIcon(icon18)
+        icon19 = QtGui.QIcon()
+        icon19.addPixmap(QtGui.QPixmap.fromImage(rs.iconPlay()), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.btn_play_pouse.setIcon(icon19)
         self.btn_play_pouse.setIconSize(QtCore.QSize(40, 40))
         self.btn_play_pouse.setObjectName("btn_play_pouse")
         self.horizontalLayout_4.addWidget(self.frame_17)
-        self.frame_18 = QtWidgets.QFrame(self.centralwidget)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Fixed,
-            QtWidgets.QSizePolicy.Fixed)
+        self.frame_18 = QtWidgets.QFrame(self.frameVideoController)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.frame_18.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(self.frame_18.sizePolicy().hasHeightForWidth())
         self.frame_18.setSizePolicy(sizePolicy)
         self.frame_18.setMinimumSize(QtCore.QSize(50, 40))
         self.frame_18.setStyleSheet("background-color: #71D1BA;   \n"
@@ -1264,28 +1255,21 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.btn_stop_video = QtWidgets.QPushButton(self.frame_18)
         self.btn_stop_video.setGeometry(QtCore.QRect(5, 5, 40, 30))
         self.btn_stop_video.setMinimumSize(QtCore.QSize(0, 0))
-        self.btn_stop_video.setStyleSheet(
-            "QPushButton{ background-color :  #71D1BA;}\n"
-            "QPushButton::pressed{ background-color : #71AED1; }\n"
-            "border-radius: 10px;")
+        self.btn_stop_video.setStyleSheet("QPushButton{ background-color :  #71D1BA;}\n"
+                                          "QPushButton::pressed{ background-color : #71AED1; }\n"
+                                          "border-radius: 10px;")
         self.btn_stop_video.setText("")
-        icon19 = QtGui.QIcon()
-        icon19.addPixmap(
-            QtGui.QPixmap.fromImage(rs.iconStop()),
-            QtGui.QIcon.Normal,
-            QtGui.QIcon.Off)
-        self.btn_stop_video.setIcon(icon19)
+        icon20 = QtGui.QIcon()
+        icon20.addPixmap(QtGui.QPixmap.fromImage(rs.iconStop()), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.btn_stop_video.setIcon(icon20)
         self.btn_stop_video.setIconSize(QtCore.QSize(40, 40))
         self.btn_stop_video.setObjectName("btn_stop_video")
         self.horizontalLayout_4.addWidget(self.frame_18)
-        self.frame_13 = QtWidgets.QFrame(self.centralwidget)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Fixed,
-            QtWidgets.QSizePolicy.Fixed)
+        self.frame_13 = QtWidgets.QFrame(self.frameVideoController)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.frame_13.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(self.frame_13.sizePolicy().hasHeightForWidth())
         self.frame_13.setSizePolicy(sizePolicy)
         self.frame_13.setMinimumSize(QtCore.QSize(50, 40))
         self.frame_13.setStyleSheet("background-color: #71D1BA;   \n"
@@ -1296,21 +1280,17 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.btn_skip_video = QtWidgets.QPushButton(self.frame_13)
         self.btn_skip_video.setGeometry(QtCore.QRect(5, 5, 40, 30))
         self.btn_skip_video.setMinimumSize(QtCore.QSize(0, 0))
-        self.btn_skip_video.setStyleSheet(
-            "QPushButton{ background-color :  #71D1BA;}\n"
-            "QPushButton::pressed{ background-color : #71AED1; }\n"
-            "border-radius: 10px;")
+        self.btn_skip_video.setStyleSheet("QPushButton{ background-color :  #71D1BA;}\n"
+                                          "QPushButton::pressed{ background-color : #71AED1; }\n"
+                                          "border-radius: 10px;")
         self.btn_skip_video.setText("")
-        icon20 = QtGui.QIcon()
-        icon20.addPixmap(
-            QtGui.QPixmap.fromImage(rs.iconForward()),
-            QtGui.QIcon.Normal,
-            QtGui.QIcon.Off)
-        self.btn_skip_video.setIcon(icon20)
+        icon21 = QtGui.QIcon()
+        icon21.addPixmap(QtGui.QPixmap.fromImage(rs.iconForward()), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.btn_skip_video.setIcon(icon21)
         self.btn_skip_video.setIconSize(QtCore.QSize(40, 40))
         self.btn_skip_video.setObjectName("btn_skip_video")
         self.horizontalLayout_4.addWidget(self.frame_13)
-        self.label_time_recent = QtWidgets.QLabel(self.centralwidget)
+        self.label_time_recent = QtWidgets.QLabel(self.frameVideoController)
         self.label_time_recent.setMinimumSize(QtCore.QSize(100, 0))
         font = QtGui.QFont()
         font.setFamily("DejaVu Serif")
@@ -1323,14 +1303,11 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.label_time_recent.setAlignment(QtCore.Qt.AlignCenter)
         self.label_time_recent.setObjectName("label_time_recent")
         self.horizontalLayout_4.addWidget(self.label_time_recent)
-        self.slider_Video = QtWidgets.QSlider(self.centralwidget)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Expanding,
-            QtWidgets.QSizePolicy.Preferred)
+        self.slider_Video = QtWidgets.QSlider(self.frameVideoController)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.slider_Video.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(self.slider_Video.sizePolicy().hasHeightForWidth())
         self.slider_Video.setSizePolicy(sizePolicy)
         self.slider_Video.setMinimumSize(QtCore.QSize(0, 40))
         font = QtGui.QFont()
@@ -1340,7 +1317,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.slider_Video.setOrientation(QtCore.Qt.Horizontal)
         self.slider_Video.setObjectName("slider_Video")
         self.horizontalLayout_4.addWidget(self.slider_Video)
-        self.label_time_end = QtWidgets.QLabel(self.centralwidget)
+        self.label_time_end = QtWidgets.QLabel(self.frameVideoController)
         self.label_time_end.setMinimumSize(QtCore.QSize(100, 0))
         font = QtGui.QFont()
         font.setFamily("DejaVu Serif")
@@ -1353,10 +1330,10 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.label_time_end.setAlignment(QtCore.Qt.AlignCenter)
         self.label_time_end.setObjectName("label_time_end")
         self.horizontalLayout_4.addWidget(self.label_time_end)
-        spacerItem6 = QtWidgets.QSpacerItem(
-            50, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
+        spacerItem6 = QtWidgets.QSpacerItem(50, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_4.addItem(spacerItem6)
-        self.verticalLayout_2.addLayout(self.horizontalLayout_4)
+        self.verticalLayout_2.addWidget(self.frameVideoController)
+
         self.horizontalLayout.addLayout(self.verticalLayout_2)
         spacerItem7 = QtWidgets.QSpacerItem(
             10, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)

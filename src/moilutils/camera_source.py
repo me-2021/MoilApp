@@ -1,6 +1,6 @@
 import cv2
 from PyQt5 import QtWidgets
-from camera.Ui_Select_Camera import Ui_Dialog
+from .camera.Ui_Select_Camera import Ui_Dialog
 
 
 def check_Port_USB_Camera():
@@ -26,21 +26,18 @@ def check_Port_USB_Camera():
 
 
 class CameraSource(Ui_Dialog):
-    def __init__(self, Parent, RecentWindow):
+    def __init__(self, RecentWindow):
         """
         Create class controller open camera with inheritance from Ui Dialog Class.
 
         Args:
-            Parent ():
             RecentWindow ():
         """
         super(CameraSource, self).__init__()
-        self.parent_win = Parent
         self.recent_win = RecentWindow
         self.setupUi(self.recent_win)
         self.camera_source = None
-        self.camera_stream_link.setText(
-            'http://192.168.100.226:8000/stream.mjpg')
+        self.camera_stream_link.setText('http://<Type your Ip address here>:8000/stream.mjpg')
         self.handle_activated_comboBox()
         self.comboBox.activated.connect(self.handle_activated_comboBox)
         self.detectPort.clicked.connect(check_Port_USB_Camera)
@@ -75,10 +72,6 @@ class CameraSource(Ui_Dialog):
             self.camera_source = int(self.portCamera.currentText())
         else:
             self.camera_source = self.camera_stream_link.text()
-        if self.camera_source is None:
-            return None
-        else:
-            return self.camera_source
 
     def onclick_comboBox_oke(self):
         """
@@ -87,7 +80,7 @@ class CameraSource(Ui_Dialog):
         Returns:
 
         """
-        self.parent_win.open_camera()
+        self.camera_source_used()
         self.recent_win.close()
 
     def onclick_comboBox_cancel(self):

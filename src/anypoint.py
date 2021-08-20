@@ -22,7 +22,7 @@ class Anypoint(object):
         self.alpha = float(self.parent.lineedit_alpha_2.text())
         self.beta = float(self.parent.lineedit_beta_2.text())
         self.zoom_any = float(self.parent.anypoint_zoom_2.text())
-        self.process_to_anypoint()
+        self.anyPo()
 
     def writeAlphaBeta(self):
         self.parent.lineedit_alpha_2.setValue(self.alpha)
@@ -45,7 +45,7 @@ class Anypoint(object):
                 "  background-color : rgb(238, 238, 236); }\n")
             if self.parent.type_camera:
                 self.moildev = MoilUtils.connectToMoildev(self.parent.type_camera)
-                self.parent.point =(round(self.moildev.getIcx()), round(self.moildev.getIcy()))
+                self.parent.point = (round(self.moildev.getIcx()), round(self.moildev.getIcy()))
                 self.resetAlphaBeta()
                 self.anypoint()
                 self.parent.show_percentage()
