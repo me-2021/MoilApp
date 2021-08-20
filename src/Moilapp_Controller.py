@@ -11,7 +11,7 @@ import numpy as np
 from help import Help
 import souceIcon
 from PyQt5 import QtWidgets, QtGui, QtCore
-from moilutils.moilutils import MoilUtils
+from moilutils import MoilUtils
 from plugin_controller import PluginController
 from Ui_Moilapp import Ui_MainWindow
 from panorama import Panorama
@@ -19,7 +19,7 @@ from anypoint import Anypoint
 from reCenter import RecenterImage
 from control_view import ManipulateView
 from event_controller import MouseEvent
-from videoController import VideoController
+from moilutils import VideoController
 
 
 class Controller(Ui_MainWindow):
