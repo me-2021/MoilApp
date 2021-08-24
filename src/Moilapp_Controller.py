@@ -9,7 +9,7 @@ import datetime
 import webbrowser
 import numpy as np
 from help import Help
-from moilutils import souceIcon
+from moilutils import ResourceIcon
 from functools import partial
 from PyQt5 import QtWidgets, QtGui, QtCore
 from moilutils import MoilUtils
@@ -36,7 +36,7 @@ class Controller(Ui_MainWindow):
         self.comboBox_cam_type = None
         self.parent = parent
         self.setupUi(self.parent)
-        self.rs = souceIcon.ResourceIcon()
+        self.rs = ResourceIcon()
         self.open_plugin = False
         self.image = None
         self.cap = None
@@ -208,7 +208,7 @@ class Controller(Ui_MainWindow):
 
     def onclick_clear(self):
         if self.cam:
-            self.video_controller.stop_video()
+            self.video_controller.stopVideo()
             self.cap.release()
             self.frameVideoController.hide()
         self.label_Result_Image.clear()
@@ -237,7 +237,7 @@ class Controller(Ui_MainWindow):
         if filename:
             self.reset_mode_view()
             if self.cam:
-                self.video_controller.stop_video()
+                self.video_controller.stopVideo()
                 self.cap.release()
                 self.frameVideoController.hide()
             typeCam = MoilUtils.readCameraType(filename)
@@ -467,7 +467,7 @@ class Controller(Ui_MainWindow):
         if self.image is not None:
             image = self.image if self.normal_view else self.result_image
             if self.dir_save is None or self.dir_save == "":
-                self.video_controller.pause_video()
+                self.video_controller.pauseVideo()
                 self.dir_save = MoilUtils.selectDirectory(self)
             if self.dir_save:
                 self.name_saved = MoilUtils.saveImage(image, self.dir_save, self.type_camera)
@@ -508,7 +508,7 @@ class Controller(Ui_MainWindow):
         posFrame = self.posVid[self.listWidget.currentRow()]
         self.type_camera = MoilUtils.readCameraType(filename)
         if self.cam:
-            self.video_controller.pause_video()
+            self.video_controller.pauseVideo()
             self.reset_mode_view()
             self.image = MoilUtils.readImage(filename)
             self.h, self.w = self.image.shape[:2]
@@ -689,7 +689,7 @@ class Controller(Ui_MainWindow):
             if self.cam:
                 if self.actionRecord_video.isChecked():
                     if self.video_controller.play:
-                        self.video_controller.pause_video()
+                        self.video_controller.pauseVideo()
                     if self.videoDir is None or self.videoDir == "":
                         self.videoDir = MoilUtils.selectDirectory()
                     if self.videoDir:
@@ -707,7 +707,7 @@ class Controller(Ui_MainWindow):
                             QtWidgets.QMessageBox.No)
 
                         if answer == QtWidgets.QMessageBox.Yes:
-                            self.video_controller.play_video()
+                            self.video_controller.playVideo()
                             self.video_writer = cv2.VideoWriter(
                                 name, cv2.VideoWriter_fourcc(
                                     *'XVID'), self.video_controller.fps, (frame_width, frame_height))
@@ -756,7 +756,7 @@ class Controller(Ui_MainWindow):
             if self.cam:
                 if self.btn_Record_video.isChecked():
                     if self.video_controller.play:
-                        self.video_controller.pause_video()
+                        self.video_controller.pauseVideo()
                     if self.videoDir is None or self.videoDir == "":
                         self.videoDir = MoilUtils.selectDirectory()
                     if self.videoDir:
@@ -774,7 +774,7 @@ class Controller(Ui_MainWindow):
                             QtWidgets.QMessageBox.No)
 
                         if answer == QtWidgets.QMessageBox.Yes:
-                            self.video_controller.play_video()
+                            self.video_controller.playVideo()
                             self.video_writer = cv2.VideoWriter(
                                 name, cv2.VideoWriter_fourcc(
                                     *'XVID'), self.video_controller.fps, (frame_width, frame_height))
@@ -924,7 +924,7 @@ class Controller(Ui_MainWindow):
 
         """
         if self.cam:
-            self.video_controller.pauseVideo(self.btn_play_pouse)
+            self.video_controller.pauseVideo()
         reply = QtWidgets.QMessageBox.question(
             self.parent,
             'Message',

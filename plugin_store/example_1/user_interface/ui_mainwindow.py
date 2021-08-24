@@ -7,7 +7,7 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from moilutils.souceIcon import ResourceIcon
+from moilutils import ResourceIcon
 
 
 class Ui_MainWindow(object):

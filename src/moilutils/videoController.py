@@ -1,7 +1,7 @@
 import cv2
 import os
 from PyQt5 import QtCore, QtGui, QtWidgets
-from .souceIcon import ResourceIcon
+from .sourceIcon import ResourceIcon
 
 
 class VideoController(object):
@@ -9,18 +9,18 @@ class VideoController(object):
         super(VideoController, self).__init__()
         self.parent = parent
         self.__rs = ResourceIcon()
-        self.__fps = None
-        self.__pos_frame = None
+        self.fps = None
+        self.pos_frame = None
         self.__frame_count = None
         self.__minute = None
         self.__minutes = None
         self.__seconds = None
         self.__sec = None
         self.play = False
-        self.playPauseBtn = None
+        self.__playPauseBtn = None
         self.__frameNumber = 1
-        self.__timer = QtCore.QTimer()
-        self.__timer.timeout.connect(self.nextFrame)
+        self.timer = QtCore.QTimer()
+        self.timer.timeout.connect(self.nextFrame)
 
     # migrate to video controller
     def nextFrame(self):
@@ -31,36 +31,43 @@ class VideoController(object):
         if self.parent.cam:
             success, self.parent.image = self.parent.cap.read()
             if success:
-                self.__fps = self.parent.cap.get(cv2.CAP_PROP_FPS)
-                self.__pos_frame = self.parent.cap.get(cv2.CAP_PROP_POS_FRAMES)
+                self.fps = self.parent.cap.get(cv2.CAP_PROP_FPS)
+                self.pos_frame = self.parent.cap.get(cv2.CAP_PROP_POS_FRAMES)
                 self.__frame_count = float(self.parent.cap.get(cv2.CAP_PROP_FRAME_COUNT))
+                self.__showToLabel()
+            else:
+                self.pauseVideo()
 
         else:
             self.__frame_count = len(os.listdir(self.parent.folderOdometry))
-            self.__fps = 10
+            self.fps = 10
             if self.__frameNumber < self.__frame_count:
-                self.__pos_frame = self.__frameNumber
+                self.pos_frame = self.__frameNumber
                 file = self.parent.folderOdometry + "/" + str(self.__frameNumber) + ".png"
                 self.parent.image = cv2.imread(file)
                 self.parent.h, self.parent.w = self.parent.image.shape[:2]
                 self.__frameNumber += 1
-
-        duration_sec = int(self.__frame_count / self.__fps)
-        self.__minutes = duration_sec // 60
-        duration_sec %= 60
-        self.__seconds = duration_sec
-        sec_pos = int(self.__pos_frame / self.__fps)
-        self.__minute = int(sec_pos // 60)
-        sec_pos %= 60
-        self.__sec = sec_pos
-        self.__controller()
-        self.parent.showToWindow()
+                self.__showToLabel()
+            else:
+                self.pauseVideo()
         try:
             if self.parent.video_writer is not None:
                 image = self.parent.image if self.parent.normal_view else self.parent.result_image
                 self.parent.video_writer.write(image)
         except:
             pass
+
+    def __showToLabel(self):
+        duration_sec = int(self.__frame_count / self.fps)
+        self.__minutes = duration_sec // 60
+        duration_sec %= 60
+        self.__seconds = duration_sec
+        sec_pos = int(self.pos_frame / self.fps)
+        self.__minute = int(sec_pos // 60)
+        sec_pos %= 60
+        self.__sec = sec_pos
+        self.__controller()
+        self.parent.showToWindow()
 
     def playPauseVideo(self, btnName):
         """
@@ -70,23 +77,23 @@ class VideoController(object):
         """
         if not btnName:
             btnName = None
-        self.playPauseBtn = btnName
+        self.__playPauseBtn = btnName
         if self.play:
-            self.pauseVideo(btnName)
+            self.pauseVideo()
 
         else:
-            self.playVideo(btnName)
+            self.playVideo()
 
-    def pauseVideo(self, btnName):
+    def pauseVideo(self):
         """
         Pause the frame in video or camera mode.
 
         """
         try:
-            self.__timer.stop()
+            self.timer.stop()
             self.play = False
-            if btnName is not None:
-                btnName.setIcon(QtGui.QIcon(QtGui.QPixmap.fromImage(self.__rs.iconPlay())))
+            if self.__playPauseBtn is not None:
+                self.__playPauseBtn.setIcon(QtGui.QIcon(QtGui.QPixmap.fromImage(self.__rs.iconPlay())))
 
         except:
             QtWidgets.QMessageBox.warning(
@@ -94,16 +101,16 @@ class VideoController(object):
                 "Warning!!",
                 "No Source Media found !!!")
 
-    def playVideo(self, btnName):
+    def playVideo(self):
         """
         Play video by connect to timer function.
 
         """
         try:
-            self.__timer.start(1000 / self.__fps)
+            self.timer.start(1000 / self.fps)
             self.play = True
-            if btnName is not None:
-                btnName.setIcon(QtGui.QIcon(QtGui.QPixmap.fromImage(self.__rs.iconPause())))
+            if self.__playPauseBtn is not None:
+                self.__playPauseBtn.setIcon(QtGui.QIcon(QtGui.QPixmap.fromImage(self.__rs.iconPause())))
 
         except:
             QtWidgets.QMessageBox.warning(
@@ -116,7 +123,7 @@ class VideoController(object):
         Manage the video to setup the current timer.
 
         """
-        dst_value = self.__pos_frame * (self.parent.slider_Video.maximum() + 1) / self.__frame_count
+        dst_value = self.pos_frame * (self.parent.slider_Video.maximum() + 1) / self.__frame_count
         self.parent.slider_Video.blockSignals(True)
         self.parent.slider_Video.setValue(dst_value)
         self.parent.slider_Video.blockSignals(False)
@@ -148,15 +155,15 @@ class VideoController(object):
         """
         try:
             self.play = False
-            if self.playPauseBtn is not None:
-                self.playPauseBtn.setIcon(QtGui.QIcon(QtGui.QPixmap.fromImage(self.__rs.iconPlay())))
+            if self.__playPauseBtn is not None:
+                self.__playPauseBtn.setIcon(QtGui.QIcon(QtGui.QPixmap.fromImage(self.__rs.iconPlay())))
             if self.parent.cam:
                 self.parent.cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
             else:
                 self.__frameNumber = 1
             self.nextFrame()
             self.__reset_label_time()
-            self.__timer.stop()
+            self.timer.stop()
 
         except:
             QtWidgets.QMessageBox.warning(
@@ -185,11 +192,11 @@ class VideoController(object):
         """
         try:
             if self.parent.cam:
-                position = self.__pos_frame - 5 * self.__fps
+                position = self.pos_frame - 5 * self.fps
                 self.parent.cap.set(cv2.CAP_PROP_POS_FRAMES, position)
 
             else:
-                self.__frameNumber -= 5 * self.__fps
+                self.__frameNumber -= 5 * self.fps
                 if self.__frameNumber <= 1:
                     self.__frameNumber = 1
             self.nextFrame()
@@ -207,11 +214,11 @@ class VideoController(object):
         """
         try:
             if self.parent.cam:
-                position = self.__pos_frame + 5 * self.__fps
+                position = self.pos_frame + 5 * self.fps
                 self.parent.cap.set(cv2.CAP_PROP_POS_FRAMES, position)
 
             else:
-                self.__frameNumber += 5 * self.__fps
+                self.__frameNumber += 5 * self.fps
                 if self.__frameNumber >= self.__frame_count:
                     self.__frameNumber = self.__frame_count
 
