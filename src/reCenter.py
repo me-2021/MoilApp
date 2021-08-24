@@ -20,7 +20,7 @@ class RecenterImage(object):
             self.parent.setIcy.setValue(self.parent.moildev.getIcy())
             self.icx = self.parent.setIcx.value()
             self.icy = self.parent.setIcy.value()
-            self.parent.show_to_window()
+            self.parent.showToWindow()
 
         else:
             QtWidgets.QMessageBox.information(self.parent.parent,
@@ -45,7 +45,7 @@ class RecenterImage(object):
         self.icy = self.parent.setIcy.value()
         self.parent.point = (self.icx, self.icy)
         self.alpha, self.beta = self.parent.moildev.getAlphaBeta(self.icx, self.icy)
-        self.parent.show_to_window()
+        self.parent.showToWindow()
 
     def positionCoorY(self):
         """Change the position coordinate center Y on image recenter process
@@ -54,4 +54,4 @@ class RecenterImage(object):
         self.icy = self.parent.setIcy.value()
         self.parent.point = (self.icx, self.icy)
         self.alpha, self.beta = self.parent.moildev.getAlphaBeta(self.icx, self.icy)
-        self.parent.show_to_window()
+        self.parent.showToWindow()

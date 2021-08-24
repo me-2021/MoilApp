@@ -57,7 +57,7 @@ class MouseEvent(object):
                 elif self.parent.buttonRecenter.isChecked():
                     self.parent.recenter.alpha, self.parent.recenter.beta = self.parent.moildev.getAlphaBeta(
                         coordinate_X, coordinate_Y)
-                    self.parent.show_to_window()
+                    self.parent.showToWindow()
 
     def mouseDoubleclick_event(self, e):
         """
@@ -94,7 +94,7 @@ class MouseEvent(object):
                         pass
                     else:
                         self.parent.width_result_image += 100
-                self.parent.show_to_window()
+                self.parent.showToWindow()
                 self.parent.show_percentage()
 
     def mouse_wheelEvent_ori_label(self, e):

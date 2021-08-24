@@ -7,7 +7,7 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from souceIcon import ResourceIcon
+from moilutils.souceIcon import ResourceIcon
 
 
 class Ui_MainWindow(QtWidgets.QMainWindow):
@@ -1918,7 +1918,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.btn_skip_video.setShortcut(_translate("MainWindow", "Ctrl+Right"))
         self.btn_skip_video.setToolTip(_translate("MainWindow", "Forward"))
         self.btn_skip_video.setStatusTip(_translate("MainWindow", "Forward video for 5 seconds"))
-        self.label_time_recent.setText(_translate("MainWindow", "00.00"))
+        self.label_time_recent.setText(_translate("MainWindow", "00 : 00"))
         self.label_time_recent.setToolTip(_translate("MainWindow", "Current time"))
         self.label_time_recent.setStatusTip(_translate("MainWindow", "Starting video / Show current time"))
 

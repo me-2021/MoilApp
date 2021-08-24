@@ -9,7 +9,8 @@ import datetime
 import webbrowser
 import numpy as np
 from help import Help
-import souceIcon
+from moilutils import souceIcon
+from functools import partial
 from PyQt5 import QtWidgets, QtGui, QtCore
 from moilutils import MoilUtils
 from plugin_controller import PluginController
@@ -86,6 +87,11 @@ class Controller(Ui_MainWindow):
         self.labelrecenterTitle.hide()
         self.frameRecenter.hide()
         self.connect_event()
+        try:
+            a = self.label_time_recent
+        except:
+            print("here")
+        # print(a)
 
     def connect_event(self):
         """
@@ -100,7 +106,7 @@ class Controller(Ui_MainWindow):
         self.actionLoad_Image.triggered.connect(self.open_image)
         self.actionLoad_Video.triggered.connect(self.onclick_load_video)
         self.actionOpen_Cam.triggered.connect(self.open_camera)
-        self.actionCamera_Parameters.triggered.connect(MoilUtils.openCameraParameters)
+        self.actionCamera_Parameters.triggered.connect(MoilUtils.parametersForm)
         self.actionRecord_video.triggered.connect(self.actionRecordVideo)
         self.actionSave_Image.triggered.connect(self.save_image)
         self.actionExit.triggered.connect(self.onclick_exit)
@@ -168,11 +174,11 @@ class Controller(Ui_MainWindow):
 
         # media player controller
         self.btn_Record_video.clicked.connect(self.buttonRecordVideo)
-        self.btn_play_pouse.clicked.connect(self.video_controller.onclickPlayPauseButton)
-        self.btn_stop_video.clicked.connect(self.video_controller.stop_video)
-        self.btn_prev_video.clicked.connect(self.video_controller.prev_video)
-        self.btn_skip_video.clicked.connect(self.video_controller.skip_video)
-        self.slider_Video.valueChanged.connect(self.video_controller.changeValueSlider)
+        self.btn_play_pouse.clicked.connect(partial(self.video_controller.playPauseVideo, self.btn_play_pouse))
+        self.btn_stop_video.clicked.connect(self.video_controller.stopVideo)
+        self.btn_prev_video.clicked.connect(self.video_controller.rewindVideo)
+        self.btn_skip_video.clicked.connect(self.video_controller.forwardVideo)
+        self.slider_Video.valueChanged.connect(self.video_controller.sliderController)
 
         # control view
         self.btn_Rotate_Left.clicked.connect(self.manipulate.rotate_left)
@@ -198,7 +204,7 @@ class Controller(Ui_MainWindow):
         self.listWidget.currentItemChanged.connect(self.saved_image_activated)
         self.comboBox_zoom.activated.connect(self.combo_percentage_zoom)
         self.button_menu.clicked.connect(self.control_frame_view_button)
-        self.buttonBack.clicked.connect(self.show_to_window)
+        self.buttonBack.clicked.connect(self.showToWindow)
 
     def onclick_clear(self):
         if self.cam:
@@ -254,7 +260,7 @@ class Controller(Ui_MainWindow):
                     "  border-style: solid;\n"
                     "  border-radius: 5px;\n"
                     "  background-color : rgb(238, 238, 236); }\n")
-                self.show_to_window()
+                self.showToWindow()
                 self.cam = False
 
     def onclick_load_video(self):
@@ -281,7 +287,7 @@ class Controller(Ui_MainWindow):
         """
         self.reset_mode_view()
         camera_source = MoilUtils.selectCameraSource()
-        if camera_source:
+        if camera_source is not None:
             self.type_camera = MoilUtils.selectCameraType()
             if self.type_camera is not None:
                 self.updateLabel()
@@ -310,7 +316,7 @@ class Controller(Ui_MainWindow):
                 "  border-style: solid;\n"
                 "  border-radius: 5px;\n"
                 "  background-color : rgb(238, 238, 236); }\n")
-            self.video_controller.next_frame_slot()
+            self.video_controller.nextFrame()
         else:
             QtWidgets.QMessageBox.information(self.parent, "Information", "No source camera founded !!!")
 
@@ -333,14 +339,14 @@ class Controller(Ui_MainWindow):
             self.panorama_view = False
             self.anypoint_view = False
             self.angle = 0
-            self.show_to_window()
+            self.showToWindow()
             self.frame_navigator.hide()
             self.frame_panorama.hide()
             self.show_percentage()
             self.status_alpha.setText("Alpha: 0")
             self.status_beta.setText("Beta: 0")
 
-    def show_to_window(self):
+    def showToWindow(self):
         """
         Showing the processing result image into the frame UI.
 
@@ -507,7 +513,7 @@ class Controller(Ui_MainWindow):
             self.image = MoilUtils.readImage(filename)
             self.h, self.w = self.image.shape[:2]
             self.cap.set(cv2.CAP_PROP_POS_FRAMES, posFrame)
-            self.video_controller.next_frame_slot()
+            self.video_controller.nextFrame()
             if self.listWidget.count() == 1:
                 self.listWidget.selectionModel().reset()
 
@@ -570,7 +576,7 @@ class Controller(Ui_MainWindow):
             percent = self.comboBox_zoom.currentText()
             percent = int(percent.replace("%", ""))
             self.width_result_image = round((self.w * percent) / 100)
-            self.show_to_window()
+            self.showToWindow()
 
     def reset_mode_view(self):
         """
@@ -826,7 +832,7 @@ class Controller(Ui_MainWindow):
                 "  border-style: solid;\n"
                 "  border-radius: 5px;\n"
                 "  background-color : rgb(238, 238, 236); }\n")
-            self.show_to_window()
+            self.showToWindow()
             self.recImage = None
 
     def onclickReleaseNote(self):
@@ -918,7 +924,7 @@ class Controller(Ui_MainWindow):
 
         """
         if self.cam:
-            self.video_controller.pause_video()
+            self.video_controller.pauseVideo(self.btn_play_pouse)
         reply = QtWidgets.QMessageBox.question(
             self.parent,
             'Message',

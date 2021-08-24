@@ -1,10 +1,8 @@
 from .user_interface.ui_mainwindow import Ui_MainWindow
 from PyQt5 import QtWidgets, QtCore
 from moilutils.CoordinateSystem import CoordinateSystem
-from camera_parameter import CameraParameters
 from moilutils.moilutils import MoilUtils
 from moilutils.MoilAlgorithm import MoilAlgorithm
-from exif_lib import MetaImage
 import cv2
 
 
@@ -24,8 +22,6 @@ class ControllerMain(Ui_MainWindow):
         self.disable_widget()
         self.checkBox.setChecked(False)
         self.delta_x.setValue(2.0)
-        self.camParams = QtWidgets.QDialog()
-        self.winCamParams = CameraParameters(self, self.camParams)
 
         self.build_coordinate()
         self.connect_to_widget()
@@ -41,16 +37,8 @@ class ControllerMain(Ui_MainWindow):
         self.clear_button.clicked.connect(self.onclick_clear)
         self.pushButton.clicked.connect(self.calculate)
         self.OpenImage.clicked.connect(self.open_image)
-        self.OpenParams.clicked.connect(self.cam_params_window)
+        self.OpenParams.clicked.connect(MoilUtils.parametersForm)
         self.parent.closeEvent = self.close_event
-
-    def cam_params_window(self):
-        """
-        Open the window of camera parameter form, this window you can update, add, and
-        delete the camera parameter from database.
-
-        """
-        self.camParams.show()
 
     def disable_widget(self):
         self.clear_button.setEnabled(False)
@@ -103,8 +91,7 @@ class ControllerMain(Ui_MainWindow):
             if img_file_path_r:
                 img_l = MoilUtils.readImage(img_file_path_l)
                 img_r = MoilUtils.readImage(img_file_path_r)
-                img = MetaImage(img_file_path_r)
-                self.type_camera = img.read_comment()
+                self.type_camera = MoilUtils.readCameraType(img_file_path_r)
                 self.moildev = MoilUtils.connectToMoildev(self.type_camera)
                 if self.moildev is not None:
                     self.img_l, self.img_r = self.ratio3D_Measurement(img_l, img_r, self.width_image)

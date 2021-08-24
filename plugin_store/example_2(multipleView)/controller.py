@@ -1,12 +1,10 @@
 from .user_interface.ui_mainwindow import Ui_MainWindow
 from moilutils import MoilUtils
+from moilutils import VideoController
 from help import Help
 import datetime
 import cv2
 from PyQt5 import QtWidgets, QtCore, QtGui
-from video_controller import VideoController
-from camera_source import CameraSource
-from camera_parameter import CameraParameters
 from control_view import ManipulateView
 
 
@@ -32,23 +30,18 @@ class UiController(Ui_MainWindow):
         self.width_ori_image = 340
         self.video_controller = VideoController(self)
         self.manipulate = ManipulateView(self)
-        self.video_controller.set_button_disable()
-        self.openCam = QtWidgets.QDialog()
-        self.winOpenCam = CameraSource(self, self.openCam)
-        self.camParams = QtWidgets.QDialog()
-        self.winCamParams = CameraParameters(self, self.camParams)
         self.hide_widget_for_original()
         self.connect_event()
 
     def connect_event(self):
         self.actionOpen_Image.triggered.connect(self.open_image)
         self.actionLoad_Video.triggered.connect(self.load_video)
-        self.actionOpen_Camera.triggered.connect(self.onclick_open_camera)
+        self.actionOpen_Camera.triggered.connect(self.open_camera)
         self.actionSave_image.triggered.connect(self.save_image)
-        self.actionCam_parameter.triggered.connect(self.cam_params_window)
+        self.actionCam_parameter.triggered.connect(MoilUtils.parametersForm)
         self.btn_open_image.clicked.connect(self.open_image)
         self.btn_open_video.clicked.connect(self.load_video)
-        self.btn_open_camera.clicked.connect(self.onclick_open_camera)
+        self.btn_open_camera.clicked.connect(self.open_camera)
         self.btn_6view.clicked.connect(self.onclick_multiple_view)
         self.btn_ori_view.clicked.connect(self.onclick_original)
         self.btn_view_1.clicked.connect(self.onclick_window_left)
@@ -65,17 +58,16 @@ class UiController(Ui_MainWindow):
         self.label_image6.mousePressEvent = self.mouse_window_rd
         self.label_Original_image.wheelEvent = self.mouse_wheelEvent
         self.label_Original_image.mouseReleaseEvent = self.mouse_release_event
-        self.parent.closeEvent = self.close_event
         self.actionAccesibility.triggered.connect(self.onclick_accessibility)
         self.coombo_zoom.activated.connect(self.combo_percentage_zoom)
 
-        self.btn_play_pouse.clicked.connect(self.video_controller.onclick_play_pause_button)
-        self.btn_stop_video.clicked.connect(self.video_controller.stop_video)
-        self.btn_prev_video.clicked.connect(self.video_controller.prev_video)
-        self.btn_skip_video.clicked.connect(self.video_controller.skip_video)
+        self.btn_play_pouse.clicked.connect(self.video_controller.playPauseVideo)
+        self.btn_stop_video.clicked.connect(self.video_controller.stopVideo)
+        self.btn_prev_video.clicked.connect(self.video_controller.rewindVideo)
+        self.btn_skip_video.clicked.connect(self.video_controller.forwardVideo)
         # self.actionRecord_video.triggered.connect(self.video_controller.action_record_video)
         # self.btn_Record_video.clicked.connect(self.video_controller.recordVideo)
-        self.slider_Video.valueChanged.connect(self.video_controller.changeValueSlider)
+        self.slider_Video.valueChanged.connect(self.video_controller.sliderController)
 
         self.btn_rotate_left.clicked.connect(self.manipulate.rotate_left)
         self.btn_rotate_right.clicked.connect(self.manipulate.rotate_right)
@@ -87,14 +79,6 @@ class UiController(Ui_MainWindow):
     def hide_widget_for_original(self):
         self.scrollArea_3.hide()
         self.frame_2.hide()
-
-    def cam_params_window(self):
-        """
-        Open the window of camera parameter form, this window you can update, add, and
-        delete the camera parameter from database.
-
-        """
-        self.camParams.show()
 
     def open_image(self):
         filename = MoilUtils.selectFile(self.parent, "Select Image", "../SourceImage",
@@ -108,7 +92,6 @@ class UiController(Ui_MainWindow):
                 self.cam = False
                 self.onclick_original()
                 self.label_camera.setText("Camera type: " + self.type_camera)
-                self.video_controller.set_button_disable()
                 self.show_percentage()
 
     def load_video(self):
@@ -137,34 +120,26 @@ class UiController(Ui_MainWindow):
             video_source (): the source of media, can be camera and video file.
 
         """
-        self.video_controller.set_button_enable()
         self.cap = cv2.VideoCapture(video_source)
         _, image = self.cap.read()
         if image is None:
             QtWidgets.QMessageBox.information(self.parent, "Information", "No source camera founded")
         else:
             self.cam = True
-            self.video_controller.next_frame_slot()
-            self.video_controller.set_button_enable()
-
-    def onclick_open_camera(self):
-        """
-        Show the window of selection camera source.
-
-        """
-        self.openCam.show()
+            self.video_controller.nextFrame()
 
     def open_camera(self):
         """
         open the camera from the available source in the system,
         this function provide 2 source namely USB cam and Streaming Cam from Raspberry pi.
         """
-        camera_source = self.winOpenCam.camera_source_used()
-        self.type_camera = MoilUtils.selectCameraType()
-        if self.type_camera is not None:
-            self.running_video(camera_source)
-            self.label_camera.setText("Camera type: " + self.type_camera)
-            self.onclick_original()
+        camera_source = MoilUtils.selectCameraSource()
+        if camera_source is not None:
+            self.type_camera = MoilUtils.selectCameraType()
+            if self.type_camera is not None:
+                self.running_video(camera_source)
+                self.label_camera.setText("Camera type: " + self.type_camera)
+                self.onclick_original()
 
     def onclick_original(self):
         self.btn_ori_view.setChecked(True)
@@ -183,7 +158,7 @@ class UiController(Ui_MainWindow):
             self.label_3.show()
             self.scrollArea.show()
             self.listWidget.show()
-            self.show_to_window()
+            self.showToWindow()
 
     def onclick_multiple_view(self):
         self.btn_ori_view.setChecked(False)
@@ -204,7 +179,7 @@ class UiController(Ui_MainWindow):
             self.normal_view = False
             self.single_view = False
             self.multiple_view = True
-            self.show_to_window()
+            self.showToWindow()
 
     def window_left(self):
         self.normal_view = False
@@ -227,7 +202,7 @@ class UiController(Ui_MainWindow):
         self.btn_view_6.setChecked(False)
         if self.image is not None:
             self.window_left()
-            self.show_to_window()
+            self.showToWindow()
 
     def window_middle(self):
         self.normal_view = False
@@ -250,7 +225,7 @@ class UiController(Ui_MainWindow):
         self.btn_view_6.setChecked(False)
         if self.image is not None:
             self.window_middle()
-            self.show_to_window()
+            self.showToWindow()
 
     def window_right(self):
         self.normal_view = False
@@ -273,7 +248,7 @@ class UiController(Ui_MainWindow):
         self.btn_view_6.setChecked(False)
         if self.image is not None:
             self.window_right()
-            self.show_to_window()
+            self.showToWindow()
 
     def window_left_down(self):
         self.normal_view = False
@@ -296,7 +271,7 @@ class UiController(Ui_MainWindow):
         self.btn_view_6.setChecked(False)
         if self.image is not None:
             self.window_left_down()
-            self.show_to_window()
+            self.showToWindow()
 
     def window_down(self):
         self.normal_view = False
@@ -319,7 +294,7 @@ class UiController(Ui_MainWindow):
         self.btn_view_6.setChecked(False)
         if self.image is not None:
             self.window_down()
-            self.show_to_window()
+            self.showToWindow()
 
     def window_right_down(self):
         self.normal_view = False
@@ -342,7 +317,7 @@ class UiController(Ui_MainWindow):
         self.btn_view_6.setChecked(True)
         if self.image is not None:
             self.window_right_down()
-            self.show_to_window()
+            self.showToWindow()
 
     def mouse_window_l(self, e):
         if e.button() == QtCore.Qt.LeftButton:
@@ -387,7 +362,7 @@ class UiController(Ui_MainWindow):
                         pass
                     else:
                         self.width_result_image += 100
-                self.show_to_window()
+                self.showToWindow()
                 self.show_percentage()
 
     def mouse_release_event(self, e):
@@ -473,9 +448,9 @@ class UiController(Ui_MainWindow):
         filename = self.dir_save + "/" + self.listWidget.currentItem().text()
         self.type_camera = MoilUtils.readCameraType(filename)
         if self.cam:
-            self.video_controller.pause_video()
+            self.video_controller.pauseVideo()
         self.image = MoilUtils.readImage(filename)
-        self.show_to_window()
+        self.showToWindow()
 
     @classmethod
     def onclick_help(cls):
@@ -485,7 +460,7 @@ class UiController(Ui_MainWindow):
         """
         Help.about_us()
 
-    def show_to_window(self):
+    def showToWindow(self):
         """
         Showing the processing result image into the frame UI.
 
@@ -567,11 +542,7 @@ class UiController(Ui_MainWindow):
                 print(percent)
                 self.width_result_image = round((self.w * percent) / 100)
                 print(self.width_result_image)
-                self.show_to_window()
-
-    def close_event(self, e):
-        self.openCam.close()
-        self.camParams.close()
+                self.showToWindow()
 
     def onclick_accessibility(self):
         """

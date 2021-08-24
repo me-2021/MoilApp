@@ -62,7 +62,7 @@ class Panorama(object):
         np.save("./maps_pano/mapY.npy", mapY)
         self.parent.max_pano.setValue(self.__pano_alpha_max)
         self.parent.min_pano.setValue(self.__pano_alpha_min)
-        self.parent.show_to_window()
+        self.parent.showToWindow()
 
     def change_panorama_fov(self):
         """

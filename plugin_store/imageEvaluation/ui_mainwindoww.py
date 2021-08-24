@@ -9,7 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from souceIcon import ResourceIcon
+from moilutils.souceIcon import ResourceIcon
 
 
 class Ui_MainWindow(object):

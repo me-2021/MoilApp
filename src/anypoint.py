@@ -67,13 +67,13 @@ class Anypoint(object):
         self.parent.frame_panorama.hide()
         self.parent.mapX, self.parent.mapY, = self.moildev.getAnypointMaps(
             self.alpha, self.beta, self.zoom_any, self.anypoint_mode)
-        self.parent.show_to_window()
+        self.parent.showToWindow()
         self.writeAlphaBeta()
 
     def anyPo(self):
         self.parent.mapX, self.parent.mapY, = self.parent.moildev.getAnypointMaps(
             round(self.alpha, 2), round(self.beta, 2), self.zoom_any, self.anypoint_mode)
-        self.parent.show_to_window()
+        self.parent.showToWindow()
         self.writeAlphaBeta()
 
     def anypoint_mode_1(self):

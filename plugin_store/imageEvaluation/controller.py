@@ -1,5 +1,6 @@
 from . import ui_mainwindow
 from PyQt5 import QtWidgets, QtCore, QtGui
+from functools import partial
 import cv2
 import imutils
 import datetime
@@ -7,7 +8,7 @@ import numpy as np
 from imutils import grab_contours, contours
 from moilutils import MoilUtils
 from reCenter import RecenterImage
-from souceIcon import ResourceIcon
+from moilutils import VideoController
 
 
 class UiController(ui_mainwindow.Ui_MainWindow):
@@ -30,19 +31,17 @@ class UiController(ui_mainwindow.Ui_MainWindow):
         self.valGammaContrast = None
         self.valBetaContrast = None
         self.valAlphaContrast = None
-        self.fps = None
-        self.pos_frame = None
-        self.frame_count = None
-        self.minute = None
-        self.minutes = None
-        self.seconds = None
-        self.sec = None
-        self.play = False
-        self.video_writer = None
+        # self.fps = None
+        # self.pos_frame = None
+        # self.frame_count = None
+        # self.minute = None
+        # self.minutes = None
+        # self.seconds = None
+        # self.sec = None
+        # self.play = False
+        # self.video_writer = None
         self.videoDir = None
-        self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(self.next_frame_slot)
-        self.rs = ResourceIcon()
+
         self.moildev = None
         self.image = None
         self.cam = False
@@ -73,6 +72,7 @@ class UiController(ui_mainwindow.Ui_MainWindow):
         self.buttonBack.hide()
         self.buttonRecenter.hide()
         self.recenter = RecenterImage(self)
+        self.videoController = VideoController(self)
         self.initConfigurationObjectDetection()
         self.connectEvent()
 
@@ -97,10 +97,10 @@ class UiController(ui_mainwindow.Ui_MainWindow):
         self.setIcy.valueChanged.connect(self.recenter.positionCoorY)
 
         # video controller
-        self.btn_play_pouse.clicked.connect(self.onclick_play_pause_button)
+        self.btn_play_pouse.clicked.connect(self.videoController.playPauseVideo)
 
         # evaluation Image
-        self.btn_objectDetect.clicked.connect(self.show_to_window)
+        self.btn_objectDetect.clicked.connect(self.showToWindow)
         self.pushButton.clicked.connect(self.onclickShowProcess)
         self.gausianSpinBox.valueChanged.connect(self.setGausianFilter)
         self.openingSpinbox.valueChanged.connect(self.setKernelOpening)
@@ -133,7 +133,7 @@ class UiController(ui_mainwindow.Ui_MainWindow):
                 "  border-style: solid;\n"
                 "  border-radius: 5px;\n"
                 "  background-color : rgb(238, 238, 236); }\n")
-            self.show_to_window()
+            self.showToWindow()
             self.recImage = None
 
     def control_extra_button(self):
@@ -175,7 +175,7 @@ class UiController(ui_mainwindow.Ui_MainWindow):
                         pass
                     else:
                         self.widthImageResult += 100
-                self.show_to_window()
+                self.showToWindow()
 
     def showInformationCamera(self):
         self.labelTypeCamera.setText(self.type_camera)
@@ -231,27 +231,21 @@ class UiController(ui_mainwindow.Ui_MainWindow):
             self.h, self.w = image.shape[:2]
             self.widthImageResult = 1160 if (self.h / self.w) == 0.75 else 900
             self.cam = True
-            self.next_frame_slot()
+            self.videoController.nextFrame()
         else:
             QtWidgets.QMessageBox.information(self.parent, "Information", "No source camera founded")
-
-    def onclick_open_camera(self):
-        """
-        Show the window of selection camera source.
-
-        """
-        self.openCam.show()
 
     def open_camera(self):
         """
         open the camera from the available source in the system,
         this function provide 2 source namely USB cam and Streaming Cam from Raspberry pi.
         """
-        camera_source = self.winOpenCam.camera_source_used()
-        self.type_camera = MoilUtils.selectCameraType()
-        if self.type_camera is not None:
-            self.running_video(camera_source)
-            self.onclick_normal()
+        camera_source = MoilUtils.selectCameraSource()
+        if camera_source is not None:
+            self.type_camera = MoilUtils.selectCameraType()
+            if self.type_camera is not None:
+                self.running_video(camera_source)
+                self.onclick_normal()
 
     # normal view start here +++++++++++++++++++++++++++++++
     def onclick_normal(self):
@@ -269,7 +263,7 @@ class UiController(ui_mainwindow.Ui_MainWindow):
             self.anypoint_view = False
             self.panorama_view = False
             self.result_image = None
-            self.show_to_window()
+            self.showToWindow()
 
     # anypoint view start here+++++++++++++++++++++++++++++
     def onclick_anypoint(self):
@@ -302,7 +296,7 @@ class UiController(ui_mainwindow.Ui_MainWindow):
             self.mapX, self.mapY, = self.moildev.getAnypointMaps(
                 self.alpha, self.beta, self.zoom_any, self.anypoint_mode)
 
-            self.show_to_window()
+            self.showToWindow()
 
     def __anypoint_mode_1(self):
         """
@@ -432,7 +426,7 @@ class UiController(ui_mainwindow.Ui_MainWindow):
         np.save("./maps_pano/mapY.npy", mapY)
         self.max_pano.setValue(self.__pano_alpha_max)
         self.min_pano.setValue(self.__pano_alpha_min)
-        self.show_to_window()
+        self.showToWindow()
 
     def change_panorama_fov(self):
         """
@@ -443,7 +437,7 @@ class UiController(ui_mainwindow.Ui_MainWindow):
         self.__pano_alpha_max = self.max_pano.value()
         self.onclick_panorama()
 
-    def show_to_window(self):
+    def showToWindow(self):
         """
         Showing the processing result image into the frame UI.
 
@@ -624,61 +618,61 @@ class UiController(ui_mainwindow.Ui_MainWindow):
         if self.pushButton.isChecked():
             self.onclickShowProcess()
         self.valAlphaContrast = self.alphaContrast.value()
-        self.show_to_window()
+        self.showToWindow()
 
     def setBetaContrast(self):
         if self.pushButton.isChecked():
             self.onclickShowProcess()
         self.valBetaContrast = self.betaContrast.value()
-        self.show_to_window()
+        self.showToWindow()
 
     def setGammaContrast(self):
         if self.pushButton.isChecked():
             self.onclickShowProcess()
         self.valGammaContrast = self.gamaContrast.value()
-        self.show_to_window()
+        self.showToWindow()
 
     def setMaxHeightThreshold(self):
         if self.pushButton.isChecked():
             self.onclickShowProcess()
         self.maxHeight = self.heightThreshold.value()
-        self.show_to_window()
+        self.showToWindow()
 
     def setMaxWidthThreshold(self):
         if self.pushButton.isChecked():
             self.onclickShowProcess()
         self.maxWidth = self.widthThreshold.value()
-        self.show_to_window()
+        self.showToWindow()
 
     def setRatioThreshold(self):
         if self.pushButton.isChecked():
             self.onclickShowProcess()
         self.ratioThresh = self.ratioThreshold.value()
-        self.show_to_window()
+        self.showToWindow()
 
     def setGausianFilter(self):
         if self.pushButton.isChecked():
             self.onclickShowProcess()
         self.gaussian_filter = self.gausianSpinBox.value()
-        self.show_to_window()
+        self.showToWindow()
 
     def setKernelOpening(self):
         if self.pushButton.isChecked():
             self.onclickShowProcess()
         self.kernel_opening = self.openingSpinbox.value()
-        self.show_to_window()
+        self.showToWindow()
 
     def setMaxThresh(self):
         if self.pushButton.isChecked():
             self.onclickShowProcess()
         self.maxThresh = self.maxThreshold.value()
-        self.show_to_window()
+        self.showToWindow()
 
     def setMinThresh(self):
         if self.pushButton.isChecked():
             self.onclickShowProcess()
         self.minThresh = self.minThreshold.value()
-        self.show_to_window()
+        self.showToWindow()
 
     def zoom_in(self):
         """
@@ -690,7 +684,7 @@ class UiController(ui_mainwindow.Ui_MainWindow):
                 pass
             else:
                 self.widthImageResult += 100
-            self.show_to_window()
+            self.showToWindow()
 
     def zoom_out(self):
         """
@@ -702,7 +696,7 @@ class UiController(ui_mainwindow.Ui_MainWindow):
                 pass
             else:
                 self.widthImageResult -= 100
-            self.show_to_window()
+            self.showToWindow()
 
     def rotate_left(self):
         """
@@ -714,7 +708,7 @@ class UiController(ui_mainwindow.Ui_MainWindow):
                 pass
             else:
                 self.angle += 10
-            self.show_to_window()
+            self.showToWindow()
 
     def rotate_right(self):
         """
@@ -726,7 +720,7 @@ class UiController(ui_mainwindow.Ui_MainWindow):
                 pass
             else:
                 self.angle -= 10
-            self.show_to_window()
+            self.showToWindow()
 
     def show_percentage(self):
         count = self.comboBox.count()
@@ -742,7 +736,7 @@ class UiController(ui_mainwindow.Ui_MainWindow):
             percent = self.comboBox.currentText()
             percent = int(percent.replace("%", ""))
             self.widthImageResult = round((self.w * percent) / 100)
-            self.show_to_window()
+            self.showToWindow()
 
     def onclickShowProcess(self):
         if self.pushButton.isChecked():
@@ -821,192 +815,6 @@ class UiController(ui_mainwindow.Ui_MainWindow):
                             (0, 255, 0), 2)
 
         return image
-
-    # migrate to video controller
-    def next_frame_slot(self):
-        """
-        looping the frame showing in label user interface.
-
-        """
-        success, self.image = self.cap.read()
-        if success:
-            self.fps = self.cap.get(cv2.CAP_PROP_FPS)
-            self.pos_frame = self.cap.get(cv2.CAP_PROP_POS_FRAMES)
-            self.frame_count = float(self.cap.get(cv2.CAP_PROP_FRAME_COUNT))
-            duration_sec = int(self.frame_count / self.fps)
-            self.minutes = duration_sec // 60
-            duration_sec %= 60
-            self.seconds = duration_sec
-            sec_pos = int(self.pos_frame / self.fps)
-            self.minute = int(sec_pos // 60)
-            sec_pos %= 60
-            self.sec = sec_pos
-            self.controller()
-            self.show_to_window()
-            # if self.parent.btn_Record_video.isChecked():
-            #     image = self.parent.image if self.parent.normal_view else self.parent.result_image
-            #     self.parent.video_writer.write(image)
-
-    def reset_time(self):
-        """
-        Reset the time when open the new video.
-
-        """
-        current = self.label_time_recent
-        current.setAlignment(QtCore.Qt.AlignCenter)
-        current.setText("00:00")
-
-        end_time = self.label_time_end
-        end_time.setAlignment(QtCore.Qt.AlignCenter)
-        end_time.setText("00:00")
-
-    def onclick_play_pause_button(self):
-        """
-        Control the play and pause video controller button
-        for example, if play is true: it will change the icon button
-
-        """
-        if self.play:
-            self.pause_video()
-
-        else:
-            self.play_video()
-
-    def pause_video(self):
-        """
-        Pause the frame in video or camera mode.
-
-        """
-        if self.video_writer is not None:
-            answer = QtWidgets.QMessageBox.information(
-                self.parent,
-                "Information",
-                "System in record mode, pause will stop recorded. \n\nContinue process ??",
-                QtWidgets.QMessageBox.Yes,
-                QtWidgets.QMessageBox.No)
-
-            if answer == QtWidgets.QMessageBox.Yes:
-                self.timer.stop()
-                self.btn_play_pouse.setIcon(
-                    QtGui.QIcon(QtGui.QPixmap.fromImage(self.rs.iconPlay())))
-                QtWidgets.QMessageBox.information(
-                    self.parent,
-                    "Information",
-                    "Video saved !!\n\nLoc: " +
-                    self.videoDir)
-                self.btn_Record_video.setIcon(QtGui.QIcon(QtGui.QPixmap.fromImage(self.rs.iconRecording())))
-                self.btn_Record_video.setChecked(False)
-                self.video_writer = None
-                self.play = False
-        else:
-            self.timer.stop()
-            self.btn_play_pouse.setIcon(
-                QtGui.QIcon(QtGui.QPixmap.fromImage(self.rs.iconPlay())))
-            self.play = False
-
-    def play_video(self):
-        """
-        Play video by connect to timer function.
-
-        """
-        if self.cap.isOpened():
-            self.btn_play_pouse.setIcon(
-                QtGui.QIcon(QtGui.QPixmap.fromImage(self.rs.iconPause())))
-            self.timer.start(1000 / self.fps)
-        self.play = True
-
-    def controller(self):
-        """
-        Manage the video to setup the current timer.
-
-        """
-        dst_value = self.pos_frame * (self.slider_Video.maximum() + 1) / self.frame_count
-        self.slider_Video.blockSignals(True)
-        self.slider_Video.setValue(dst_value)
-        self.slider_Video.blockSignals(False)
-
-        current = self.label_time_recent
-        current.setAlignment(QtCore.Qt.AlignCenter)
-        current.setText("%02d : %02d" % (self.minute, self.sec))
-
-        if self.minutes < 0:
-            "this is for live camera, when the times more than 1000 minutes, it will set to 00:00"
-            my_label3 = self.label_time_end
-            my_label3.setAlignment(QtCore.Qt.AlignCenter)
-            my_label3.setText("00:00")
-
-        else:
-            my_label3 = self.label_time_end
-            my_label3.setAlignment(QtCore.Qt.AlignCenter)
-            my_label3.setText("%02d : %02d" %
-                              (self.minutes, self.seconds))
-
-    def stop_video(self):
-        """
-        Stop video and set the time as a beginning, including the slider time
-
-        """
-        self.play = False
-        self.btn_play_pouse.setIcon(QtGui.QIcon(QtGui.QPixmap.fromImage(self.rs.iconPlay())))
-        if self.cap.isOpened():
-            self.timer.stop()
-            self.cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
-            self.next_frame_slot()
-            self.reset_label_time()
-        else:
-            pass
-
-    def reset_label_time(self):
-        """
-        Reset the time when open the new video.
-
-        """
-        current = self.label_time_recent
-        current.setAlignment(QtCore.Qt.AlignCenter)
-        current.setText("00:00")
-
-        current_1 = self.label_time_end
-        current_1.setAlignment(QtCore.Qt.AlignCenter)
-        current_1.setText("00:00")
-
-    def prev_video(self):
-        """
-        Previous video is 5 seconds.
-
-        """
-        if self.cap.isOpened():
-            position = self.pos_frame - 5 * self.fps
-            self.cap.set(cv2.CAP_PROP_POS_FRAMES, position)
-            self.next_frame_slot()
-        else:
-            pass
-
-    def skip_video(self):
-        """
-        skip video in 5 seconds.
-
-        """
-        if self.cap.isOpened():
-            position = self.pos_frame + 5 * self.fps
-            self.cap.set(cv2.CAP_PROP_POS_FRAMES, position)
-            self.next_frame_slot()
-        else:
-            pass
-
-    def changeValueSlider(self, value):
-        """
-        Set and control the slider to control the video.
-
-        Args:
-            value (): Value from slider
-
-        """
-        if self.cap.isOpened():
-            dst_frame = self.frame_count * value / self.slider_Video.maximum()
-            self.cap.set(cv2.CAP_PROP_POS_FRAMES, dst_frame)
-            self.next_frame_slot()
-            self.pause_video()
-            self.play = False
 
     def actionRecordVideo(self):
         """

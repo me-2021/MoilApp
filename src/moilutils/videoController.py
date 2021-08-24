@@ -1,28 +1,29 @@
 import cv2
 import os
-from PyQt5 import QtCore, QtGui
-from souceIcon import ResourceIcon
+from PyQt5 import QtCore, QtGui, QtWidgets
+from .souceIcon import ResourceIcon
 
 
 class VideoController(object):
     def __init__(self, parent):
         super(VideoController, self).__init__()
         self.parent = parent
-        self.rs = ResourceIcon()
-        self.fps = None
-        self.pos_frame = None
-        self.frame_count = None
-        self.minute = None
-        self.minutes = None
-        self.seconds = None
-        self.sec = None
+        self.__rs = ResourceIcon()
+        self.__fps = None
+        self.__pos_frame = None
+        self.__frame_count = None
+        self.__minute = None
+        self.__minutes = None
+        self.__seconds = None
+        self.__sec = None
         self.play = False
-        self.frameNumber = 1
-        self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(self.next_frame_slot)
+        self.playPauseBtn = None
+        self.__frameNumber = 1
+        self.__timer = QtCore.QTimer()
+        self.__timer.timeout.connect(self.nextFrame)
 
     # migrate to video controller
-    def next_frame_slot(self):
+    def nextFrame(self):
         """
         looping the frame showing in label user interface.
 
@@ -30,168 +31,199 @@ class VideoController(object):
         if self.parent.cam:
             success, self.parent.image = self.parent.cap.read()
             if success:
-                self.fps = self.parent.cap.get(cv2.CAP_PROP_FPS)
-                self.pos_frame = self.parent.cap.get(cv2.CAP_PROP_POS_FRAMES)
-                self.frame_count = float(self.parent.cap.get(cv2.CAP_PROP_FRAME_COUNT))
+                self.__fps = self.parent.cap.get(cv2.CAP_PROP_FPS)
+                self.__pos_frame = self.parent.cap.get(cv2.CAP_PROP_POS_FRAMES)
+                self.__frame_count = float(self.parent.cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
         else:
-            self.frame_count = len(os.listdir(self.parent.folderOdometry))
-            self.fps = 10
-            if self.frameNumber < self.frame_count:
-                self.pos_frame = self.frameNumber
-                file = self.parent.folderOdometry + "/" + str(self.frameNumber) + ".png"
+            self.__frame_count = len(os.listdir(self.parent.folderOdometry))
+            self.__fps = 10
+            if self.__frameNumber < self.__frame_count:
+                self.__pos_frame = self.__frameNumber
+                file = self.parent.folderOdometry + "/" + str(self.__frameNumber) + ".png"
                 self.parent.image = cv2.imread(file)
                 self.parent.h, self.parent.w = self.parent.image.shape[:2]
-                self.frameNumber += 1
+                self.__frameNumber += 1
 
-        duration_sec = int(self.frame_count / self.fps)
-        self.minutes = duration_sec // 60
+        duration_sec = int(self.__frame_count / self.__fps)
+        self.__minutes = duration_sec // 60
         duration_sec %= 60
-        self.seconds = duration_sec
-        sec_pos = int(self.pos_frame / self.fps)
-        self.minute = int(sec_pos // 60)
+        self.__seconds = duration_sec
+        sec_pos = int(self.__pos_frame / self.__fps)
+        self.__minute = int(sec_pos // 60)
         sec_pos %= 60
-        self.sec = sec_pos
-        self.controller()
-        self.parent.show_to_window()
-        if self.parent.video_writer is not None:
-            image = self.parent.image if self.parent.normal_view else self.parent.result_image
-            self.parent.video_writer.write(image)
+        self.__sec = sec_pos
+        self.__controller()
+        self.parent.showToWindow()
+        try:
+            if self.parent.video_writer is not None:
+                image = self.parent.image if self.parent.normal_view else self.parent.result_image
+                self.parent.video_writer.write(image)
+        except:
+            pass
 
-    def reset_time(self):
-        """
-        Reset the time when open the new video.
-
-        """
-        current = self.parent.label_time_recent
-        current.setAlignment(QtCore.Qt.AlignCenter)
-        current.setText("00:00")
-
-        end_time = self.parent.label_time_end
-        end_time.setAlignment(QtCore.Qt.AlignCenter)
-        end_time.setText("00:00")
-
-    def onclickPlayPauseButton(self):
+    def playPauseVideo(self, btnName):
         """
         Control the play and pause video controller button
         for example, if play is true: it will change the icon button
 
         """
+        if not btnName:
+            btnName = None
+        self.playPauseBtn = btnName
         if self.play:
-            self.pause_video()
+            self.pauseVideo(btnName)
 
         else:
-            self.play_video()
+            self.playVideo(btnName)
 
-    def pause_video(self):
+    def pauseVideo(self, btnName):
         """
         Pause the frame in video or camera mode.
 
         """
-        self.timer.stop()
-        self.parent.btn_play_pouse.setIcon(
-            QtGui.QIcon(QtGui.QPixmap.fromImage(self.rs.iconPlay())))
-        self.play = False
+        try:
+            self.__timer.stop()
+            self.play = False
+            if btnName is not None:
+                btnName.setIcon(QtGui.QIcon(QtGui.QPixmap.fromImage(self.__rs.iconPlay())))
 
-    def play_video(self):
+        except:
+            QtWidgets.QMessageBox.warning(
+                None,
+                "Warning!!",
+                "No Source Media found !!!")
+
+    def playVideo(self, btnName):
         """
         Play video by connect to timer function.
 
         """
-        self.timer.start(1000 / self.fps)
-        self.parent.btn_play_pouse.setIcon(
-            QtGui.QIcon(QtGui.QPixmap.fromImage(self.rs.iconPause())))
-        self.play = True
+        try:
+            self.__timer.start(1000 / self.__fps)
+            self.play = True
+            if btnName is not None:
+                btnName.setIcon(QtGui.QIcon(QtGui.QPixmap.fromImage(self.__rs.iconPause())))
 
-    def controller(self):
+        except:
+            QtWidgets.QMessageBox.warning(
+                None,
+                "Warning!!",
+                "No Source Media found !!!")
+
+    def __controller(self):
         """
         Manage the video to setup the current timer.
 
         """
-        dst_value = self.pos_frame * (self.parent.slider_Video.maximum() + 1) / self.frame_count
+        dst_value = self.__pos_frame * (self.parent.slider_Video.maximum() + 1) / self.__frame_count
         self.parent.slider_Video.blockSignals(True)
         self.parent.slider_Video.setValue(dst_value)
         self.parent.slider_Video.blockSignals(False)
 
-        current = self.parent.label_time_recent
-        current.setAlignment(QtCore.Qt.AlignCenter)
-        current.setText("%02d : %02d" % (self.minute, self.sec))
+        try:
+            current = self.parent.label_time_recent
+            current.setAlignment(QtCore.Qt.AlignCenter)
+            current.setText("%02d : %02d" % (self.__minute, self.__sec))
 
-        if self.minutes < 0:
-            "this is for live camera, when the times more than 1000 minutes, it will set to 00:00"
-            my_label3 = self.parent.label_time_end
-            my_label3.setAlignment(QtCore.Qt.AlignCenter)
-            my_label3.setText("00:00")
+            if self.__minutes < 0:
+                "this is for live camera, when the times more than 1000 minutes, it will set to 00:00"
+                my_label3 = self.parent.label_time_end
+                my_label3.setAlignment(QtCore.Qt.AlignCenter)
+                my_label3.setText("00 : 00")
 
-        else:
-            my_label3 = self.parent.label_time_end
-            my_label3.setAlignment(QtCore.Qt.AlignCenter)
-            my_label3.setText("%02d : %02d" %
-                              (self.minutes, self.seconds))
+            else:
+                my_label3 = self.parent.label_time_end
+                my_label3.setAlignment(QtCore.Qt.AlignCenter)
+                my_label3.setText("%02d : %02d" %
+                                  (self.__minutes, self.__seconds))
 
-    def stop_video(self):
+        except:
+            pass
+
+    def stopVideo(self):
         """
         Stop video and set the time as a beginning, including the slider time
 
         """
-        self.play = False
-        self.parent.btn_play_pouse.setIcon(QtGui.QIcon(QtGui.QPixmap.fromImage(self.rs.iconPlay())))
-        if self.parent.cam:
-            self.parent.cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+        try:
+            self.play = False
+            if self.playPauseBtn is not None:
+                self.playPauseBtn.setIcon(QtGui.QIcon(QtGui.QPixmap.fromImage(self.__rs.iconPlay())))
+            if self.parent.cam:
+                self.parent.cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+            else:
+                self.__frameNumber = 1
+            self.nextFrame()
+            self.__reset_label_time()
+            self.__timer.stop()
 
-        else:
-            self.frameNumber = 1
+        except:
+            QtWidgets.QMessageBox.warning(
+                None,
+                "Warning!!",
+                "No Source Media found !!!")
 
-        self.next_frame_slot()
-        self.reset_label_time()
-        self.timer.stop()
-
-    def reset_label_time(self):
+    def __reset_label_time(self):
         """
         Reset the time when open the new video.
 
         """
         current = self.parent.label_time_recent
         current.setAlignment(QtCore.Qt.AlignCenter)
-        current.setText("00:00")
+        current.setText("00 : 00")
 
-        current_1 = self.parent.label_time_end
-        current_1.setAlignment(QtCore.Qt.AlignCenter)
-        current_1.setText("00:00")
+        my_label3 = self.parent.label_time_end
+        my_label3.setAlignment(QtCore.Qt.AlignCenter)
+        my_label3.setText("%02d : %02d" %
+                          (self.__minutes, self.__seconds))
 
-    def prev_video(self):
+    def rewindVideo(self):
         """
         Previous video is 5 seconds.
 
         """
-        if self.parent.cam:
-            position = self.pos_frame - 5 * self.fps
-            self.parent.cap.set(cv2.CAP_PROP_POS_FRAMES, position)
+        try:
+            if self.parent.cam:
+                position = self.__pos_frame - 5 * self.__fps
+                self.parent.cap.set(cv2.CAP_PROP_POS_FRAMES, position)
 
-        else:
-            self.frameNumber -= 5 * self.fps
-            if self.frameNumber <= 1:
-                self.frameNumber = 1
+            else:
+                self.__frameNumber -= 5 * self.__fps
+                if self.__frameNumber <= 1:
+                    self.__frameNumber = 1
+            self.nextFrame()
 
-        self.next_frame_slot()
+        except:
+            QtWidgets.QMessageBox.warning(
+                None,
+                "Warning!!",
+                "No Source Media found !!!")
 
-    def skip_video(self):
+    def forwardVideo(self):
         """
         skip video in 5 seconds.
 
         """
-        if self.parent.cam:
-            position = self.pos_frame + 5 * self.fps
-            self.parent.cap.set(cv2.CAP_PROP_POS_FRAMES, position)
+        try:
+            if self.parent.cam:
+                position = self.__pos_frame + 5 * self.__fps
+                self.parent.cap.set(cv2.CAP_PROP_POS_FRAMES, position)
 
-        else:
-            self.frameNumber += 5 * self.fps
-            if self.frameNumber >= self.frame_count:
-                self.frameNumber = self.frame_count
+            else:
+                self.__frameNumber += 5 * self.__fps
+                if self.__frameNumber >= self.__frame_count:
+                    self.__frameNumber = self.__frame_count
 
-        self.next_frame_slot()
+            self.nextFrame()
 
-    def changeValueSlider(self, value):
+        except:
+            QtWidgets.QMessageBox.warning(
+                None,
+                "Warning!!",
+                "No Source Media found !!!")
+
+    def sliderController(self, value):
         """
         Set and control the slider to control the video.
 
@@ -199,15 +231,22 @@ class VideoController(object):
             value (): Value from slider
 
         """
-        dst_frame = self.frame_count * value / self.parent.slider_Video.maximum()
-        if self.parent.cam:
-            self.parent.cap.set(cv2.CAP_PROP_POS_FRAMES, dst_frame)
+        try:
+            dst_frame = self.__frame_count * value / self.parent.slider_Video.maximum()
+            if self.parent.cam:
+                self.parent.cap.set(cv2.CAP_PROP_POS_FRAMES, dst_frame)
 
-        else:
-            self.frameNumber = round(dst_frame)
-            if self.frameNumber <= 1:
-                self.frameNumber = 1
+            else:
+                self.__frameNumber = round(dst_frame)
+                if self.__frameNumber <= 1:
+                    self.__frameNumber = 1
 
-        self.next_frame_slot()
-        self.pause_video()
-        self.play = False
+            self.nextFrame()
+            self.pauseVideo()
+            self.play = False
+
+        except:
+            QtWidgets.QMessageBox.warning(
+                None,
+                "Warning!!",
+                "No Source Media found !!!")

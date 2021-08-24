@@ -13,8 +13,8 @@ from .camera_parameter import CameraParameters
 
 
 class MoilUtils(object):
-    camera_params = "moilutils/camera/camera_parameters.json"
-    camera_type = None
+    __camera_params = "moilutils/camera/camera_parameters.json"
+    __camera_type = None
 
     def __init__(self):
         super(MoilUtils, self).__init__()
@@ -27,7 +27,7 @@ class MoilUtils(object):
         return winOpenCam.camera_source
 
     @classmethod
-    def openCameraParameters(cls):
+    def parametersForm(cls):
         """
         Open the window of camera parameter form, this window you can update, add, and
         delete the camera parameter from database.
@@ -58,8 +58,8 @@ class MoilUtils(object):
         Select the camera type prompt.
 
         """
-        cls.camera_type = None
-        with open(cls.camera_params) as f:
+        cls.__camera_type = None
+        with open(cls.__camera_params) as f:
             data = json.load(f)
         new_list = []
         for key in data.keys():
@@ -90,17 +90,17 @@ class MoilUtils(object):
         buttonBox.accepted.connect(lambda: cls.__accept_btn(Dialog, comboBox_cam_type))
         buttonBox.rejected.connect(lambda: cls.__reject_btn(Dialog))
         Dialog.exec_()
-        return cls.camera_type
+        return cls.__camera_type
 
     @classmethod
     def __accept_btn(cls, dialog, msg):
         dialog.accept()
-        cls.camera_type = msg.currentText()
+        cls.__camera_type = msg.currentText()
 
     @classmethod
     def __reject_btn(cls, dialog):
         dialog.reject()
-        cls.camera_type = None
+        cls.__camera_type = None
 
     @classmethod
     def selectFile(cls, parent, title, dir_path, file_filter):
@@ -374,7 +374,7 @@ class MoilUtils(object):
 
         """
         if type_camera:
-            moildev = Moildev(cls.camera_params, type_camera)
+            moildev = Moildev(cls.__camera_params, type_camera)
 
         else:
             QtWidgets.QMessageBox.warning(
