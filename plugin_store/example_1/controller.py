@@ -648,7 +648,7 @@ class UiController(Ui_MainWindow):
                                        self.width_result_image, self.angle, plusIcon=False)
 
         else:
-            self.result_image = cv2.remap(self.image, self.mapX, self.mapY, cv2.INTER_CUBIC)
+            self.result_image = MoilUtils.remap(self.image, self.mapX, self.mapY)
             if self.anypoint_view:
                 image = MoilUtils.drawPolygon(self.image.copy(), self.mapX, self.mapY)
                 image = MoilUtils.drawPoint(image, self.point, radius)

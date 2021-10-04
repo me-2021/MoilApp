@@ -18,7 +18,7 @@ class VideoController(object):
         self.__sec = None
         self.play = False
         self.__playPauseBtn = None
-        self.__frameNumber = 1
+        self.frameNumber = 1
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.nextFrame)
 
@@ -28,26 +28,27 @@ class VideoController(object):
         looping the frame showing in label user interface.
 
         """
-        if self.parent.cam:
+        if self.parent.cap:
             success, self.parent.image = self.parent.cap.read()
             if success:
                 self.fps = self.parent.cap.get(cv2.CAP_PROP_FPS)
                 self.pos_frame = self.parent.cap.get(cv2.CAP_PROP_POS_FRAMES)
                 self.__frame_count = float(self.parent.cap.get(cv2.CAP_PROP_FRAME_COUNT))
                 self.__showToLabel()
+                
             else:
                 self.pauseVideo()
 
         else:
             self.__frame_count = len(os.listdir(self.parent.folderOdometry))
             self.fps = 10
-            if self.__frameNumber < self.__frame_count:
-                self.pos_frame = self.__frameNumber
-                file = self.parent.folderOdometry + "/" + str(self.__frameNumber) + ".png"
+            if self.frameNumber < self.__frame_count:
+                self.pos_frame = self.frameNumber
+                file = self.parent.folderOdometry + "/" + str(self.frameNumber) + ".png"
                 self.parent.image = cv2.imread(file)
                 self.parent.h, self.parent.w = self.parent.image.shape[:2]
-                self.__frameNumber += 1
                 self.__showToLabel()
+                self.frameNumber += 1
             else:
                 self.pauseVideo()
         try:
@@ -123,12 +124,11 @@ class VideoController(object):
         Manage the video to setup the current timer.
 
         """
-        dst_value = self.pos_frame * (self.parent.slider_Video.maximum() + 1) / self.__frame_count
-        self.parent.slider_Video.blockSignals(True)
-        self.parent.slider_Video.setValue(dst_value)
-        self.parent.slider_Video.blockSignals(False)
-
         try:
+            dst_value = self.pos_frame * (self.parent.slider_Video.maximum() + 1) / self.__frame_count
+            self.parent.slider_Video.blockSignals(True)
+            self.parent.slider_Video.setValue(dst_value)
+            self.parent.slider_Video.blockSignals(False)
             current = self.parent.label_time_recent
             current.setAlignment(QtCore.Qt.AlignCenter)
             current.setText("%02d : %02d" % (self.__minute, self.__sec))
@@ -157,10 +157,10 @@ class VideoController(object):
             self.play = False
             if self.__playPauseBtn is not None:
                 self.__playPauseBtn.setIcon(QtGui.QIcon(QtGui.QPixmap.fromImage(self.__rs.iconPlay())))
-            if self.parent.cam:
+            if self.parent.cap:
                 self.parent.cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
             else:
-                self.__frameNumber = 1
+                self.frameNumber = 1
             self.nextFrame()
             self.__reset_label_time()
             self.timer.stop()
@@ -191,14 +191,14 @@ class VideoController(object):
 
         """
         try:
-            if self.parent.cam:
+            if self.parent.cap:
                 position = self.pos_frame - 5 * self.fps
                 self.parent.cap.set(cv2.CAP_PROP_POS_FRAMES, position)
 
             else:
-                self.__frameNumber -= 5 * self.fps
-                if self.__frameNumber <= 1:
-                    self.__frameNumber = 1
+                self.frameNumber -= 5 * self.fps
+                if self.frameNumber <= 1:
+                    self.frameNumber = 1
             self.nextFrame()
 
         except:
@@ -213,14 +213,14 @@ class VideoController(object):
 
         """
         try:
-            if self.parent.cam:
+            if self.parent.cap:
                 position = self.pos_frame + 5 * self.fps
                 self.parent.cap.set(cv2.CAP_PROP_POS_FRAMES, position)
 
             else:
-                self.__frameNumber += 5 * self.fps
-                if self.__frameNumber >= self.__frame_count:
-                    self.__frameNumber = self.__frame_count
+                self.frameNumber += 5 * self.fps
+                if self.frameNumber >= self.__frame_count:
+                    self.frameNumber = self.__frame_count
 
             self.nextFrame()
 
@@ -240,13 +240,13 @@ class VideoController(object):
         """
         try:
             dst_frame = self.__frame_count * value / self.parent.slider_Video.maximum()
-            if self.parent.cam:
+            if self.parent.cap:
                 self.parent.cap.set(cv2.CAP_PROP_POS_FRAMES, dst_frame)
 
             else:
-                self.__frameNumber = round(dst_frame)
-                if self.__frameNumber <= 1:
-                    self.__frameNumber = 1
+                self.frameNumber = round(dst_frame)
+                if self.frameNumber <= 1:
+                    self.frameNumber = 1
 
             self.nextFrame()
             self.pauseVideo()

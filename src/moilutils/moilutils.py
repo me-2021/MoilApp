@@ -13,7 +13,7 @@ from .camera_parameter import CameraParameters
 
 
 class MoilUtils(object):
-    __camera_params = "moilutils/camera/camera_parameters.json"
+    __camera_params = "moilutils/camera_parameters.json"
     __camera_type = None
 
     def __init__(self):
@@ -424,6 +424,11 @@ class MoilUtils(object):
         image = QtGui.QImage(image.data, image.shape[1], image.shape[0],
                              QtGui.QImage.Format_RGB888).rgbSwapped()
         label.setPixmap(QtGui.QPixmap.fromImage(image))
+
+    @classmethod
+    def remap(cls, image, mapX, mapY):
+        image = cv2.remap(image, mapX, mapY, cv2.INTER_CUBIC)
+        return image
 
     @classmethod
     def drawRectangle(cls, image, point_1, point_2, thickness=5):

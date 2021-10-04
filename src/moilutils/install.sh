@@ -20,7 +20,8 @@ pip install Pillow==8.1.0 \
 	moildev==2.6.0\
 	pyyaml \
 	imutils \
+	opencv-contrib-python==3.4.2.16 \
 	sympy
-c++ -O3 -Wall -shared -std=c++11 -fPIC $(python3 -m pybind11 --includes) exif.cpp -o exif$(python3-config --extension-suffix) `pkg-config --cflags --libs python3` -I/usr/local/include -L/usr/local/lib -lexiv2
+c++ -O3 -Wall -shared -std=c++11 -fPIC $(python3 -m pybind11 --includes) moilutils/exif.cpp -o moilutils/exif$(python3-config --extension-suffix) `pkg-config --cflags --libs python3` -I/usr/local/include -L/usr/local/lib -lexiv2
 echo -e ""
 echo -e ">>Good Luck, Haryanto<<"

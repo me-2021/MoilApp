@@ -1,6 +1,6 @@
 import cv2
 from PyQt5 import QtWidgets
-from .camera.Ui_Select_Camera import Ui_Dialog
+from .Ui_Select_Camera import Ui_Dialog
 
 
 def check_Port_USB_Camera():

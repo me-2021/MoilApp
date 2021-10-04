@@ -433,7 +433,7 @@ class Controller(Ui_MainWindow):
                 MoilUtils.showImageToLabel(self.label_Original_Image,
                                            image,
                                            self.width_original_image)
-            self.result_image = cv2.remap(resImage, mapX, mapY, cv2.INTER_CUBIC)
+            self.result_image = MoilUtils.remap(resImage, mapX, mapY)
             MoilUtils.showImageToLabel(self.label_Result_Image,
                                        self.result_image,
                                        self.width_result_image, self.angle)
@@ -444,11 +444,7 @@ class Controller(Ui_MainWindow):
             self.labelrecenterTitle.hide()
             image = MoilUtils.drawPolygon(self.image.copy(), self.mapX, self.mapY)
             image = MoilUtils.drawPoint(image, self.point, radius)
-            self.result_image = cv2.remap(
-                self.image,
-                self.mapX,
-                self.mapY,
-                cv2.INTER_CUBIC)
+            self.result_image = MoilUtils.remap(self.image, self.mapX, self.mapY)
             result = MoilUtils.drawLine(self.result_image.copy())
             MoilUtils.showImageToLabel(self.label_Result_Image,
                                        result,

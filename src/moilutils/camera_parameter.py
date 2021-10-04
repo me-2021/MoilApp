@@ -1,10 +1,10 @@
 import json
 from PyQt5 import QtWidgets
-from .camera.Ui_Camera_params import Ui_Dialog
+from .Ui_Camera_params import Ui_Dialog
 
 
 class CameraParameters(Ui_Dialog):
-    camera_parameter = 'moilutils/camera/camera_parameters.json'
+    camera_parameter = 'moilutils/camera_parameters.json'
 
     def __init__(self, RecentWindow):
         """
