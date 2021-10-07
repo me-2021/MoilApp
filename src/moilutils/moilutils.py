@@ -131,8 +131,9 @@ class MoilUtils(object):
         Returns:
             None.
         """
+        options = QtWidgets.QFileDialog.DontUseNativeDialog
         directory = QtWidgets.QFileDialog.getExistingDirectory(
-            parent, 'Select Save Folder')
+            parent, 'Select Save Folder', options=options)
         return directory
 
     @classmethod

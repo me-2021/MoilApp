@@ -133,8 +133,9 @@ class PluginController(object):
         Returns:
             None.
         """
+        options = QtWidgets.QFileDialog.DontUseNativeDialog
         dir_plugin = QtWidgets.QFileDialog.getExistingDirectory(
-            self.main_controller.parent, 'Select Application Folder', "../plugin_store")
+            self.main_controller.parent, 'Select Application Folder', "../plugin_store", options)
         if dir_plugin:
             original = dir_plugin
             name_plug = os.path.basename(os.path.normpath(original))

@@ -179,6 +179,8 @@ class CameraParameters(Ui_Dialog):
         """
         Get data from input parameter box (LineEdit)
         """
+        cameraFoV = self.camera_fov.text()
+        cameraFoV = float(cameraFoV) if cameraFoV.find(",") == -1 else float(cameraFoV.replace(',', "."))
         sensorWidth = self.cam_sensor_width.text()
         sensorWidth = float(sensorWidth) if sensorWidth.find(",") == -1 else float(sensorWidth.replace(',', "."))
         sensorHeight = self.cam_sensor_width.text()
@@ -202,7 +204,7 @@ class CameraParameters(Ui_Dialog):
 
         self.a_dict = {self.camera_name.text(): {
             "cameraName": self.camera_name.text(),
-            "cameraFov": self.camera_fov.text(),
+            "cameraFov": cameraFoV,
             "cameraSensorWidth": sensorWidth,
             "cameraSensorHeight": sensorHeight,
             "iCx": int(self.image_center_X.text()),

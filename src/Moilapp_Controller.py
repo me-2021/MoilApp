@@ -57,7 +57,7 @@ class Controller(Ui_MainWindow):
         self.mapX_pano = None
         self.mapY_pano = None
         self.zoom_area = False
-        self.type_camera = "Raspi"
+        self.type_camera = None
         self.num = 0
         self.pos_x = 0
         self.w = 0
@@ -91,7 +91,6 @@ class Controller(Ui_MainWindow):
             a = self.label_time_recent
         except:
             print("here")
-        # print(a)
 
     def connect_event(self):
         """
@@ -252,6 +251,7 @@ class Controller(Ui_MainWindow):
                 self.image = MoilUtils.readImage(filename)
                 self.h, self.w = self.image.shape[:2]
                 self.moildev = MoilUtils.connectToMoildev(self.type_camera)
+                # print(self.type_camera)
                 self.buttonRecenter.setChecked(False)
                 self.buttonRecenter.setStyleSheet(
                     "QPushButton{\n"
