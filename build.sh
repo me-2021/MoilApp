@@ -1,13 +1,15 @@
 #!/bin/bash
 
 echo -e ">>>Install all dependencies library to run this project<<<<"
+echo "export OPENBLAS_CORETYPE=ARMV8" >> ~/.bashrc
+source ~/.bashrc
 sudo apt update -y
 sudo apt-get install -y python3-venv
-sudo apt-get install build-essential
-sudo apt install libexiv2-dev
-sudo apt install python3-dev
-sudo apt-get install qttools5-dev-tools
-sudo apt-get install qttools5-dev
+sudo apt-get install -y build-essential
+sudo apt install -y libexiv2-dev
+sudo apt install -y python3-dev
+sudo apt-get install -y qttools5-dev-tools
+sudo apt-get install -y qttools5-dev
 echo -e "1. Create Virtual environment"
 python3 -m venv venv
 source ./venv/bin/activate
