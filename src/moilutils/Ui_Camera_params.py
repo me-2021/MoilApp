@@ -14,13 +14,14 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(510, 474)
+        Dialog.resize(510, 494)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(Dialog.sizePolicy().hasHeightForWidth())
         Dialog.setSizePolicy(sizePolicy)
         Dialog.setMaximumSize(QtCore.QSize(510, 494))
+        Dialog.setMinimumSize(QtCore.QSize(510, 494))
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(Dialog)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.label_3 = QtWidgets.QLabel(Dialog)

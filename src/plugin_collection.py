@@ -2,6 +2,7 @@ import inspect
 import os
 import pkgutil
 from base_plugin import Plugin
+from PyQt5 import QtWidgets
 
 
 class PluginCollection(object):
@@ -32,7 +33,12 @@ class PluginCollection(object):
         self.name_application = []
         self.seen_paths = []
         self.path_folder = []
+        # try:
         self.walk_package(self.plugin_package)
+        # except ImportError as err:
+        #     QtWidgets.QMessageBox.warning(None, "Warning", "You have application with not enough requirement, "
+        #                                                    "\nplease check the readme of your plugin application!!\n\n"
+        #                                                    "err: " + str(err))
 
     def application(self, argument, index):
         """
@@ -63,16 +69,19 @@ class PluginCollection(object):
         for _, pluginname, ispkg in pkgutil.iter_modules(
                 imported_package.__path__, imported_package.__name__ + '.'):
             if not ispkg:
-                plugin_module = __import__(pluginname, fromlist=['blah'])
-                clsmembers = inspect.getmembers(plugin_module, inspect.isclass)
-                for (_, c) in clsmembers:
-                    # only add classes that are a sub class of plugin, but not
-                    # plugin it self
-                    if issubclass(c, Plugin) & (c is not Plugin):
-                        # print(f'Found Plugin class: {c.__name__}')
-                        self.path_folder.append(c.__module__)
-                        self.name_application.append(c.__name__)
-                        self.plugins.append(c())
+                try:
+                    plugin_module = __import__(pluginname, fromlist=['blah'])
+                    clsmembers = inspect.getmembers(plugin_module, inspect.isclass)
+                    for (_, c) in clsmembers:
+                        # only add classes that are a sub class of plugin, but not
+                        # plugin it self
+                        if issubclass(c, Plugin) & (c is not Plugin):
+                            # print(f'Found Plugin class: {c.__name__}')
+                            self.path_folder.append(c.__module__)
+                            self.name_application.append(c.__name__)
+                            self.plugins.append(c())
+                except ImportError as err:
+                    print("Your will get problem because: "+str(err))
 
         # Now that we have looked at all the modules in the current package, start looking
         # recursively for additional modules in sub packages

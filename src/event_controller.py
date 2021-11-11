@@ -228,6 +228,20 @@ class MouseEvent(object):
                     self.parent.status_alpha.setText("Alpha: %.1f" % self.parent.anypoint.alpha)
                     self.parent.status_beta.setText("Beta: %.1f" % self.parent.anypoint.beta)
 
+                if self.parent.anypoint.anypoint_mode == 1:
+                    if self.parent.anypoint.alpha < -90 or \
+                            self.parent.anypoint.alpha > 90 or \
+                            self.parent.anypoint.beta > 360:
+                        self.parent.status_alpha.setText("Alpha: " + self.parent.lineedit_alpha_2.text())
+                        self.parent.status_beta.setText("Beta: " + self.parent.lineedit_beta_2.text())
+                elif self.parent.anypoint.anypoint_mode == 2:
+                    if self.parent.anypoint.alpha < -90 or \
+                            self.parent.anypoint.alpha > 90 or \
+                            self.parent.anypoint.beta < -90 or \
+                            self.parent.anypoint.beta > 90:
+                        self.parent.status_alpha.setText("Alpha: " + self.parent.lineedit_alpha_2.text())
+                        self.parent.status_beta.setText("Beta: " + self.parent.lineedit_beta_2.text())
+
             elif e.buttons() == QtCore.Qt.LeftButton:
                 if self.parent.anypoint_view:
                     self.parent.point = (coordinate_X, coordinate_Y)

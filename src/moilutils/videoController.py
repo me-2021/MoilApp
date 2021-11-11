@@ -31,13 +31,16 @@ class VideoController(object):
         if self.parent.cap:
             success, self.parent.image = self.parent.cap.read()
             if success:
+                if self.parent.easySpin is True and self.parent.type_camera == "narl_fisheye" :
+                    self.parent.image = cv2.cvtColor(self.parent.image, cv2.COLOR_BayerBG2BGR)
                 self.fps = self.parent.cap.get(cv2.CAP_PROP_FPS)
                 self.pos_frame = self.parent.cap.get(cv2.CAP_PROP_POS_FRAMES)
                 self.__frame_count = float(self.parent.cap.get(cv2.CAP_PROP_FRAME_COUNT))
                 self.__showToLabel()
-                
+
             else:
                 self.pauseVideo()
+                self.__finish_recording()
 
         else:
             self.__frame_count = len(os.listdir(self.parent.folderOdometry))
@@ -51,12 +54,30 @@ class VideoController(object):
                 self.frameNumber += 1
             else:
                 self.pauseVideo()
+                self.__finish_recording()
         try:
             if self.parent.video_writer is not None:
                 image = self.parent.image if self.parent.normal_view else self.parent.result_image
                 self.parent.video_writer.write(image)
         except:
             pass
+
+    def __finish_recording(self):
+        if self.parent.video_writer is not None:
+            QtWidgets.QMessageBox.information(
+                self.parent.parent,
+                "Information",
+                "Video Recording Finish !!\n\nLoc: " +
+                self.parent.videoDir)
+            self.parent.video_writer = None
+            self.parent.video_controller.play = False
+            self.parent.record = False
+            self.parent.actionRecord_video.setChecked(False)
+            self.parent.btn_Record_video.setChecked(False)
+            self.parent.btn_Record_video.setIcon(
+                QtGui.QIcon(QtGui.QPixmap.fromImage(self.__rs.iconRecord())))
+            self.parent.actionRecord_video.setIcon(
+                QtGui.QIcon(QtGui.QPixmap.fromImage(self.__rs.iconRecord())))
 
     def __showToLabel(self):
         duration_sec = int(self.__frame_count / self.fps)

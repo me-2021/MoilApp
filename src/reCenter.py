@@ -8,8 +8,6 @@ class RecenterImage(object):
         self.parent = parent
         self.icx = None
         self.icy = None
-        self.alpha = None
-        self.beta = None
         self.alphaMax = None
 
     def onclickRecenter(self):
@@ -29,13 +27,12 @@ class RecenterImage(object):
 
     def returnImage(self, alpha=None, beta=None):
         if alpha is None and beta is None:
-            alpha = self.alpha
-            beta = self.beta
+            alpha = self.parent.alpha
+            beta = self.parent.beta
         else:
             alpha = alpha
             beta = beta
         recImage = self.parent.moildev.reverseImage(self.parent.image.copy(), self.alphaMax, alpha, beta)
-        # print(recImage)
         return recImage
 
     def positionCoorX(self):
@@ -44,7 +41,7 @@ class RecenterImage(object):
         self.icx = self.parent.setIcx.value()
         self.icy = self.parent.setIcy.value()
         self.parent.point = (self.icx, self.icy)
-        self.alpha, self.beta = self.parent.moildev.getAlphaBeta(self.icx, self.icy)
+        self.parent.alpha, self.parent.beta = self.parent.moildev.getAlphaBeta(self.icx, self.icy)
         self.parent.showToWindow()
 
     def positionCoorY(self):
@@ -53,5 +50,5 @@ class RecenterImage(object):
         self.icx = self.parent.setIcx.value()
         self.icy = self.parent.setIcy.value()
         self.parent.point = (self.icx, self.icy)
-        self.alpha, self.beta = self.parent.moildev.getAlphaBeta(self.icx, self.icy)
+        self.parent.alpha, self.parent.beta = self.parent.moildev.getAlphaBeta(self.icx, self.icy)
         self.parent.showToWindow()

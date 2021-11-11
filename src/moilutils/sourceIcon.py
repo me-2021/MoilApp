@@ -29,6 +29,9 @@ class ResourceIcon(object):
     def iconDeletePlugin(self):
         return QtGui.QImage("moilutils/icon/deleteApps.png")
 
+    def iconMachineLearning(self):
+        return QtGui.QImage("moilutils/icon/ml.png")
+
     # Mode------------------------------------------------------------------------
 
     def iconAnypoint(self):
@@ -160,3 +163,12 @@ class ResourceIcon(object):
 
     def iconHelpPlugin(self):
         return QtGui.QImage("moilutils/icon/helpPlugin.png")
+
+    def iconCar(self):
+        return QtGui.QImage("moilutils/icon/car.png")
+
+    def iconDoubleUp(self):
+        return QtGui.QImage("moilutils/icon/double_up.png")
+
+    def iconDoubledown(self):
+        return QtGui.QImage("moilutils/icon/double_down.png")

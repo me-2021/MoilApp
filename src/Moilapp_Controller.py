@@ -64,6 +64,7 @@ class Controller(Ui_MainWindow):
         self.h = 0
         self.point = None
         self.result_image = None
+        self.easySpin = False
         self.width_original_image = 300
         self.width_result_image = 1080
         self.angle = 0
@@ -77,7 +78,6 @@ class Controller(Ui_MainWindow):
         self.recenter = RecenterImage(self)
         self.control_mouse = MouseEvent(self)
         self.manipulate = ManipulateView(self)
-        self.control_plugin = PluginController(self)
 
         self.frameVideoController.hide()
         self.frame_panorama.hide()
@@ -86,11 +86,8 @@ class Controller(Ui_MainWindow):
         self.buttonRecenter.hide()
         self.labelrecenterTitle.hide()
         self.frameRecenter.hide()
+        self.control_plugin = PluginController(self)
         self.connect_event()
-        try:
-            a = self.label_time_recent
-        except:
-            print("here")
 
     def connect_event(self):
         """
@@ -121,10 +118,6 @@ class Controller(Ui_MainWindow):
         self.actionMinimize.triggered.connect(self.minimize_view)
 
         # action from menubar menu apps
-        self.actionAdd_Apps.triggered.connect(self.control_plugin.add_application)
-        self.actionDelete_Apps.triggered.connect(self.control_plugin.action_delete_apps)
-        self.actionOpen_Apps.triggered.connect(self.control_plugin.action_open_apps)
-        self.actionCreatePlugins.triggered.connect(self.winHelp.help_create_plugin)
         self.actionHelpPlugins.triggered.connect(self.winHelp.help_plugin)
 
         # action from menubar menu help
@@ -165,11 +158,6 @@ class Controller(Ui_MainWindow):
         self.btn_Open_Video.clicked.connect(self.onclick_load_video)
         self.btn_Open_Cam.clicked.connect(self.open_camera)
         self.btn_Save_Image.clicked.connect(self.save_image)
-
-        # btn Plugin controller
-        self.btn_add_apps.clicked.connect(self.control_plugin.add_application)
-        self.btn_open_app.clicked.connect(self.control_plugin.btn_open_apps)
-        self.btn_delete_app.clicked.connect(self.control_plugin.btn_delete_apps)
 
         # media player controller
         self.btn_Record_video.clicked.connect(self.buttonRecordVideo)
@@ -276,6 +264,7 @@ class Controller(Ui_MainWindow):
         if video_source:
             self.reset_mode_view()
             self.type_camera = MoilUtils.selectCameraType()
+            self.easySpin = False
             if self.type_camera is not None:
                 self.updateLabel(video_source)
                 self.running_video(video_source)
@@ -291,9 +280,14 @@ class Controller(Ui_MainWindow):
             self.type_camera = MoilUtils.selectCameraType()
             if self.type_camera is not None:
                 self.updateLabel()
-                self.running_video(camera_source)
+                if self.type_camera == "narl_fisheye":
+                    self.easySpin = True
+                    self.running_video(camera_source, True)
+                else:
+                    self.running_video(camera_source)
+                    self.easySpin = False
 
-    def running_video(self, video_source):
+    def running_video(self, video_source, easySpin = False):
         """
         Open Video following the source given.
 
@@ -302,7 +296,23 @@ class Controller(Ui_MainWindow):
 
         """
         self.frameVideoController.show()
-        self.cap = cv2.VideoCapture(video_source)
+        if easySpin:
+            try:
+                import EasyPySpin
+                self.cap = EasyPySpin.VideoCapture(video_source)
+                self.cap.set(cv2.CAP_PROP_EXPOSURE, -1)  # -1 sets exposure_time to auto
+                self.cap.set(cv2.CAP_PROP_GAIN, -1)  # -1 sets gain to auto
+                print('\nModule was installed')
+            except ImportError:
+                print('\nThere was no such module installed')
+                QtWidgets.QMessageBox.warning(None, "Warning !!", "The Module was not Installed. \n"
+                                                                  "Make sure the environment meet the requirement.")
+        else:
+            self.cap = cv2.VideoCapture(video_source)
+            if self.type_camera == "leo_fisheye":
+                self.cap.set(3, 1920)
+                self.cap.set(4, 1080)
+
         success, self.image = self.cap.read()
         if success:
             self.h, self.w = self.image.shape[:2]

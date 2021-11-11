@@ -131,9 +131,9 @@ class MoilUtils(object):
         Returns:
             None.
         """
-        options = QtWidgets.QFileDialog.DontUseNativeDialog
+        option = QtWidgets.QFileDialog.DontUseNativeDialog
         directory = QtWidgets.QFileDialog.getExistingDirectory(
-            parent, 'Select Save Folder', options=options)
+            parent, 'Select Save Folder', options=option)
         return directory
 
     @classmethod
@@ -393,14 +393,15 @@ class MoilUtils(object):
         Showing image to the window in user interface.
 
         Args:
-            plusIcon ():
-            label ():
-            image ():
-            width ():
-            angle ():
+            label (): The label will contain image to show in your user interface
+            image (): Image that want to show on user interface
+            width (): the width of result image, this value will calculate the height following the ratio.
+            angle (): the angle of image
+            plusIcon (): Drawing the plus icon on the image, by default this will be False.
+                        if you want to draw you have to change to be True.
 
         Returns:
-
+            Showing image on the label
         """
 
         height = cls.calculateHeight(image, width)
@@ -428,11 +429,34 @@ class MoilUtils(object):
 
     @classmethod
     def remap(cls, image, mapX, mapY):
+        """
+        This function is useful for simplifying the remap function.
+
+        Args:
+            image (): Input image
+            mapX (): The mapping function in the x direction.
+            mapY (): The mapping function in the y direction.
+
+        Returns:
+            Updating the image after remapping
+        """
         image = cv2.remap(image, mapX, mapY, cv2.INTER_CUBIC)
         return image
 
     @classmethod
     def drawRectangle(cls, image, point_1, point_2, thickness=5):
+        """
+        Draw rectangle on the image.
+
+        Args:
+            image (): input image
+            point_1 (): the first point
+            point_2 (): the second point to create rectangle
+            thickness (): the thickness of rectangle line
+
+        Returns:
+            image with rectangle object
+        """
         image = cv2.rectangle(image, point_1, point_2, (0, 0, 225), thickness)
         return image
 
@@ -538,38 +562,39 @@ class MoilUtils(object):
         return coor
 
     @classmethod
-    def drawPoint(cls, image, coordinatePoint, radius=5):
+    def drawPoint(cls, image, coordinatePoint, thickness=5):
         """
         Drawing point on the image.
 
         Args:
-            image ():
-            coordinatePoint ():
-            radius ():
+            image (): source image
+            coordinatePoint (): the coordinate of point, contain coordinate X and Y
+            thickness (): the thickness of the point
 
         Returns:
-
+            image with drawn point
         """
 
         if coordinatePoint is not None:
             w, h = image.shape[:2]
             if h >= 1000:
-                cv2.circle(image, coordinatePoint, radius, (0, 255, 0), 20, -1)
+                cv2.circle(image, coordinatePoint, thickness, (0, 255, 0), 20, -1)
             else:
-                cv2.circle(image, coordinatePoint, radius, (0, 255, 0), -1)
+                cv2.circle(image, coordinatePoint, thickness, (0, 255, 0), -1)
         return image
 
     @classmethod
     def drawLine(cls, image, coordinatePoint_1=None, coordinatePoint_2=None):
         """
+        Draw line on the image.
 
         Args:
-            image ():
-            coordinatePoint_1 ():
-            coordinatePoint_2 ():
+            image (): source image
+            coordinatePoint_1 (): the first coordinate contain coordinate X and coordinate Y
+            coordinatePoint_2 (): the second coordinate contain coordinate X and coordinate Y
 
         Returns:
-
+            image with drawn line
         """
         # draw anypoint line
         if coordinatePoint_1 is None:
@@ -608,12 +633,13 @@ class MoilUtils(object):
     @classmethod
     def convertToGray(cls, image):
         """
-        Convert rgb to grayscale.
+        Convert input image to grayscale color.
 
         Args:
-            image ():
+            image (): input image
 
         Returns:
+            grayscale image
 
         """
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -624,10 +650,12 @@ class MoilUtils(object):
         """
         Calculate the initial ratio of the image.
 
+        Args:
+            label (): The label user interface
+            image (): Input image
+
         Returns:
-            ratio_x : ratio width between image and ui window.
-            ratio_y : ratio height between image and ui window.
-            center : find the center image on window user interface.
+            ratio_x, ratio_y
         """
         h = label.height()
         w = label.width()
