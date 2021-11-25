@@ -305,8 +305,9 @@ class Controller(Ui_MainWindow):
                 print('\nModule was installed')
             except ImportError:
                 print('\nThere was no such module installed')
-                QtWidgets.QMessageBox.warning(None, "Warning !!", "The Module was not Installed. \n"
-                                                                  "Make sure the environment meet the requirement.")
+                QtWidgets.QMessageBox.warning(None, "Warning !!", "The Module was not Installed. \n\n"
+                                                                  "Please install the library following \n"
+                                                                  "the document provided.")
         else:
             self.cap = cv2.VideoCapture(video_source)
             if self.type_camera == "leo_fisheye":

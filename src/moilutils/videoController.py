@@ -34,6 +34,7 @@ class VideoController(object):
                 if self.parent.easySpin is True and self.parent.type_camera == "narl_fisheye" :
                     self.parent.image = cv2.cvtColor(self.parent.image, cv2.COLOR_BayerBG2BGR)
                 self.fps = self.parent.cap.get(cv2.CAP_PROP_FPS)
+                print(self.fps)
                 self.pos_frame = self.parent.cap.get(cv2.CAP_PROP_POS_FRAMES)
                 self.__frame_count = float(self.parent.cap.get(cv2.CAP_PROP_FRAME_COUNT))
                 self.__showToLabel()
