@@ -663,3 +663,5 @@ class MoilUtils(object):
         ratio_x = width / w
         ratio_y = height / h
         return ratio_x, ratio_y
+
+
