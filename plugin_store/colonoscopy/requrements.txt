@@ -1,4 +1,0 @@
-tensorflow == 1.15.5
-keras == 2.2.4
-scipy
-scikit-image

@@ -1,6 +1,6 @@
 ## MoilApp Application
 
-*Date: 09/08/2021*
+*Last modified: 17/22/2021*
 
 *Created by: Haryanto*
 
@@ -181,7 +181,7 @@
 
       ![](./assets/install.png)
 
-      Then running the apps, you can search on the all application or use command line bellow this. 
+      Then running the Apps, you can search on the all application or use command line bellow this. 
 
       ```
       $ moilapp
@@ -189,5 +189,4 @@
 
       
 
-7. For more documentation, **Contact US....**
-
+7. For more documentation, **Contact Developer....**

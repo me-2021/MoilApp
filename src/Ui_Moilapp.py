@@ -1046,7 +1046,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.anypoint_zoom_2.setSizePolicy(sizePolicy)
         self.anypoint_zoom_2.setDecimals(1)
         self.anypoint_zoom_2.setMaximum(14.0)
-        self.anypoint_zoom_2.setMinimum(0.5)
+        self.anypoint_zoom_2.setMinimum(0.2)
         self.anypoint_zoom_2.setSingleStep(0.1)
         self.anypoint_zoom_2.setObjectName("anypoint_zoom_2")
 

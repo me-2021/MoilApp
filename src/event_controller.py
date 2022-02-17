@@ -41,6 +41,7 @@ class MouseEvent(object):
                 ratio_x, ratio_y = self.init_ori_ratio(self.parent.image)
                 X = round(pos_x * ratio_x)
                 Y = round(pos_y * ratio_y)
+                # print(X, Y)
                 if X <= 0 or X >= self.parent.w and Y <= 0 or Y >= self.parent.h:
                     coordinate_X = int(self.parent.w / 2)
                     coordinate_Y = int(self.parent.h / 2)

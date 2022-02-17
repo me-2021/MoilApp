@@ -210,6 +210,7 @@ class Controller(Ui_MainWindow):
         self.parent.setWindowTitle("MoilApp")
         self.buttonBack.hide()
         self.frameRecenter.hide()
+        self.buttonRecenter.hide()
         self.image = None
         self.recImage = None
 
@@ -362,6 +363,9 @@ class Controller(Ui_MainWindow):
         Showing the processing result image into the frame UI.
 
         """
+        # _, img = self.cap.read()
+        # if not _:
+        #     QtWidgets.QMessageBox.information(None, "Test", "Finishhhh")
         self.zoom_area = False
         self.buttonBack.hide()
         radius = 6 if self.h < 800 else 10
@@ -414,9 +418,9 @@ class Controller(Ui_MainWindow):
                 self.frame_panorama.setGeometry(QtCore.QRect(5, 50, 180, 145))
                 self.recImage = self.recenter.returnImage()
                 resImage = self.recImage
-                res = MoilUtils.drawPolygon(resImage.copy(), mapX, mapY)
+                # res = MoilUtils.drawPolygon(resImage.copy(), mapX, mapY)
                 MoilUtils.showImageToLabel(self.labelRecenter,
-                                           res,
+                                           resImage,
                                            self.width_original_image, plusIcon=True)
                 image = MoilUtils.drawPoint(self.image.copy(), self.point, radius)
                 MoilUtils.showImageToLabel(self.label_Original_Image,
@@ -439,8 +443,8 @@ class Controller(Ui_MainWindow):
 
                 # self.result_image = self.result_image[round(rho):self.h, 0:self.w]
                 # print(self.result_image)
-                image = MoilUtils.drawPolygon(self.image.copy(), mapX, mapY)
-                image = MoilUtils.drawPoint(image, self.point, radius)
+                # image = MoilUtils.drawPolygon(self.image.copy(), mapX, mapY)
+                image = MoilUtils.drawPoint(self.image.copy(), self.point, radius)
                 MoilUtils.showImageToLabel(self.label_Original_Image,
                                            image,
                                            self.width_original_image)
@@ -863,7 +867,7 @@ class Controller(Ui_MainWindow):
 
     @classmethod
     def checkUpdate(cls):
-        webbrowser.open('https://www.oil-mcut.educationhost.cloud/moilapp/')
+        webbrowser.open('https://github.com/MoilOrg/MoilApp')
 
     def onclick_accessibility(self):
         """

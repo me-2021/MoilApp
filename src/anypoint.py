@@ -48,6 +48,8 @@ class Anypoint(object):
                 self.parent.point = (round(self.moildev.getIcx()), round(self.moildev.getIcy()))
                 self.resetAlphaBeta()
                 self.anypoint()
+                self.parent.status_alpha.setText("Alpha: %.1f" % self.parent.anypoint.alpha)
+                self.parent.status_beta.setText("Beta: %.1f" % self.parent.anypoint.beta)
                 self.parent.show_percentage()
             else:
                 QtWidgets.QMessageBox.information(self.parent.parent,
