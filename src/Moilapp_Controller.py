@@ -9,10 +9,10 @@ import datetime
 import webbrowser
 import numpy as np
 from help import Help
-from moilutils import ResourceIcon
+from moilutils.sourceIcon import ResourceIcon
 from functools import partial
 from PyQt5 import QtWidgets, QtGui, QtCore
-from moilutils import MoilUtils
+# from moilutils import MoilUtils
 from plugin_controller import PluginController
 from Ui_Moilapp import Ui_MainWindow
 from panorama import Panorama
@@ -20,22 +20,36 @@ from anypoint import Anypoint
 from reCenter import RecenterImage
 from control_view import ManipulateView
 from event_controller import MouseEvent
-from moilutils import VideoController
+
+from src import VideoController
+# due to __init__.py of src
+
+from src import MoilUtils
+# due to __init__.py of src
+
+from src import VideoController, MoilUtils
 
 
 class Controller(Ui_MainWindow):
     resized = QtCore.pyqtSignal()
 
-    def __init__(self, parent):
+    def __init__(self, the_root_wdg):
         """
-
         Args:
             parent ():
         """
-        super().__init__(parent)
-        self.comboBox_cam_type = None
-        self.parent = parent
-        self.setupUi(self.parent)
+        super().__init__(the_root_wdg)
+        # the_root_wdg is the object MainWindow in main module
+        # i.e <the_root_wdg> is the root node of the widgetS hierarchical tree
+
+        # self.comboBox_cam_type = None
+
+        self.parent = the_root_wdg
+        # self.parent gives birth an instance property that csn be referred by another object method
+        self.setupUi(the_root_wdg)
+        # setupUi is a method in super class Ui_MainWindow
+        # An inheritance calling
+
         self.rs = ResourceIcon()
         self.open_plugin = False
         self.image = None
@@ -58,6 +72,7 @@ class Controller(Ui_MainWindow):
         self.mapY_pano = None
         self.zoom_area = False
         self.type_camera = None
+
         self.num = 0
         self.pos_x = 0
         self.w = 0
@@ -93,7 +108,6 @@ class Controller(Ui_MainWindow):
         """
         Connect every event on user interface like button event, mouse event
         and etc to the function processing.
-
         """
         self.parent.closeEvent = self.closeEvent
         self.parent.resizeEvent = self.resizeEvent

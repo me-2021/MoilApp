@@ -6,7 +6,13 @@ from .sourceIcon import ResourceIcon
 
 class VideoController(object):
     def __init__(self, parent):
+        '''
+
+        Args:
+            parent: Container of Ui elements? cj
+        '''
         super(VideoController, self).__init__()
+        # super is based class
         self.parent = parent
         self.__rs = ResourceIcon()
         self.fps = None

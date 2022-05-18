@@ -3,7 +3,7 @@ PyQt5==5.15.0
 pyserial
 pybind11==2.6.2
 opencv-python==4.2.0.32
-moildev==2.7.0
+moildev==3.1.0
 pyyaml
 imutils
 sympy

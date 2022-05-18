@@ -2,7 +2,7 @@ from help_source.ui_help import Ui_Help
 from help_source import MoilApp_help
 import webbrowser
 from PyQt5 import QtWidgets, QtGui
-from moilutils import ResourceIcon
+from src import ResourceIcon
 
 
 class Help(Ui_Help):

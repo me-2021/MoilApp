@@ -7,11 +7,12 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from moilutils import ResourceIcon
+# from moilutils import ResourceIcon
+from src import ResourceIcon
 
 
 class Ui_MainWindow(QtWidgets.QMainWindow):
-    def setupUi(self, MainWindow):
+    def setupUi(self, MainWindow):  #formal parameter
         rs = ResourceIcon()
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1920, 917)

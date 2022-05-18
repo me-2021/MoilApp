@@ -6,6 +6,7 @@ from .Ui_Camera_params import Ui_Dialog
 class CameraParameters(Ui_Dialog):
     camera_parameter = 'moilutils/camera_parameters.json'
 
+    # __new__ will return self
     def __init__(self, RecentWindow):
         """
         Create class controller open camera with inheritance from Ui Dialog Class.
