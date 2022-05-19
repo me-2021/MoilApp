@@ -13,6 +13,9 @@ from moilutils import ResourceIcon
 
 
 class Ui_MainWindow(object):
+    def __init__(self):
+            self.btn_panorama = None
+
     def setupUi(self, MainWindow):
         rs = ResourceIcon()
         MainWindow.setObjectName("MainWindow")
